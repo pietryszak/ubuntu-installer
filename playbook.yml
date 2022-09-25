@@ -3,6 +3,25 @@
 
   tasks:
 
+# Username for not become
+# https://stackoverflow.com/a/58916467
+  - name: Run whoami without become for regular username
+    command: whoami
+    changed_when: false
+    become: false
+    register: whoami
+
+  - name: Set a fact with the user name.
+    set_fact:
+      login_user: "{{ whoami.stdout }}"
+
+  - name: Install acl for change ansible users
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - acl
+      update_cache: yes
+
 # GRUB
 # https://github.com/AdisonCavani/distro-grub-themes
 
@@ -81,6 +100,53 @@
 
     become: true
 
+# Ly TUI display manager
+# https://github.com/fairyglade/ly
+  
+  - name: Clone a ly TUI display manager repo
+    ansible.builtin.git:
+      repo: https://github.com/fairyglade/ly
+      dest: ~/.gc/ly
+
+  - name: Install ly dependiences
+    block:
+  
+    - name: Install ly dependiences
+      ansible.builtin.apt:
+        pkg:
+          - build-essential
+          - libpam0g-dev 
+          - libxcb-xkb-dev
+          - libpam-dev 
+        update_cache: yes
+    
+    - name: create folder for ly
+      ansible.builtin.file:
+        path: /etc/ly
+        state: directory
+        mode: '0755'
+    become: true
+
+  - name: Build the default target
+    community.general.make:
+      chdir: ~/.gc/ly
+
+  - name: Install LY
+    ansible.builtin.shell: make install installsystemd
+    args:
+      chdir: /home/{{ login_user }}/.gc/ly
+    become: true
+
+  - name: Enable service ly
+    become: true
+    become_user: "{{ login_user }}"
+    ansible.builtin.service:
+      name: ly.service
+      enabled: yes
+
+    
+
+
 # i3-gaps
 # https://github.com/Airblader/i3/wiki/Building-from-source
 
@@ -130,8 +196,5 @@
     ansible.builtin.shell: ninja
     args: 
       chdir: ~/.gc/i3-gaps/build
-
-
-
 
 
