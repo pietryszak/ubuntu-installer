@@ -3,7 +3,7 @@
 
   tasks:
 
-# Username for not become
+# Username of regular username
 # https://stackoverflow.com/a/58916467
   - name: Run whoami without become for regular username
     command: whoami
@@ -101,7 +101,7 @@
     become: true
 
 # Xorg
-  - name: Install a i3-gaps dependiences 
+  - name: Install Xorg 
     become: true 
     ansible.builtin.apt:
       pkg:
@@ -111,69 +111,45 @@
 # Lightdm Display Manager
 
   - name: Install Lightdm 
+
     block:
-      - name: Install a i3-gaps dependiences
+
+      - name: Install a lightdm dependiences
         ansible.builtin.apt:
           pkg:
             - lightdm
             - lightdm-gtk-greeter
             - lightdm-gtk-greeter-settings
           update_cache: yes
-      - name: Enable service httpd, and not touch the state
+
+      - name: Enable lightdm service
         ansible.builtin.service:
           name: lightdm.service
           enabled: yes
+
     become: true          
       
 
 # i3-gaps
-# https://github.com/Airblader/i3/wiki/Building-from-source
+# https://stackoverflow.com/a/73805885
+  - name: Install i3-gaps 
 
-  - name: Clone a i3-gaps repo
-    ansible.builtin.git:
-      repo: https://www.github.com/Airblader/i3
-      dest: ~/.gc/i3-gaps
+    block:
 
-  - name: Install a i3-gaps dependiences
+      - name: Download Regolith public key
+        ansible.builtin.get_url:
+          url: https://regolith-desktop.org/regolith.key
+          dest: /etc/apt/trusted.gpg.d/regolith.asc
+
+      - name: Register Regolith public key to local apt
+        ansible.builtin.apt_repository:
+          repo: "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/regolith.asc] https://regolith-desktop.org/release-ubuntu-jammy-amd64 {{ ansible_distribution_release }} main"
+          state: present
+          update_cache: yes
+
+      - name: Install i3-gaps
+        ansible.builtin.apt:
+          pkg:
+            - i3-gaps
+          update_cache: yes
     become: true
-    ansible.builtin.apt:
-      pkg:
-        - libxcb1-dev 
-        - libxcb-keysyms1-dev
-        - libpango1.0-dev 
-        - libxcb-util0-dev 
-        - libxcb-icccm4-dev 
-        - libyajl-dev 
-        - libstartup-notification0-dev
-        - libxcb-randr0-dev
-        - libev-dev 
-        - libxcb-cursor-dev 
-        - libxcb-xinerama0-dev 
-        - libxcb-xkb-dev 
-        - libxkbcommon-dev 
-        - libxkbcommon-x11-dev 
-        - autoconf 
-        - libxcb-xrm0
-        - libxcb-xrm-dev
-        - automake
-        - libxcb-shape0-dev
-        - meson
-      update_cache: yes
-
-  - name: Create a build folder for i3-gaps 
-    ansible.builtin.file:
-      path: ~/.gc/i3-gaps/build
-      state: directory
-      mode: '0755'
-
-  - name: Compile with meson a i3-gaps
-    ansible.builtin.shell: meson ..
-    args: 
-      chdir: ~/.gc/i3-gaps/build
-
-  - name: Compile with ninja a i3-gaps
-    ansible.builtin.shell: ninja
-    args: 
-      chdir: ~/.gc/i3-gaps/build
-
-
