@@ -100,52 +100,31 @@
 
     become: true
 
-# Ly TUI display manager
-# https://github.com/fairyglade/ly
-  
-  - name: Clone a ly TUI display manager repo
-    ansible.builtin.git:
-      repo: https://github.com/fairyglade/ly
-      dest: ~/.gc/ly
+# Xorg
+  - name: Install a i3-gaps dependiences 
+    become: true 
+    ansible.builtin.apt:
+      pkg:
+        - xorg
+      update_cache: yes
 
-  - name: Install ly dependiences
+# Lightdm Display Manager
+
+  - name: Install Lightdm 
     block:
-  
-    - name: Install ly dependiences
-      ansible.builtin.apt:
-        pkg:
-          - build-essential
-          - libpam0g-dev 
-          - libxcb-xkb-dev
-          - libpam-dev 
-        update_cache: yes
-    
-    - name: create folder for ly
-      ansible.builtin.file:
-        path: /etc/ly
-        state: directory
-        mode: '0755'
-    become: true
-
-  - name: Build the default target
-    community.general.make:
-      chdir: ~/.gc/ly
-
-  - name: Install LY
-    ansible.builtin.shell: make install installsystemd
-    args:
-      chdir: /home/{{ login_user }}/.gc/ly
-    become: true
-
-  - name: Enable service ly
-    become: true
-    become_user: "{{ login_user }}"
-    ansible.builtin.service:
-      name: ly.service
-      enabled: yes
-
-    
-
+      - name: Install a i3-gaps dependiences
+        ansible.builtin.apt:
+          pkg:
+            - lightdm
+            - lightdm-gtk-greeter
+            - lightdm-gtk-greeter-settings
+          update_cache: yes
+      - name: Enable service httpd, and not touch the state
+        ansible.builtin.service:
+          name: lightdm.service
+          enabled: yes
+    become: true          
+      
 
 # i3-gaps
 # https://github.com/Airblader/i3/wiki/Building-from-source
