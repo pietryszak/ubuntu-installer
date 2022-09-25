@@ -1,0 +1,137 @@
+---
+- hosts: all
+
+  tasks:
+
+# GRUB
+# https://github.com/AdisonCavani/distro-grub-themes
+
+  - name: Grub look theme
+    ansible.builtin.git:
+      repo: https://github.com/AdisonCavani/distro-grub-themes.git
+      dest: ~/.gc/distro-grub-themes
+
+  - name: Install grub theme and plymouth theme, configure it
+    block:
+  
+      - name: Create a folder for grub theme
+        ansible.builtin.file:
+          path: /boot/grub/themes/
+          state: directory
+          mode: '0755'
+
+      - name: Copy grub theme to grub folder
+        ansible.builtin.copy:
+          src: ~/.gc/distro-grub-themes/customize/msi/
+          dest: /boot/grub/themes
+
+      - name: Adjust grub display resolution
+        ansible.builtin.lineinfile:
+          path: /etc/default/grub
+          regexp: '#GRUB_GFXMODE=640x480'
+          line: GRUB_GFXMODE=2560x1440
+          backup: yes
+
+      - name: Adjust grub display time
+        ansible.builtin.lineinfile:
+          path: /etc/default/grub
+          regexp: 'GRUB_TIMEOUT=0'
+          line: GRUB_TIMEOUT=4
+
+      - name: Add path of theme to grub configure
+        ansible.builtin.blockinfile:
+          path: /etc/default/grub      
+          block: |
+
+            # Ubuntu grub theme
+            GRUB_THEME=/boot/grub/themes/theme.txt
+
+      - name: Show grub theme
+        ansible.builtin.lineinfile:
+          path: /etc/default/grub
+          regexp: 'GRUB_TIMEOUT_STYLE=hidden'
+          line: GRUB_TIMEOUT_STYLE=menu
+
+      - name: Show splash screen
+        ansible.builtin.lineinfile:
+          path: /etc/default/grub
+          regexp: 'GRUB_CMDLINE_LINUX_DEFAULT=""'
+          line: GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 rd.systemd.show_status=auto rd.udev.log_level=3 splash"
+      
+      - name: Add path of theme to grub configure
+        ansible.builtin.blockinfile:
+          path: /etc/sysctl.d/20-quiet-printk.conf
+          create: yes      
+          block: |
+
+            # Hide any kernel messages from the console
+            kernel.printk = 3 3 3 3
+
+      - name: Update Grub config file
+        ansible.builtin.shell: update-grub2
+
+      - name: Install a plymouth (splash screen) theme
+        ansible.builtin.apt:
+          pkg:
+          - plymouth-themes 
+          update_cache: yes
+
+      - name: Update initial ramfs for new plymouth theme
+        ansible.builtin.shell: update-initramfs -u 
+
+    become: true
+
+# i3-gaps
+# https://github.com/Airblader/i3/wiki/Building-from-source
+
+  - name: Clone a i3-gaps repo
+    ansible.builtin.git:
+      repo: https://www.github.com/Airblader/i3
+      dest: ~/.gc/i3-gaps
+
+  - name: Install a i3-gaps dependiences
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - libxcb1-dev 
+        - libxcb-keysyms1-dev
+        - libpango1.0-dev 
+        - libxcb-util0-dev 
+        - libxcb-icccm4-dev 
+        - libyajl-dev 
+        - libstartup-notification0-dev
+        - libxcb-randr0-dev
+        - libev-dev 
+        - libxcb-cursor-dev 
+        - libxcb-xinerama0-dev 
+        - libxcb-xkb-dev 
+        - libxkbcommon-dev 
+        - libxkbcommon-x11-dev 
+        - autoconf 
+        - libxcb-xrm0
+        - libxcb-xrm-dev
+        - automake
+        - libxcb-shape0-dev
+        - meson
+      update_cache: yes
+
+  - name: Create a build folder for i3-gaps 
+    ansible.builtin.file:
+      path: ~/.gc/i3-gaps/build
+      state: directory
+      mode: '0755'
+
+  - name: Compile with meson a i3-gaps
+    ansible.builtin.shell: meson ..
+    args: 
+      chdir: ~/.gc/i3-gaps/build
+
+  - name: Compile with ninja a i3-gaps
+    ansible.builtin.shell: ninja
+    args: 
+      chdir: ~/.gc/i3-gaps/build
+
+
+
+
+
