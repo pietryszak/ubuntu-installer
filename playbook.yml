@@ -151,4 +151,22 @@
           pkg:
             - i3-gaps
           update_cache: yes
+          
+    become: true
+
+# Linux firmware
+  - name: Install Drivers 
+
+    block:
+
+    - name: Install Linux firmware, ubuntu drivers 
+      ansible.builtin.apt:
+        pkg:
+          - linux-firmware
+          - ubuntu-drivers-common
+        update_cache: yes
+
+    - name: Autoinstall discovered ubuntu drivers
+      ansible.builtin.shell: ubuntu-drivers autoinstall
+    
     become: true
