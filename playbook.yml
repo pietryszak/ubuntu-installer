@@ -145,7 +145,13 @@
           enabled: yes
 
     become: true          
-      
+
+#############################################################################################################
+
+# i3 gaps + things connected to i3
+
+#############################################################################################################      
+
 # i3-gaps
 # https://stackoverflow.com/a/73805885
   - name: Install i3-gaps 
@@ -171,6 +177,49 @@
           
     become: true
 
+# Polybar - status bar for i3-gaps
+
+    - name: Install polybar status bar
+      become: true
+      ansible.builtin.apt:
+        pkg:
+          - polybar
+        update_cache: yes
+
+# Volumeicon - a volume icon for i3-gaps
+
+    - name: Install volumeicon a volume icon for i3-gaps
+      become: true
+      ansible.builtin.apt:
+        pkg:
+          - volumeicon-alsa
+        update_cache: yes              
+
+# Rofi - A window switcher, application launcher
+
+    - name: Install rofi application launcher
+      become: true
+      ansible.builtin.apt:
+        pkg:
+          - rofi
+        update_cache: yes  
+
+
+# Network manager
+
+    - name: Install network manager
+      become: true
+      ansible.builtin.apt:
+        pkg:
+          - network-manager
+        update_cache: yes
+
+#############################################################################################################
+
+# Apps
+
+#############################################################################################################         
+
 # Ubuntu restricted extras
 
   - name: Install Ubuntu restricted extras 
@@ -179,9 +228,10 @@
 
       - name: Prepare eula for microsoft fonts on Ubuntu
         debconf:
-        name: ttf-mscorefonts-installer
-        question: msttcorefonts/accepted-mscorefonts-eula
-        value: true
+          name: ttf-mscorefonts-installer
+          question: msttcorefonts/accepted-mscorefonts-eula
+          vtype: select
+          value: "'true'"
 
       - name: Install Ubuntu restricted extras
         ansible.builtin.apt:
@@ -189,4 +239,4 @@
             - ubuntu-restricted-extras
           update_cache: yes
         
-      become: true
+    become: true
