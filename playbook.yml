@@ -210,7 +210,7 @@
 
 # Picom - A lightweight compositor for X11 
 
-  - name: Install rofi application launcher
+  - name: Install picom compositor for x11
     become: true
     ansible.builtin.apt:
       pkg:
@@ -224,7 +224,25 @@
     ansible.builtin.apt:
       pkg:
         - dunst
-      update_cache: yes 
+      update_cache: yes
+
+# Yad - dialog app for calendar in i3-gaps  
+
+  - name: Install yad dialog app for calendar in i3-gaps
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - yad
+      update_cache: yes     
+
+# Numlockx - numlock on at startup i3-gaps
+
+  - name: Install yad dialog app for calendar in i3-gaps
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - numlockx
+      update_cache: yes           
 
 # Network manager
 
