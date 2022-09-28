@@ -5,6 +5,7 @@
 
 # Username of regular username
 # https://stackoverflow.com/a/58916467
+
   - name: Run whoami without become for regular username
     command: whoami
     changed_when: false
@@ -23,6 +24,7 @@
       update_cache: yes
 
 # Linux firmware
+
   - name: Install Drivers 
 
     block:
@@ -118,6 +120,7 @@
     become: true
 
 # Xorg
+
   - name: Install Xorg 
     become: true 
     ansible.builtin.apt:
@@ -154,6 +157,7 @@
 
 # i3-gaps
 # https://stackoverflow.com/a/73805885
+
   - name: Install i3-gaps 
 
     block:
@@ -179,40 +183,57 @@
 
 # Polybar - status bar for i3-gaps
 
-    - name: Install polybar status bar
-      become: true
-      ansible.builtin.apt:
-        pkg:
-          - polybar
-        update_cache: yes
+  - name: Install polybar status bar
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - polybar
+      update_cache: yes
 
 # Volumeicon - a volume icon for i3-gaps
 
-    - name: Install volumeicon a volume icon for i3-gaps
-      become: true
-      ansible.builtin.apt:
-        pkg:
-          - volumeicon-alsa
-        update_cache: yes              
+  - name: Install volumeicon a volume icon for i3-gaps
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - volumeicon-alsa
+      update_cache: yes              
 
 # Rofi - A window switcher, application launcher
 
-    - name: Install rofi application launcher
-      become: true
-      ansible.builtin.apt:
-        pkg:
-          - rofi
-        update_cache: yes  
+  - name: Install rofi application launcher
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - rofi
+      update_cache: yes  
 
+# Picom - A lightweight compositor for X11 
+
+  - name: Install rofi application launcher
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - picom
+      update_cache: yes       
+
+# Dunst - Lightweight and customizable notification daemon  
+
+  - name: Install dunst notification daemon
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - dunst
+      update_cache: yes 
 
 # Network manager
 
-    - name: Install network manager
-      become: true
-      ansible.builtin.apt:
-        pkg:
-          - network-manager
-        update_cache: yes
+  - name: Install network manager
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - network-manager
+      update_cache: yes
 
 #############################################################################################################
 
