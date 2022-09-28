@@ -22,6 +22,23 @@
         - acl
       update_cache: yes
 
+# Linux firmware
+  - name: Install Drivers 
+
+    block:
+
+    - name: Install Linux firmware, ubuntu drivers 
+      ansible.builtin.apt:
+        pkg:
+          - linux-firmware
+          - ubuntu-drivers-common
+        update_cache: yes
+
+    - name: Autoinstall discovered ubuntu drivers
+      ansible.builtin.shell: ubuntu-drivers autoinstall
+    
+    become: true      
+
 # GRUB
 # https://github.com/AdisonCavani/distro-grub-themes
 
@@ -154,19 +171,22 @@
           
     become: true
 
-# Linux firmware
-  - name: Install Drivers 
+# Ubuntu restricted extras
+
+  - name: Install Ubuntu restricted extras 
 
     block:
 
-    - name: Install Linux firmware, ubuntu drivers 
-      ansible.builtin.apt:
-        pkg:
-          - linux-firmware
-          - ubuntu-drivers-common
-        update_cache: yes
+      - name: Prepare eula for microsoft fonts on Ubuntu
+        debconf:
+        name: ttf-mscorefonts-installer
+        question: msttcorefonts/accepted-mscorefonts-eula
+        value: true
 
-    - name: Autoinstall discovered ubuntu drivers
-      ansible.builtin.shell: ubuntu-drivers autoinstall
-    
-    become: true
+      - name: Install Ubuntu restricted extras
+        ansible.builtin.apt:
+          pkg:
+            - ubuntu-restricted-extras
+          update_cache: yes
+        
+      become: true
