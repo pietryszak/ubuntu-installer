@@ -34,7 +34,6 @@
         pkg:
           - linux-firmware
           - ubuntu-drivers-common
-        update_cache: yes
 
     - name: Autoinstall discovered ubuntu drivers
       ansible.builtin.shell: ubuntu-drivers autoinstall
@@ -112,7 +111,6 @@
         ansible.builtin.apt:
           pkg:
           - plymouth-themes 
-          update_cache: yes
 
       - name: Update initial ramfs for new plymouth theme
         ansible.builtin.shell: update-initramfs -u 
@@ -126,7 +124,6 @@
     ansible.builtin.apt:
       pkg:
         - xorg
-      update_cache: yes
 
 # Lightdm Display Manager
 
@@ -140,7 +137,6 @@
             - lightdm
             - lightdm-gtk-greeter
             - lightdm-gtk-greeter-settings
-          update_cache: yes
 
       - name: Enable lightdm service
         ansible.builtin.service:
@@ -167,7 +163,7 @@
           url: https://regolith-desktop.org/regolith.key
           dest: /etc/apt/keyrings/regolith.key
 
-      - name: Add Vscode gpg key
+      - name: Add Regolith gpg key
         ansible.builtin.shell: |
           gpg --dearmor < /etc/apt/keyrings/regolith.key > /etc/apt/keyrings/regolith.gpg
           install -D -o root -g root -m 644 /etc/apt/keyrings/regolith.gpg /etc/apt/trusted.gpg.d/regolith-archive-keyring.gpg
@@ -190,7 +186,6 @@
     ansible.builtin.apt:
       pkg:
         - polybar
-      update_cache: yes
 
 # Volumeicon - a volume icon for i3-gaps
 
@@ -198,8 +193,7 @@
     become: true
     ansible.builtin.apt:
       pkg:
-        - volumeicon-alsa
-      update_cache: yes              
+        - volumeicon-alsa             
 
 # Rofi - A window switcher, application launcher
 
@@ -208,7 +202,6 @@
     ansible.builtin.apt:
       pkg:
         - rofi
-      update_cache: yes  
 
 # Picom - A lightweight compositor for X11 
 
@@ -216,8 +209,7 @@
     become: true
     ansible.builtin.apt:
       pkg:
-        - picom
-      update_cache: yes       
+        - picom    
 
 # Dunst - Lightweight and customizable notification daemon  
 
@@ -226,7 +218,6 @@
     ansible.builtin.apt:
       pkg:
         - dunst
-      update_cache: yes
 
 # Yad - dialog app for calendar in i3-gaps  
 
@@ -235,7 +226,6 @@
     ansible.builtin.apt:
       pkg:
         - yad
-      update_cache: yes     
 
 # Numlockx - numlock on at startup i3-gaps
 
@@ -243,8 +233,7 @@
     become: true
     ansible.builtin.apt:
       pkg:
-        - numlockx
-      update_cache: yes           
+        - numlockx       
 
 # Network manager
 
@@ -253,7 +242,6 @@
     ansible.builtin.apt:
       pkg:
         - network-manager
-      update_cache: yes
 
 #############################################################################################################
 
@@ -278,7 +266,6 @@
         ansible.builtin.apt:
           pkg:
             - ubuntu-restricted-extras
-          update_cache: yes
         
     become: true
 
@@ -363,7 +350,6 @@
         ansible.builtin.apt:
           pkg:
             - neovim
-          update_cache: yes
         
       - name: Use neovim as default editor
         ansible.builtin.blockinfile:
