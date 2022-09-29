@@ -165,13 +165,15 @@
       - name: Download Regolith public key
         ansible.builtin.get_url:
           url: https://regolith-desktop.org/regolith.key
-          dest: /etc/apt/trusted.gpg.d/regolith.asc
+          dest: /etc/apt/keyrings/regolith.key
 
-      - name: Register Regolith public key to local apt
-        ansible.builtin.apt_repository:
-          repo: "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/regolith.asc] https://regolith-desktop.org/release-ubuntu-jammy-amd64 {{ ansible_distribution_release }} main"
-          state: present
-          update_cache: yes
+      - name: Add Vscode gpg key
+        ansible.builtin.shell: |
+          gpg --dearmor < /etc/apt/keyrings/regolith.key > /etc/apt/keyrings/regolith.gpg
+          install -D -o root -g root -m 644 /etc/apt/keyrings/regolith.gpg /etc/apt/trusted.gpg.d/regolith-archive-keyring.gpg
+          sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/regolith-archive-keyring.gpg] https://regolith-desktop.org/release-ubuntu-jammy-amd64 {{ ansible_distribution_release }} main" > /etc/apt/sources.list.d/regolith.list'
+          rm -f /etc/apt/keyrings/regolith.key
+          rm -f /etc/apt/keyrings/microsoft.gpg    
 
       - name: Install i3-gaps
         ansible.builtin.apt:
@@ -284,23 +286,20 @@
 
   - name: Install Vscode 
 
-    block:
+    block: 
 
       - name: Download Vscode public key
         ansible.builtin.get_url:
           url: https://packages.microsoft.com/keys/microsoft.asc
-          dest: /etc/apt/keyrings/packages.microsoft.asc
+          dest: /etc/apt/keyrings/microsoft.asc
 
-      - name: De-Armor Vscode GPG key
-        shell:  gpg --dearmor <  /usr/share/keyrings/packages.microsoft.asc > /usr/share/keyrings/packages.microsoft.gpg
-        # no_log: true
-        args:
-          creates: /usr/share/keyrings/docker-archive-keyring.gpg
-
-      - name: Add Vscode repository to APT sources list
-      ansible.builtin.apt_repository:
-        repo: "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main"
-        state: present
+      - name: Add Vscode gpg key
+        ansible.builtin.shell: |
+          gpg --dearmor < /etc/apt/keyrings/microsoft.asc > /etc/apt/keyrings/microsoft.gpg
+          install -D -o root -g root -m 644 /etc/apt/keyrings/microsoft.gpg /etc/apt/trusted.gpg.d/packages.microsoft.gpg
+          sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+          rm -f /etc/apt/keyrings/microsoft.asc
+          rm -f /etc/apt/keyrings/microsoft.gpg
 
       - name: Install Vscode
         ansible.builtin.apt:
@@ -308,5 +307,22 @@
             - apt-transport-https
             - code
           update_cache: yes
-          
+
+      - name: Install Vscode extensions
+        ansible.builtin.shell: |
+          code --install-extension visualstudioexptteam.vscodeintellicode 
+          code --install-extension ms-python.python 
+          code --install-extension esbenp.prettier-vscode 
+          code --install-extension redhat.vscode-xml 
+          code --install-extension redhat.vscode-yaml 
+          code --install-extension ms-azuretools.vscode-docker 
+          code --install-extension xadillax.viml 
+          code --install-extension jdinhlife.gruvbox 
+          code --install-extension naumovs.color-highlight 
+          code --install-extension nico-castell.linux-desktop-file 
+          code --install-extension xadillax.viml 
+          code --install-extension dlasagno.rasi 
+          code --install-extension dcasella.i3 
+          code --install-extension jonathanharty.gruvbox-material-icon-theme 
+ 
     become: true
