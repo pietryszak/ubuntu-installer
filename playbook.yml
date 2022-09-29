@@ -12,7 +12,7 @@
     become: false
     register: whoami
 
-  - name: Set a fact with the user name.
+  - name: Set a fact with the username
     set_fact:
       login_user: "{{ whoami.stdout }}"
 
@@ -237,7 +237,7 @@
 
 # Numlockx - numlock on at startup i3-gaps
 
-  - name: Install yad dialog app for calendar in i3-gaps
+  - name: Install numlockx for numlock on startup
     become: true
     ansible.builtin.apt:
       pkg:
@@ -289,13 +289,18 @@
       - name: Download Vscode public key
         ansible.builtin.get_url:
           url: https://packages.microsoft.com/keys/microsoft.asc
-          dest: /etc/apt/keyrings/packages.microsoft.gpg
+          dest: /etc/apt/keyrings/packages.microsoft.asc
 
-      - name: Register Vscode public key to local apt
-        ansible.builtin.apt_repository:
-          repo: "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main"
-          state: present
-          update_cache: yes
+      - name: De-Armor Vscode GPG key
+        shell:  gpg --dearmor <  /usr/share/keyrings/packages.microsoft.asc > /usr/share/keyrings/packages.microsoft.gpg
+        # no_log: true
+        args:
+          creates: /usr/share/keyrings/docker-archive-keyring.gpg
+
+      - name: Add Vscode repository to APT sources list
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main"
+        state: present
 
       - name: Install Vscode
         ansible.builtin.apt:
