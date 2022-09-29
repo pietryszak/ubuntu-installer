@@ -173,7 +173,7 @@
           install -D -o root -g root -m 644 /etc/apt/keyrings/regolith.gpg /etc/apt/trusted.gpg.d/regolith-archive-keyring.gpg
           sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/regolith-archive-keyring.gpg] https://regolith-desktop.org/release-ubuntu-jammy-amd64 {{ ansible_distribution_release }} main" > /etc/apt/sources.list.d/regolith.list'
           rm -f /etc/apt/keyrings/regolith.key
-          rm -f /etc/apt/keyrings/microsoft.gpg    
+          rm -f /etc/apt/keyrings/regolith.gpg    
 
       - name: Install i3-gaps
         ansible.builtin.apt:
@@ -325,4 +325,31 @@
           code --install-extension dcasella.i3 
           code --install-extension jonathanharty.gruvbox-material-icon-theme 
  
+    become: true
+
+# Teamviewer
+
+  - name: Install Teamviewer
+
+    block: 
+
+      - name: Download Teamviewer public key
+        ansible.builtin.get_url:
+          url: https://download.teamviewer.com/download/linux/signature/TeamViewer2017.asc
+          dest: /etc/apt/keyrings/TeamViewer2017.gpg
+
+      - name: Add Teamviewer gpg key
+        ansible.builtin.shell: |
+          gpg --dearmor < /etc/apt/keyrings/TeamViewer2017.asc > /etc/apt/keyrings/teamviewer.gpg
+          install -D -o root -g root -m 644 /etc/apt/keyrings/teamviewer.gpg /etc/apt/trusted.gpg.d/teamviewer.gpg
+          sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/teamviewer.gpg] http://linux.teamviewer.com/deb stable main" > /etc/apt/sources.list.d/teamviewer.list'
+          rm -f /etc/apt/keyrings/TeamViewer2017.asc
+          rm -f /etc/apt/keyrings/teamviewer.gpg
+
+      - name: Install Teamviewer
+        ansible.builtin.apt:
+          pkg:
+            - teamviewer
+          update_cache: yes
+
     become: true
