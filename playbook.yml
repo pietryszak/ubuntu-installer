@@ -49,6 +49,7 @@
       dest: ~/.gc/distro-grub-themes
 
   - name: Install grub theme and plymouth theme, configure it
+  
     block:
   
       - name: Create a folder for grub theme
@@ -377,7 +378,8 @@
   - name: Install bat - a cat clone with syntax highlighting and Git integration
     become: true
     ansible.builtin.apt:
-      - bat
+      pkg:
+        - bat
 
 # Ripgrep
 # https://github.com/BurntSushi/ripgrep
@@ -385,13 +387,15 @@
   - name: Install ripgrep - a search tool that recursively searches the current directory for a regex pattern
     become: true
     ansible.builtin.apt:
-      - ripgrep
+      pkg:
+        - ripgrep
 
 # Most
   - name: Install most - man help pager
     become: true
     ansible.builtin.apt:
-      - most
+      pkg:
+        - most
 
 # Neofetch
 # https://github.com/dylanaraps/neofetch
@@ -399,7 +403,8 @@
   - name: Install neofetch a command-line system information tool 
     become: true
     ansible.builtin.apt:
-      - neofetch     
+      pkg:
+        - neofetch     
 
 # Htop
 # https://github.com/htop-dev/htop/
@@ -407,7 +412,8 @@
   - name: Install htop an interactive process viewer 
     become: true
     ansible.builtin.apt:
-      - htop  
+      pkg:
+        - htop  
 
 # Btop
 # https://github.com/aristocratos/btop
@@ -415,21 +421,24 @@
   - name: Install btop a monitor of resources with mouse support
     become: true
     ansible.builtin.apt:
-      - btop       
+      pkg:
+        - btop       
 
 # Thunderbird
 
   - name: Install thunderbird mail app
     become: true
     ansible.builtin.apt:
-      - thunderbird 
+      pkg:
+        - thunderbird 
 
 # Gimp
 
   - name: Install gimp - image manipulation program
     become: true
     ansible.builtin.apt:
-      - gimp
+      pkg:
+        - gimp
 
 # Flameshot
 # https://github.com/flameshot-org/flameshot
@@ -441,7 +450,8 @@
       - name: Install flameshot - screenshots tool
         become: true
         ansible.builtin.apt:
-          - flameshot
+          pkg:  
+            - flameshot
 
       - name: Create folder for flameshot screenshots
         ansible.builtin.file:
@@ -454,7 +464,8 @@
   - name: Install libreoffice - office suite
     become: true
     ansible.builtin.apt:
-      - libreoffice  
+      pkg:  
+        - libreoffice  
 
 # Timeshift
 # https://github.com/linuxmint/timeshift
@@ -462,7 +473,8 @@
   - name: Install Timeshift - system restore tool
     become: true
     ansible.builtin.apt:
-      - timeshift  
+      pkg:
+        - timeshift  
 
 # Terminator and kitty terminals
 # https://github.com/gnome-terminator/terminator
@@ -474,11 +486,13 @@
 
       - name: Install kitty - cross-platform, fast, feature-rich, GPU based terminal
         ansible.builtin.apt:
-          - kitty
+          pkg:
+            - kitty
 
       - name: Install terminator - multiple terminals in one window 
         ansible.builtin.apt:
-          - terminator 
+          pkg:
+            - terminator 
 
     become: true     
 
@@ -487,14 +501,16 @@
   - name: Install transmission a fast, easy, and free BitTorrent client
     become: true
     ansible.builtin.apt:
-      - transmission
+      pkg:  
+        - transmission
 
 # Redshift adjusts the color temperature of your screen according to your surrounding
 
   - name: Install redshift - adjusts the color temperature of screen
     become: true
     ansible.builtin.apt:
-      - redshift-gtk
+      pkg:  
+        - redshift-gtk
 
 # Galculator - scientific calculator  
 # https://github.com/galculator/galculator
@@ -502,7 +518,8 @@
   - name: Install galculator - linux scientific calculator
     become: true
     ansible.builtin.apt:
-      - galculator
+      pkg:  
+        - galculator
 
 #############################################################################################################
 
@@ -544,6 +561,8 @@
         purge: yes   
         ansible.builtin.apt:
           - snapd
+
+    become: true
 
 
 
