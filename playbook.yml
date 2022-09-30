@@ -196,6 +196,7 @@
         - volumeicon-alsa             
 
 # Rofi - A window switcher, application launcher
+# https://github.com/davatorium/rofi
 
   - name: Install rofi application launcher
     become: true
@@ -204,6 +205,7 @@
         - rofi
 
 # Picom - A lightweight compositor for X11 
+# https://github.com/yshui/picom
 
   - name: Install picom compositor for x11
     become: true
@@ -212,6 +214,7 @@
         - picom    
 
 # Dunst - Lightweight and customizable notification daemon  
+# https://github.com/dunst-project/dunst
 
   - name: Install dunst notification daemon
     become: true
@@ -220,6 +223,7 @@
         - dunst
 
 # Yad - dialog app for calendar in i3-gaps  
+# https://github.com/v1cont/yad
 
   - name: Install yad dialog app for calendar in i3-gaps
     become: true
@@ -341,6 +345,7 @@
     become: true
 
 # Neovim
+# https://github.com/neovim/neovim
 
   - name: Install neovim 
 
@@ -359,9 +364,52 @@
             # Neovim as default editor
             EDITOR=nvim
 
-    become: yes
+    become: true
 
   - name: Install vim-plug a vim plugin manager
     ansible.builtin.shell: |
       sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'       
+
+# Bat
+# https://github.com/sharkdp/bat
+
+  - name: Install bat - a cat clone with syntax highlighting and Git integration
+    become: true
+    ansible.builtin.apt:
+      - bat
+
+# Ripgrep
+# https://github.com/BurntSushi/ripgrep
+  
+  - name: Install ripgrep a search tool that recursively searches the current directory for a regex pattern
+    become: true
+    ansible.builtin.apt:
+      - ripgrep
+
+# Most
+  - name: Install most - man help pager
+    become: true
+    ansible.builtin.apt:
+      - most
+
+# Neofetch
+# https://github.com/dylanaraps/neofetch
+  - name: Install neofetch a command-line system information tool 
+    become: true
+    ansible.builtin.apt:
+      - neofetch     
+
+# Htop
+# https://github.com/htop-dev/htop/
+  - name: Install htop an interactive process viewer 
+    become: true
+    ansible.builtin.apt:
+      - htop  
+
+# Btop
+# https://github.com/aristocratos/btop
+  - name: Install btop a monitor of resources with mouse support
+    become: true
+    ansible.builtin.apt:
+      - btop       
