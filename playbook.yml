@@ -366,7 +366,7 @@
 
     become: true
 
-  - name: Install vim-plug a vim plugin manager
+  - name: Install vim-plug - a vim plugin manager
     ansible.builtin.shell: |
       sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'       
@@ -382,7 +382,7 @@
 # Ripgrep
 # https://github.com/BurntSushi/ripgrep
   
-  - name: Install ripgrep a search tool that recursively searches the current directory for a regex pattern
+  - name: Install ripgrep - a search tool that recursively searches the current directory for a regex pattern
     become: true
     ansible.builtin.apt:
       - ripgrep
@@ -395,6 +395,7 @@
 
 # Neofetch
 # https://github.com/dylanaraps/neofetch
+
   - name: Install neofetch a command-line system information tool 
     become: true
     ansible.builtin.apt:
@@ -402,6 +403,7 @@
 
 # Htop
 # https://github.com/htop-dev/htop/
+
   - name: Install htop an interactive process viewer 
     become: true
     ansible.builtin.apt:
@@ -409,7 +411,55 @@
 
 # Btop
 # https://github.com/aristocratos/btop
+
   - name: Install btop a monitor of resources with mouse support
     become: true
     ansible.builtin.apt:
       - btop       
+
+# Thunderbird
+
+  - name: Install thunderbird mail app
+    become: true
+    ansible.builtin.apt:
+      - thunderbird 
+
+# Gimp
+
+  - name: Install gimp - image manipulation program
+    become: true
+    ansible.builtin.apt:
+      - gimp
+
+# Flameshot
+# https://github.com/flameshot-org/flameshot
+
+  - name: Install flameshot 
+
+    block:
+
+      - name: Install flameshot - screenshots tool
+        become: true
+        ansible.builtin.apt:
+          - flameshot
+
+      - name: Create folder for flameshot screenshots
+        ansible.builtin.file:
+          path: ~/pictures/screenshots
+          state: directory
+          mode: '0755'
+
+# Libreoffice
+
+  - name: Install libreoffice - office suite
+    become: true
+    ansible.builtin.apt:
+      - libreoffice  
+
+# Timeshift
+# https://github.com/linuxmint/timeshift
+
+  - name: Install Timeshift - system restore tool
+    become: true
+    ansible.builtin.apt:
+      - timeshift         
