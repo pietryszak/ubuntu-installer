@@ -495,3 +495,55 @@
     become: true
     ansible.builtin.apt:
       - redshift-gtk
+
+# Galculator - scientific calculator  
+# https://github.com/galculator/galculator
+
+  - name: Install galculator - linux scientific calculator
+    become: true
+    ansible.builtin.apt:
+      - galculator
+
+#############################################################################################################
+
+# Flathub
+
+#############################################################################################################  
+
+  - name: Disable unnecessary snap
+  
+    block:
+
+      - name: Disable snapd service
+        ansible.builtin.service:
+          name: snapd.service
+          enabled: no
+
+      - name: Disable snapd.socket
+        ansible.builtin.service:
+          name: snapd.socket
+          enabled: no
+
+      - name: Disable snapd.seeded.service
+        ansible.builtin.service:
+          name: snapd.seeded.service
+          enabled: no 
+
+      - name: Remove snaps
+        ansible.builin.shell: |
+          snap remove --purge lxd
+          snap remove --purge core20
+          snap remove --purge snapd
+      
+      - name: Delete any leftover snap cached data
+        ansible.builtin.shell: |
+          rm -rf ~/snap /snap /var/snap /var/lib/snapd /var/cache/snapd/
+
+      - name: Purge or remove completely snapd
+        autoremove: yes
+        purge: yes   
+        ansible.builtin.apt:
+          - snapd
+
+
+
