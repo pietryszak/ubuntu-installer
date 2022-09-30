@@ -462,4 +462,36 @@
   - name: Install Timeshift - system restore tool
     become: true
     ansible.builtin.apt:
-      - timeshift         
+      - timeshift  
+
+# Terminator and kitty terminals
+# https://github.com/gnome-terminator/terminator
+# https://github.com/kovidgoyal/kitty
+
+  - name: Install terminals 
+
+    block:
+
+      - name: Install kitty - cross-platform, fast, feature-rich, GPU based terminal
+        ansible.builtin.apt:
+          - kitty
+
+      - name: Install terminator - multiple terminals in one window 
+        ansible.builtin.apt:
+          - terminator 
+
+    become: true     
+
+# Transmission a fast, easy, and free BitTorrent client
+ 
+  - name: Install transmission a fast, easy, and free BitTorrent client
+    become: true
+    ansible.builtin.apt:
+      - transmission
+
+# Redshift adjusts the color temperature of your screen according to your surrounding
+
+  - name: Install redshift - adjusts the color temperature of screen
+    become: true
+    ansible.builtin.apt:
+      - redshift-gtk
