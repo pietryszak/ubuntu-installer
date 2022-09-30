@@ -563,6 +563,9 @@
 
 #############################################################################################################  
 
+# https://ubuntuhandbook.org/index.php/2022/04/remove-snap-block-ubuntu-2204/
+# https://onlinux.systems/guides/20220524_how-to-disable-and-remove-snap-on-ubuntu-2204
+
   - name: Disable unnecessary snap
   
     block:
