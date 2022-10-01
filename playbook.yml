@@ -324,24 +324,20 @@
 
     block: 
 
-      - name: Download Teamviewer public key
+      - name: Download latest teamviewer deb package
         ansible.builtin.get_url:
-          url: https://download.teamviewer.com/download/linux/signature/TeamViewer2017.asc
-          dest: /etc/apt/keyrings/TeamViewer2017.asc
+          url: https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
+          dest: /tmp/teamviewer_amd64.deb
 
-      - name: Add Teamviewer gpg key
-        ansible.builtin.shell: |
-          gpg --dearmor < /etc/apt/keyrings/TeamViewer2017.asc > /etc/apt/keyrings/teamviewer.gpg
-          install -D -o root -g root -m 644 /etc/apt/keyrings/teamviewer.gpg /etc/apt/trusted.gpg.d/teamviewer.gpg
-          sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/teamviewer.gpg] http://linux.teamviewer.com/deb stable main" > /etc/apt/sources.list.d/teamviewer.list'
-          rm -f /etc/apt/keyrings/TeamViewer2017.asc
-          rm -f /etc/apt/keyrings/teamviewer.gpg
-
-      - name: Install Teamviewer
+      - name: Install a teamviewer deb package
         ansible.builtin.apt:
-          pkg:
-            - teamviewer
+          deb: /tmp/teamviewer_amd64.deb
           update_cache: yes
+
+      - name: Remove unnecessary deb package from tmp folder  
+        ansible.builtin.file:
+          path: /tmp/teamviewer_amd64.deb
+          state: absent
 
     become: true
 
@@ -434,6 +430,7 @@
 
 # Firefox
 # https://ubuntuhandbook.org/index.php/2022/04/install-firefox-deb-ubuntu-22-04/
+
   - name: Install firefox
 
     block:
