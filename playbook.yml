@@ -435,9 +435,19 @@
 
     block:
 
-      - name: Add firefox repository from PPA
-        ansible.builtin.apt_repository:
-          repo: 'ppa:mozillateam/ppa'
+      - name: Add an firefox apt key by id from a keyserver
+        ansible.builtin.apt_key:
+          keyserver: keyserver.ubuntu.com
+          id: 0AB215679C571D1C8325275B9BDB3D89CE49EC21  
+
+      - name: Create files with apt firefox settings
+        ansible.builtin.file:
+          path: "{{ item }}"
+          state: touch
+          mode: u=rw,g=r,o=r
+        with_items:
+          - /etc/apt/preferences.d/mozilla-firefox
+          - /etc/apt/preferences.d/51unattended-upgrades-firefox 
 
       - name: Set firefox ppa priority
         ansible.builtin.blockinfile:
