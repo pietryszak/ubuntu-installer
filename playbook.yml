@@ -444,7 +444,7 @@
         ansible.builtin.shell: |
           gpg --dearmor < /etc/apt/keyrings/mozilla-firefox.key > /etc/apt/keyrings/mozilla-firefox.gpg
           install -D -o root -g root -m 644 /etc/apt/keyrings/mozilla-firefox.gpg /etc/apt/trusted.gpg.d/mozilla-firefox.gpg
-          sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/mozilla-firefox.gpg] deb https://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu {{ ansible_distribution_release }} main" > /etc/apt/sources.list.d/mozilla-firefox.list'
+          sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/mozilla-firefox.gpg] https://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu {{ ansible_distribution_release }} main" > /etc/apt/sources.list.d/mozilla-firefox.list'
           rm -f /etc/apt/keyrings/mozilla-firefox.key
           rm -f /etc/apt/keyrings/mozilla-firefox.gpg    
 
