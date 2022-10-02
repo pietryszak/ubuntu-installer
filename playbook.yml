@@ -615,6 +615,12 @@
           pkg:
             - snapd
 
+      - name: Create file with apt snap settings to avoid install
+        ansible.builtin.file:
+          path: /etc/apt/preferences.d/nosnap.pref
+          state: touch
+          mode: u=rw,g=r,o=r           
+
       - name: Set snap priority to avoid install in future
         ansible.builtin.blockinfile:
           path: /etc/apt/preferences.d/nosnap.pref     
@@ -624,6 +630,3 @@
             Pin-Priority: -10
 
     become: true
-
-
-
