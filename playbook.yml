@@ -420,14 +420,6 @@
       pkg:
         - btop       
 
-# Thunderbird
-
-  - name: Install thunderbird mail app
-    become: true
-    ansible.builtin.apt:
-      pkg:
-        - thunderbird 
-
 # Firefox
 # https://ubuntuhandbook.org/index.php/2022/04/install-firefox-deb-ubuntu-22-04/
 
@@ -462,7 +454,7 @@
 
       - name: Unattended firefox upgrades
         ansible.builtin.blockinfile:
-          path: /etc/apt/preferences.d/51unattended-upgrades-firefox  
+          path: /etc/apt/apt.conf.d/51unattended-upgrades-firefox  
           block: |
             Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";
 
@@ -472,7 +464,15 @@
             - firefox
           update_cache: yes      
 
-    become: true        
+    become: true    
+
+# Thunderbird
+
+  - name: Install thunderbird mail app
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - thunderbird     
 
 # Gimp
 
