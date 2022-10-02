@@ -446,7 +446,7 @@
           mode: u=rw,g=r,o=r
         with_items:
           - /etc/apt/preferences.d/mozilla-firefox
-          - /etc/apt/preferences.d/51unattended-upgrades-firefox 
+          - /etc/apt/apt.conf.d/51unattended-upgrades-firefox 
 
       - name: Set firefox ppa priority
         ansible.builtin.blockinfile:
