@@ -170,7 +170,13 @@
           install -D -o root -g root -m 644 /etc/apt/keyrings/regolith.gpg /etc/apt/trusted.gpg.d/regolith-archive-keyring.gpg
           sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/regolith-archive-keyring.gpg] https://regolith-desktop.org/release-ubuntu-jammy-amd64 {{ ansible_distribution_release }} main" > /etc/apt/sources.list.d/regolith.list'
           rm -f /etc/apt/keyrings/regolith.key
-          rm -f /etc/apt/keyrings/regolith.gpg    
+          rm -f /etc/apt/keyrings/regolith.gpg      
+          
+      - name: Install a plymouth (splash screen) theme
+        ansible.builtin.apt:
+          pkg:
+          - plymouth-themes /keyrings/regolith.key
+           
 
       - name: Install i3-gaps
         ansible.builtin.apt:
@@ -615,6 +621,25 @@
       pkg:  
         - galculator
 
+# Nextcloud client        
+
+  - name: Install nexcloud client
+
+    block:
+
+      - name: Add nexcloud ppa
+        ansible.builtin.shell: |
+          add-apt-repository --yes ppa:nextcloud-devs/client
+          
+      - name: Install Nexcloud client
+        ansible.builtin.apt:
+          pkg:
+            - nextcloud-client
+          update_cache: yes      
+
+    become: true    
+
+
 #############################################################################################################
 
 # Flathub
@@ -680,5 +705,37 @@
             Package: snapd
             Pin: release a=*
             Pin-Priority: -10
+
+    become: true
+
+  - name: Enable flatpak
+  
+    block:
+
+      - name: Install flatpak
+        ansible.builtin.apt:
+          pkg:
+          - flatpak 
+
+      - name: Enable the Flathub - a popular destination for searching the application
+        ansible.builtin.shell: |
+          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+
+      - name: Install Ferdium - app for communication, facebook messenger, microsoft terminals
+        community.general.flatpak:
+          name: org.ferdium.Ferdium
+          state: present
+
+      - name: Install TickTick a kanban board, todo list, tasks list
+        community.general.flatpak:
+          name: com.ticktick.TickTicks
+          state: present 
+
+          
+      - name: Install Github desktop
+        community.general.flatpak:
+          name: io.github.shiftey.Desktop
+          state: present 
 
     become: true
