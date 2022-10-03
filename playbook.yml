@@ -296,7 +296,6 @@
       - name: Install Vscode
         ansible.builtin.apt:
           pkg:
-            - apt-transport-https
             - code
           update_cache: yes
     become: true      
@@ -469,10 +468,63 @@
 # Thunderbird
 
   - name: Install thunderbird mail app
+
     become: true
     ansible.builtin.apt:
       pkg:
         - thunderbird     
+
+# Vivaldi browser
+
+  - name: Install Vivaldi browser
+
+    block: 
+
+      - name: Download Vivaldi browser public key
+        ansible.builtin.get_url:
+          url: https://repo.vivaldi.com/archive/linux_signing_key.pub
+          dest: /etc/apt/keyrings/vivaldi_linux_signing_key.pub
+
+      - name: Add Vivaldi gpg key
+        ansible.builtin.shell: |
+          gpg --dearmor < /etc/apt/keyrings/vivaldi_linux_signing_key.pub > /etc/apt/keyrings/vivaldi.gpg
+          install -D -o root -g root -m 644 /etc/apt/keyrings/vivaldi.gpg /etc/apt/trusted.gpg.d/packages.vivaldi.gpg
+          sh -c 'echo "deb [signed-by=/etc/apt/trusted.gpg.d/packages.vivaldi.gpg arch=$(dpkg --print-architecture)] https://repo.vivaldi.com/archive/deb/ stable main" > /etc/apt/sources.list.d/vivaldi.list'
+          rm -f /etc/apt/keyrings/vivaldi_linux_signing_key.pub
+          rm -f /etc/apt/keyrings/vivaldi.gpg
+
+      - name: Install Vivaldi browser
+        ansible.builtin.apt:
+          pkg:
+            - vivaldi-stable
+          update_cache: yes
+    become: true   
+
+# Spotify   
+
+  - name: Install Spotify 
+
+    block: 
+
+      - name: Download Spotify browser public key
+        ansible.builtin.get_url:
+          url: https://download.spotify.com/debian/pubkey_5E3C45D7B312C643.gpg
+          dest: /etc/apt/keyrings/pubkey_spotify.gpg
+
+      - name: Add Spotify gpg key
+        ansible.builtin.shell: |
+          gpg --dearmor < /etc/apt/keyrings/pubkey_spotify.gpg > /etc/apt/keyrings/spotify.gpg
+          install -D -o root -g root -m 644 /etc/apt/keyrings/spotify.gpg /etc/apt/trusted.gpg.d/spotify.gpg
+          sh -c 'echo "deb [signed-by=/etc/apt/trusted.gpg.d/spotify.gpg] http://repository.spotify.com stable non-free" > /etc/apt/sources.list.d/spotify.list'
+          rm -f /etc/apt/keyrings/pubkey_spotify.gpg
+          rm -f /etc/apt/keyrings/spotify.gpg
+
+      - name: Install Spotify
+        ansible.builtin.apt:
+          pkg:
+            - spotify-client
+          update_cache: yes
+    become: true   
 
 # Gimp
 
