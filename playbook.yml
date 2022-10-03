@@ -248,6 +248,21 @@
       pkg:
         - network-manager
 
+# Arandr - screen layout
+
+  - name: Install arandr for screen layout
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - arandr
+
+# Feh for i3 wallpapers
+
+  - name: Install Feh - i3-gaps wallpapers
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - feh
 #############################################################################################################
 
 # Apps
@@ -300,7 +315,7 @@
           update_cache: yes
     become: true      
 
-  - name: Install Vscode extensions
+  - name: Install Vscode extensions ( takes time, please wait )
     ansible.builtin.shell: |
       code --install-extension visualstudioexptteam.vscodeintellicode 
       code --install-extension ms-python.python 
@@ -559,7 +574,26 @@
     become: true
     ansible.builtin.apt:
       pkg:  
-        - libreoffice  
+        - libreoffice
+
+# Celluloid video player        
+
+  - name: Install Celluloid video player
+
+    block:
+
+      - name: Add Celluloid video player ppa
+        ansible.builtin.shell: |
+          add-apt-repository --yes ppa:xuzhen666/gnome-mpv
+          
+      - name: Install Celluloid
+        ansible.builtin.apt:
+          pkg:
+            - celluloid
+          update_cache: yes      
+
+    become: true  
+
 
 # Timeshift
 # https://github.com/linuxmint/timeshift
@@ -634,12 +668,36 @@
     become: true  
 
 # 7zip
+
   - name: Install 7zip
     become: true 
     ansible.builtin.apt:
       pkg:
         - p7zip-full
         - p7zip-rar
+
+# Nemo file manager
+  
+  - name: Install nemo file manager end extensions
+
+    block:
+      
+      - name: Add nemo file manager ppa
+        ansible.builtin.shell: |
+          add-apt-repository --yes ppa:ubuntubudgie/backports
+          
+      - name: Install Nemo file manager
+        ansible.builtin.apt:
+          pkg:
+            - nemo               
+            - nemo-fileroller 
+            - nemo-font-manager
+            - nemo-gtkhash     
+            - nemo-nextcloud
+            - nemo-preview
+          update_cache: yes    
+
+    become: true 
            
 #############################################################################################################
 
@@ -741,7 +799,7 @@
 
       - name: Install Joplin notes app
         community.general.flatpak:
-          name: net.cozic.joplin_desktoppath
+          name: net.cozic.joplin_desktop
           state: present     
 
       - name: Install Peazip GUI for 7-zip archives

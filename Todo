@@ -28,11 +28,6 @@ sudo dnf install -y libva-intel-driver
 echo "${green}${bold}ADDING FFMPEG CODECS${reset}"
 sudo dnf install -y ffmpeg 
 
-# Mpv
-echo "${green}${bold}INSTALLING MPV. VIDEO APP${reset}"
-sudo dnf install -y mpv 
-
-
 sudo dnf install -y neovim python3-neovim 
 
 
@@ -122,10 +117,6 @@ sudo dnf install -y jq
 # Xfce polkit for password popups
 sudo dnf install -y xfce-polkit
 
-# Thunar archive plugin
-echo "${green}${bold}INSTALLING THUNAR FILE MANAGER A ARCHIVE PLUGIN${reset}"
-sudo dnf install -y thunar-archive-plugin file-roller
-
 # Bluez for bluetooth 
 echo "${green}${bold}INSTALLING BLUEZ. BLUETOOTH PROTOCOL STACK FOR LINUX${reset}"
 sudo dnf -y install bluez bluez-tools 
@@ -206,22 +197,9 @@ cp weathericons-regular-webfont.ttf ~/.local/share/fonts
 fc-cache -fv >> ~/.gc/fedora-installer/install-log
 cd
 
-
-
 # i3-wifi applet
 echo "${green}${bold}INSTALLING I3 WIFI APPLET${reset}"
 sudo dnf install -y network-manager-applet 
-
-
-# Arandr -screen layout
-echo "${green}${bold}INSTALLING ARANDR. XRANDR GUI${reset}"
-sudo dnf install -y arandr 
-
-
-# Feh for i3 wallpapers
-echo "${green}${bold}INSTALLING I3 WALLPAPER APP${reset}"
-sudo dnf install -y feh 
-
 
 # Polybar Spotify 
 echo "${green}${bold}INSTALLING POLYBAR SPOTIFY APPLET${reset}"
@@ -444,9 +422,6 @@ sudo dnf upgrade --refresh
 sudo dnf upgrade -y 
 sudo dnf autoremove -y 
 
-# Sudo timeout back to default
-echo "${green}${bold}SET SUDO TIMEOUT TO DEFAULT${reset}"
-sudo sed -i 's/Defaults        env_reset,timestamp_timeout=60/#Defaults        env_reset,timestamp_timeout=60/g' /etc/sudoers
 
 # Reboot
 echo "${MAGENTA}${bold}INSTALLATION SUCCESFULL !! REBOOT SYSTEM${reset}"
