@@ -738,4 +738,40 @@
           name: io.github.shiftey.Desktop
           state: present 
 
+      - name: Install Joplin notes app
+        community.general.flatpak:
+          name: net.cozic.joplin_desktoppath
+          state: present     
+
     become: true
+
+  - name: Create a folder for joplin extensions
+    ansible.builtin.file:
+      path: ~/.config/joplin-desktop/plugins
+      state: directory
+      mode: '0755'
+
+  - name: Download Joplin Better Markdown Viewer extension
+    ansible.builtin.get_url:
+      url: https://github.com/joplin/plugins/raw/master/plugins/ylc395.betterMarkdownViewer/plugin.jpl
+      dest: ~/.config/joplin-desktop/plugins/ylc395.betterMarkdownViewer.jpl
+
+  - name: Download Joplin Email note extension
+    ansible.builtin.get_url:
+      url: https://github.com/joplin/plugins/raw/master/plugins/com.eliasvsimon.email-note/plugin.jpl
+      dest: ~/.config/joplin-desktop/plugins/com.eliasvsimon.email-note.jpl
+
+  - name: Download Joplin Home note extension
+    ansible.builtin.get_url:
+      url: https://github.com/joplin/plugins/raw/master/plugins/com.lki.homenote/plugin.jpl
+      dest: ~/.config/joplin-desktop/plugins/com.lki.homenote.jpl
+
+  - name: Download Joplin Note tabs extension
+    ansible.builtin.get_url:
+      url: https://github.com/joplin/plugins/raw/master/plugins/joplin.plugin.note.tabs/plugin.jpl
+      dest: ~/.config/joplin-desktop/plugins/joplin.plugin.note.tabs.jpl
+
+  - name: Download Joplin Note tabs extension
+    ansible.builtin.get_url:
+      url: https://github.com/joplin/plugins/raw/master/plugins/joplin.plugin.benji.persistentLayout/plugin.jpl
+      dest: ~/.config/joplin-desktop/plugins/joplin.plugin.benji.persistentLayout.jpl
