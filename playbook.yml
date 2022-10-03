@@ -637,9 +637,16 @@
             - nextcloud-client
           update_cache: yes      
 
-    become: true    
+    become: true  
 
-
+# 7zip
+  - name: Install 7zip
+    become: true 
+    ansible.builtin.apt:
+      pkg:
+        - p7zip-full
+        - p7zip-rar
+           
 #############################################################################################################
 
 # Flathub
@@ -742,6 +749,11 @@
         community.general.flatpak:
           name: net.cozic.joplin_desktoppath
           state: present     
+
+      - name: Install Peazip GUI for 7-zip archives
+        community.general.flatpak:
+          name: io.github.peazip.PeaZip
+          state: present  
 
     become: true
 

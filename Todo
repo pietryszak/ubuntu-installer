@@ -122,10 +122,6 @@ sudo dnf install -y jq
 # Xfce polkit for password popups
 sudo dnf install -y xfce-polkit
 
-# 7zip
-echo "${green}${bold}INSTALLING 7ZIP. ARCHIVE APP${reset}"
-sudo dnf install -y p7zip p7zip-plugins 
-
 # Thunar archive plugin
 echo "${green}${bold}INSTALLING THUNAR FILE MANAGER A ARCHIVE PLUGIN${reset}"
 sudo dnf install -y thunar-archive-plugin file-roller
