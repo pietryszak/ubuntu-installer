@@ -111,8 +111,8 @@
       - name: Install a plymouth (splash screen) theme
         ansible.builtin.apt:
           pkg:
-          - plymouth-themes 
-          
+            - plymouth-themes
+            
       - name: Update initial ramfs for new plymouth theme
         ansible.builtin.shell: update-initramfs -u 
 
