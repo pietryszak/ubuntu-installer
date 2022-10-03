@@ -112,7 +112,7 @@
         ansible.builtin.apt:
           pkg:
             - plymouth-themes
-            
+
       - name: Update initial ramfs for new plymouth theme
         ansible.builtin.shell: update-initramfs -u 
 
@@ -172,12 +172,6 @@
           rm -f /etc/apt/keyrings/regolith.key
           rm -f /etc/apt/keyrings/regolith.gpg      
           
-      - name: Install a plymouth (splash screen) theme
-        ansible.builtin.apt:
-          pkg:
-          - plymouth-themes /keyrings/regolith.key
-           
-
       - name: Install i3-gaps
         ansible.builtin.apt:
           pkg:
