@@ -312,6 +312,10 @@
         with_items:
           - lxd
 
+      - name: Pause for 30 senonds to avoid snap remove issue
+        ansible.builtin.pause:
+          seconds: 30   
+
       - name: Remove snap core20
         community.general.snap:
           name={{item}} 
