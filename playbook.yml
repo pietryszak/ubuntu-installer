@@ -11,26 +11,6 @@
       msg: "{{ ansible_processor[1] }}"
     register: cpu_familly
     no_log: true
-    
-# Username of regular username
-# https://stackoverflow.com/a/58916467
-
-  - name: Run whoami without become for regular username
-    command: whoami
-    changed_when: false
-    become: false
-    register: whoami
-
-  - name: Set a fact with the username
-    set_fact:
-      login_user: "{{ whoami.stdout }}"
-
-  - name: Install acl for change ansible users
-    become: true
-    ansible.builtin.apt:
-      pkg:
-        - acl
-      update_cache: yes
 
 # Linux firmware
 
@@ -272,6 +252,90 @@
     ansible.builtin.apt:
       pkg:
         - feh
+
+#############################################################################################################
+
+# Flathub
+
+#############################################################################################################  
+
+# https://ubuntuhandbook.org/index.php/2022/04/remove-snap-block-ubuntu-2204/
+# https://onlinux.systems/guides/20220524_how-to-disable-and-remove-snap-on-ubuntu-2204
+
+  - name: Disable unnecessary snap
+  
+    block:
+
+      - name: Disable snapd service
+        ansible.builtin.service:
+          name: snapd.service
+          enabled: no
+
+      - name: Disable snapd.socket
+        ansible.builtin.service:
+          name: snapd.socket
+          enabled: no
+
+      - name: Disable snapd.seeded.service
+        ansible.builtin.service:
+          name: snapd.seeded.service
+          enabled: no 
+
+      - name: Remove snaps
+        ansible.builtin.shell: |
+          snap remove --purge lxd
+          snap remove --purge core20
+          snap remove --purge snapd
+      
+      - name: Delete any leftover snap cached data
+        ansible.builtin.file:
+          path: "{{ item }}" 
+          state: absent
+        with_items:
+          - ~/snap
+          - /snap
+          - /var/snap
+          - /var/lib/snapd
+          - /var/cache/snapd/
+
+      - name: Purge or remove completely snapd   
+        ansible.builtin.apt:
+          autoremove: yes
+          purge: yes
+          pkg:
+            - snapd
+
+      - name: Create file with apt snap settings to avoid install
+        ansible.builtin.file:
+          path: /etc/apt/preferences.d/nosnap.pref
+          state: touch
+          mode: u=rw,g=r,o=r           
+
+      - name: Set snap priority to avoid install in future
+        ansible.builtin.blockinfile:
+          path: /etc/apt/preferences.d/nosnap.pref     
+          block: |
+            Package: snapd
+            Pin: release a=*
+            Pin-Priority: -10
+
+    become: true
+
+  - name: Enable flatpak
+  
+    block:
+
+      - name: Install flatpak
+        ansible.builtin.apt:
+          pkg:
+          - flatpak 
+
+      - name: Enable the Flathub - a popular destination for searching the application
+        ansible.builtin.shell: |
+          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+    become: true
+
 #############################################################################################################
 
 # Apps
@@ -297,12 +361,15 @@
             - ubuntu-restricted-extras
         
     become: true
+
 # FFmpeg
 
   - name: Install ffmpeg video and audio codecs
     ansible.buiultin.apt:
       pkg:
         - ffmpeg
+
+# Intel specific video accelaraion
 
   - name: Install Intel(R) Media Driver Video Acceleration if Intel CPU exist 
     ansible.builtin.apt:
@@ -741,143 +808,72 @@
 
     become: true 
            
-#############################################################################################################
-
-# Flathub
-
-#############################################################################################################  
-
-# https://ubuntuhandbook.org/index.php/2022/04/remove-snap-block-ubuntu-2204/
-# https://onlinux.systems/guides/20220524_how-to-disable-and-remove-snap-on-ubuntu-2204
-
-  - name: Disable unnecessary snap
-  
-    block:
-
-      - name: Disable snapd service
-        ansible.builtin.service:
-          name: snapd.service
-          enabled: no
-
-      - name: Disable snapd.socket
-        ansible.builtin.service:
-          name: snapd.socket
-          enabled: no
-
-      - name: Disable snapd.seeded.service
-        ansible.builtin.service:
-          name: snapd.seeded.service
-          enabled: no 
-
-      - name: Remove snaps
-        ansible.builtin.shell: |
-          snap remove --purge lxd
-          snap remove --purge core20
-          snap remove --purge snapd
-      
-      - name: Delete any leftover snap cached data
-        ansible.builtin.file:
-          path: "{{ item }}" 
-          state: absent
-        with_items:
-          - ~/snap
-          - /snap
-          - /var/snap
-          - /var/lib/snapd
-          - /var/cache/snapd/
-
-      - name: Purge or remove completely snapd   
-        ansible.builtin.apt:
-          autoremove: yes
-          purge: yes
-          pkg:
-            - snapd
-
-      - name: Create file with apt snap settings to avoid install
-        ansible.builtin.file:
-          path: /etc/apt/preferences.d/nosnap.pref
-          state: touch
-          mode: u=rw,g=r,o=r           
-
-      - name: Set snap priority to avoid install in future
-        ansible.builtin.blockinfile:
-          path: /etc/apt/preferences.d/nosnap.pref     
-          block: |
-            Package: snapd
-            Pin: release a=*
-            Pin-Priority: -10
-
+# Ferdium - app for app for communication, facebook messenger, microsoft teams
+  - name: Install Ferdium - app for communication, facebook messenger, microsoft teams
     become: true
+    community.general.flatpak:
+      name: org.ferdium.Ferdium
+      state: present
 
-  - name: Enable flatpak
-  
+# TickTick a kanban board, todo list, tasks list
+  - name: Install TickTick a kanban board, todo list, tasks list
+    become: true
+    community.general.flatpak:
+      name: com.ticktick.TickTicks
+      state: present 
+
+# Github desktop app          
+  - name: Install Github desktop
+    become: true
+    community.general.flatpak:
+      name: io.github.shiftey.Desktop
+      state: present 
+
+# Peazip GUI for archives files  
+  - name: Install Peazip GUI for 7-zip archives
+    become: true
+    community.general.flatpak:
+      name: io.github.peazip.PeaZip
+      state: present  
+
+# Joplin notes app and extensions
+  - name: Install Joplin notes app and extensions
+
     block:
-
-      - name: Install flatpak
-        ansible.builtin.apt:
-          pkg:
-          - flatpak 
-
-      - name: Enable the Flathub - a popular destination for searching the application
-        ansible.builtin.shell: |
-          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-
-
-      - name: Install Ferdium - app for communication, facebook messenger, microsoft terminals
-        community.general.flatpak:
-          name: org.ferdium.Ferdium
-          state: present
-
-      - name: Install TickTick a kanban board, todo list, tasks list
-        community.general.flatpak:
-          name: com.ticktick.TickTicks
-          state: present 
-
-          
-      - name: Install Github desktop
-        community.general.flatpak:
-          name: io.github.shiftey.Desktop
-          state: present 
 
       - name: Install Joplin notes app
+        become: true
         community.general.flatpak:
           name: net.cozic.joplin_desktop
-          state: present     
+          state: present         
 
-      - name: Install Peazip GUI for 7-zip archives
-        community.general.flatpak:
-          name: io.github.peazip.PeaZip
-          state: present  
+      - name: Create a folder for joplin extensions
+        ansible.builtin.file:
+          path: ~/.config/joplin-desktop/plugins
+          state: directory
+          mode: '0755'
 
-    become: true
+      - name: Download Joplin Better Markdown Viewer extension
+        ansible.builtin.get_url:
+          url: https://github.com/joplin/plugins/raw/master/plugins/ylc395.betterMarkdownViewer/plugin.jpl
+          dest: ~/.config/joplin-desktop/plugins/ylc395.betterMarkdownViewer.jpl
 
-  - name: Create a folder for joplin extensions
-    ansible.builtin.file:
-      path: ~/.config/joplin-desktop/plugins
-      state: directory
-      mode: '0755'
+      - name: Download Joplin Email note extension
+        ansible.builtin.get_url:
+          url: https://github.com/joplin/plugins/raw/master/plugins/com.eliasvsimon.email-note/plugin.jpl
+          dest: ~/.config/joplin-desktop/plugins/com.eliasvsimon.email-note.jpl
 
-  - name: Download Joplin Better Markdown Viewer extension
-    ansible.builtin.get_url:
-      url: https://github.com/joplin/plugins/raw/master/plugins/ylc395.betterMarkdownViewer/plugin.jpl
-      dest: ~/.config/joplin-desktop/plugins/ylc395.betterMarkdownViewer.jpl
+      - name: Download Joplin Home note extension
+        ansible.builtin.get_url:
+          url: https://github.com/joplin/plugins/raw/master/plugins/com.lki.homenote/plugin.jpl
+          dest: ~/.config/joplin-desktop/plugins/com.lki.homenote.jpl
 
-  - name: Download Joplin Email note extension
-    ansible.builtin.get_url:
-      url: https://github.com/joplin/plugins/raw/master/plugins/com.eliasvsimon.email-note/plugin.jpl
-      dest: ~/.config/joplin-desktop/plugins/com.eliasvsimon.email-note.jpl
+      - name: Download Joplin Note tabs extension
+        ansible.builtin.get_url:
+          url: https://github.com/joplin/plugins/raw/master/plugins/joplin.plugin.note.tabs/plugin.jpl
+          dest: ~/.config/joplin-desktop/plugins/joplin.plugin.note.tabs.jpl
 
-  - name: Download Joplin Home note extension
-    ansible.builtin.get_url:
-      url: https://github.com/joplin/plugins/raw/master/plugins/com.lki.homenote/plugin.jpl
-      dest: ~/.config/joplin-desktop/plugins/com.lki.homenote.jpl
-
-  - name: Download Joplin Note tabs extension
-    ansible.builtin.get_url:
-      url: https://github.com/joplin/plugins/raw/master/plugins/joplin.plugin.note.tabs/plugin.jpl
-      dest: ~/.config/joplin-desktop/plugins/joplin.plugin.note.tabs.jpl
-
-  - name: Download Joplin Note tabs extension
-    ansible.builtin.get_url:
-      url: https://github.com/joplin/plugins/raw/master/plugins/joplin.plugin.benji.persistentLayout/plugin.jpl
-      dest: ~/.config/joplin-desktop/plugins/joplin.plugin.benji.persistentLayout.jpl
+      - name: Download Joplin Note tabs extension
+        ansible.builtin.get_url:
+          url: https://github.com/joplin/plugins/raw/master/plugins/joplin.plugin.benji.persistentLayout/plugin.jpl
+          dest: ~/.config/joplin-desktop/plugins/joplin.plugin.benji.persistentLayout.jpl
