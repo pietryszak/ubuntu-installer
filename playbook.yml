@@ -297,38 +297,51 @@
 
 # https://ubuntuhandbook.org/index.php/2022/04/remove-snap-block-ubuntu-2204/
 # https://onlinux.systems/guides/20220524_how-to-disable-and-remove-snap-on-ubuntu-2204
+# https://gist.github.com/tyrells/0a79681de339237cb04c?permalink_comment_id=3668310#gistcomment-3668310
 
   - name: Disable unnecessary snap
   
     block:
 
-      - name: Disable snapd service
-        ansible.builtin.systemd:
-          name: snapd.service
-          enabled: no
-
-      - name: Disable snapd.socket
-        ansible.builtin.systemd:
-          name: snapd.socket
-          enabled: no
-
-      - name: Disable snapd.seeded.service
-        ansible.builtin.systemd:
-          name: snapd.seeded.service
-          enabled: no 
-
       - name: Remove snap lxd
-        ansible.builtin.shell: |
-          snap remove --purge lxd
+        community.general.snap:
+          name={{item}} 
+          state=absent 
+        register: unused_snaps
+        failed_when: "unused_snaps is failed and ('find' not in unused_snaps.msg and 'found' not in unused_snaps.msg)"
+        with_items:
+          - lxd
 
       - name: Remove snap core20
-        ansible.builtin.shell: |
-          snap remove --purge core20
+        community.general.snap:
+          name={{item}} 
+          state=absent 
+        register: unused_snaps
+        failed_when: "unused_snaps is failed and ('find' not in unused_snaps.msg and 'found' not in unused_snaps.msg)"
+        with_items:
+          - core20   
 
       - name: Remove snap snapd
-        ansible.builtin.shell: |
-          snap remove --purge snapd    
-      
+        community.general.snap:
+          name={{item}} 
+          state=absent 
+        register: unused_snaps
+        failed_when: "unused_snaps is failed and ('find' not in unused_snaps.msg and 'found' not in unused_snaps.msg)"
+        with_items:
+          - snapd
+
+      - name: Stop and disable unused snap services
+        ansible.builtin.systemd: 
+          name={{item}} 
+          state=stopped 
+          enabled=no
+        register: unused_disable
+        failed_when: "unused_disable is failed and ('find' not in unused_disable.msg and 'found' not in unused_disable.msg)"
+        with_items:
+          - snapd.service
+          - snapd.socket
+          - snapd.seeded.service
+
       - name: Delete any leftover snap cached data
         ansible.builtin.file:
           path: "{{ item }}" 
@@ -1004,4 +1017,5 @@
   - name: Clone a repo with dotfiles
     ansible.builtin.git:
       repo: https://github.com/pietryszak/ubuntu-dotfiles
-      dest: ~/.gc/
+      dest: ~/.gc/ubuntu-dotfiles
+      clone: yes

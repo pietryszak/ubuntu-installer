@@ -1,10 +1,8 @@
 sudo dnf install -y neovim python3-neovim 
 
-
 # Nodejs for neovim plugins
 echo "${green}${bold}INSTALLING NODEJS FOR VIM PLUGINS${reset}"
 sudo dnf install -y nodejs 
-
 
 # Nnn
 echo "${green}${bold}INSTALLING NNN. FILE MANAGER IN TERMINAL${reset}"
@@ -14,7 +12,6 @@ sudo dnf install -y nnn
 echo "${green}${bold}INSTALLING FIREWALL GUI${reset}"
 sudo dnf install -y firewall-config 
  
-
 # Kernel headers
 echo "${green}${bold}INSTALLING KERNEL HEADERS. IT'S TAKE A TIME. PLEASE WAIT!${reset}"
 sudo dnf install -y "kernel-devel-$(uname -r)" 
@@ -60,7 +57,6 @@ sudo dnf group install -y --with-optional virtualization
 sudo systemctl start libvirtd
 sudo systemctl enable libvirtd 
 sudo usermod -a -G libvirt $USER 
-
 
 # Perl for fzf, Rust, Python pip
 echo "${green}${bold}INSTALLING PERL, RUST. POPULAR PROGRAMMING LANGUAGES IN LINUX. FOR APPS USED IN SYSTEM${reset}"
@@ -171,11 +167,9 @@ cd
 echo "${green}${bold}INSTALLING GNOME POLKIT. POPUP WITH PASSWORD OF SUDO${reset}"
 sudo dnf install -y polkit-gnome 
 
-
 # Solaar logitch devices control app
 sudo dnf install -y solaar
  
-
 # GTK Gruvbox theme
 echo "${green}${bold}INSTALLING GRUVBOX THEME${reset}"
 cd ~/.gc
@@ -375,13 +369,11 @@ wget -q https://sysoply.pl/download/public/thunderbird-cache-public.7z
 cp -r thunderbird ~/.cache
 cd
 
-
 # Last update
 echo "${green}${bold}UPDATE SYSTEM BEFORE RESTART${reset}"
 sudo dnf upgrade --refresh 
 sudo dnf upgrade -y 
 sudo dnf autoremove -y 
-
 
 # Reboot
 echo "${MAGENTA}${bold}INSTALLATION SUCCESFULL !! REBOOT SYSTEM${reset}"
