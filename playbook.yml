@@ -807,7 +807,6 @@
 
 # ClamAV is an open-source and free antivirus software toolkit
 # https://aaronbrighton.medium.com/installation-configuration-of-clamav-antivirus-on-ubuntu-18-04-a6416bab3b41
-# https://blog.frehi.be/2021/01/25/using-fangfrisch-to-improve-malware-e-mail-detection-with-clamav/
 
   - name: Install Clamav antivirus
 
@@ -843,7 +842,7 @@
       - name: Create folder for quarantine
         ansible.builtin.file:
           path: "{{ item }}" 
-          state: present
+          state: directory
           owner: root
           group: root
           mode: '0755'
@@ -873,29 +872,7 @@
           name: clamav-daemon
           state: restarted
 
-      - name: Create folder for extra antivirus signatures 
-        ansible.builtin.file:
-          path: /var/lib/fangfrisch
-          state: present
-          owner: root
-          group: clamav
-          mode: '0770'
-
-      - name: Install extra antivirus signatures dependiences
-        ansible.buiultin.apt:
-          pkg:
-            - python3-venv 
-            - python3-pip
-      
-      - name: Install fangfrisch 
-        ansible.builtin.shell: |
-          cd /var/lib/fangfrisch
-          python3 -m venv venv
-          source venv/bin/activate
-          pip install fangfrisch
-
     become: true
-
 
 
 # Ferdium - app for app for communication, facebook messenger, microsoft teams
@@ -972,3 +949,14 @@
         ansible.builtin.get_url:
           url: https://github.com/joplin/plugins/raw/master/plugins/joplin.plugin.benji.persistentLayout/plugin.jpl
           dest: ~/.config/joplin-desktop/plugins/joplin.plugin.benji.persistentLayout.jpl
+
+#############################################################################################################
+
+# Dotfiles
+
+#############################################################################################################  
+
+  - name: Clone a repo with dotfiles
+    ansible.builtin.git:
+      repo: https://github.com/pietryszak/ubuntu-dotfiles
+      dest: ~/.gc/
