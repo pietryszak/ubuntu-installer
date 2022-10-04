@@ -3,6 +3,12 @@
 
   tasks:
 
+#############################################################################################################
+
+# Ansible config, variables
+
+#############################################################################################################    
+
 # Cpu familly
 # https://stackoverflow.com/a/41610564
 
@@ -11,6 +17,38 @@
       msg: "{{ ansible_processor[1] }}"
     register: cpu_familly
     no_log: true
+
+#############################################################################################################
+
+# Drivers
+
+#############################################################################################################         
+
+# Mesa graphic drivers
+# https://itsfoss.com/install-mesa-ubuntu/
+
+#  - name: Install Mesa graphic drivers 
+
+#    block:
+
+      #- name: Add Mesa ppa
+       # ansible.builtin.shell: |
+        #  add-apt-repository --yes ppa:kisak/kisak-mesa
+
+    #  - name: Install Mesa graphic card drivers 
+     #   ansible.builtin.apt:
+      #    pkg:
+       #     -  
+    # become: true  
+
+# Xorg
+
+  - name: Install Xorg 
+    become: true 
+    ansible.builtin.apt:
+      pkg:
+        - xorg
+      update_cache: yes    
 
 # Linux firmware
 
@@ -27,7 +65,13 @@
     - name: Autoinstall discovered ubuntu drivers
       ansible.builtin.shell: ubuntu-drivers autoinstall
     
-    become: true      
+    become: true 
+
+#############################################################################################################
+
+# Grub - startup app + Lightdm - login app
+
+#############################################################################################################  
 
 # GRUB
 # https://github.com/AdisonCavani/distro-grub-themes
@@ -107,31 +151,6 @@
 
     become: true
 
-# Xorg
-
-  - name: Install Xorg 
-    become: true 
-    ansible.builtin.apt:
-      pkg:
-        - xorg
-
-# Mesa graphic drivers
-# https://itsfoss.com/install-mesa-ubuntu/
-
-#  - name: Install Mesa graphic drivers 
-
-#    block:
-
-      #- name: Add Mesa ppa
-       # ansible.builtin.shell: |
-        #  add-apt-repository --yes ppa:kisak/kisak-mesa
-
-    #  - name: Install Mesa graphic card drivers 
-     #   ansible.builtin.apt:
-      #    pkg:
-       #     -  
-    # become: true     
-
 # Lightdm Display Manager
 
   - name: Install Lightdm 
@@ -146,7 +165,7 @@
             - lightdm-gtk-greeter-settings
 
       - name: Enable lightdm service
-        ansible.builtin.service:
+        ansible.builtin.systemd:
           name: lightdm.service
           enabled: yes
 
@@ -284,17 +303,17 @@
     block:
 
       - name: Disable snapd service
-        ansible.builtin.service:
+        ansible.builtin.systemd:
           name: snapd.service
           enabled: no
 
       - name: Disable snapd.socket
-        ansible.builtin.service:
+        ansible.builtin.systemd:
           name: snapd.socket
           enabled: no
 
       - name: Disable snapd.seeded.service
-        ansible.builtin.service:
+        ansible.builtin.systemd:
           name: snapd.seeded.service
           enabled: no 
 
