@@ -299,11 +299,8 @@
           - /var/cache/snapd/
 
       - name: Purge or remove completely snapd   
-        ansible.builtin.apt:
-          autoremove: yes
-          purge: yes
-          pkg:
-            - snapd
+        ansible.builtin.shell: |
+          sudo apt autoremove --purge snapd -y
 
       - name: Create file with apt snap settings to avoid install
         ansible.builtin.file:
@@ -807,8 +804,82 @@
           update_cache: yes    
 
     become: true 
-           
+
+# ClamAV is an open-source and free antivirus software toolkit
+# https://aaronbrighton.medium.com/installation-configuration-of-clamav-antivirus-on-ubuntu-18-04-a6416bab3b41
+# https://blog.frehi.be/2021/01/25/using-fangfrisch-to-improve-malware-e-mail-detection-with-clamav/
+
+  - name: Install Clamav antivirus
+
+    block:
+
+      - name: Install Clamav - open-source and free antivirus software toolkit
+        ansible.builtin.apt:
+          pkg:
+            - clamav 
+            - clamav-daemon
+            - clamtk
+
+      - name: Stop the clamav-freshclam service before update
+        ansible.builtin.systemd:
+          name: clamav-freshclam
+          state: stopped
+
+      - name: Update antivirus database
+        ansible.builtin.shell: |
+          freshclam
+
+      - name: Start the clamav-freshclam service after update
+        ansible.builtin.systemd:
+          name: clamav-freshclam
+          state: started
+
+      - name: Enable service clamav-deamon that loads the virus database definitions into memory, and handles scanning of files
+        ansible.builtin.systemd:
+          name: clamav-daemon
+          enabled: yes
+          state: started
+
+      - name: Create folder for quarantine
+        ansible.builtin.file:
+          path: "{{ item }}" 
+          state: absent
+          owner: root
+          group: root
+          mode: '0755'
+        with_items:
+          - /root/.clamav/quarantine
+          - /root/.clamav/logs
+
+
+      - name: Create a new crontab file for scan system every 20 day of month at 21:00 
+        ansible.builtin.shell: |
+          echo "0 21 20 * 0 root /usr/bin/clamdscan --fdpass --log=/root/.clamav/logs/scan-$(date +'%d-%m-%Y-%T').log --move=/root/.clamav/quarantine /" | tee /etc/cron.d/clamdscan
+
+      - name: Add exlude path to clamav settings file
+        ansible.builtin.blockinfile:
+          path: /etc/clamav/clamd.conf      
+          block: |
+
+            # Exlude from scanning
+            ExcludePath ^/proc
+            ExcludePath ^/sys
+            ExcludePath ^/run
+            ExcludePath ^/dev
+            ExcludePath ^/var/lib/lxcfs/cgroup
+            ExcludePath ^/root/clamav/quarantine
+
+      - name: Restart service clamav-daemon after changes in config file
+        ansible.builtin.systemd:
+          name: clamav-daemon
+          state: restarted
+
+    become: true
+
+
+
 # Ferdium - app for app for communication, facebook messenger, microsoft teams
+
   - name: Install Ferdium - app for communication, facebook messenger, microsoft teams
     become: true
     community.general.flatpak:
@@ -816,13 +887,15 @@
       state: present
 
 # TickTick a kanban board, todo list, tasks list
+
   - name: Install TickTick a kanban board, todo list, tasks list
     become: true
     community.general.flatpak:
       name: com.ticktick.TickTicks
       state: present 
 
-# Github desktop app          
+# Github desktop app      
+
   - name: Install Github desktop
     become: true
     community.general.flatpak:
@@ -830,6 +903,7 @@
       state: present 
 
 # Peazip GUI for archives files  
+
   - name: Install Peazip GUI for 7-zip archives
     become: true
     community.general.flatpak:
@@ -837,6 +911,7 @@
       state: present  
 
 # Joplin notes app and extensions
+
   - name: Install Joplin notes app and extensions
 
     block:
