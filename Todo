@@ -10,16 +10,6 @@ sudo dnf install -y nodejs
 echo "${green}${bold}INSTALLING NNN. FILE MANAGER IN TERMINAL${reset}"
 sudo dnf install -y nnn 
 
-# ClamAV
-echo "${green}${bold}INSTALLING CLAMAV. BEST LINUX ANTIVIRUS${reset}"
-sudo dnf install -y clamav clamd clamav-update clamtk 
-sudo setsebool -P antivirus_can_scan_system 1
-sudo systemctl stop clamav-freshclam
-sudo freshclam 
-sudo freshclam 
-sudo systemctl start clamav-freshclam 
-sudo systemctl enable clamav-freshclam 
-
 # Firewalld GUI
 echo "${green}${bold}INSTALLING FIREWALL GUI${reset}"
 sudo dnf install -y firewall-config 

@@ -115,6 +115,22 @@
       pkg:
         - xorg
 
+# Mesa graphic drivers
+# https://itsfoss.com/install-mesa-ubuntu/
+
+#  - name: Install Mesa graphic drivers 
+
+#    block:
+
+      #- name: Add Mesa ppa
+       # ansible.builtin.shell: |
+        #  add-apt-repository --yes ppa:kisak/kisak-mesa
+
+    #  - name: Install Mesa graphic card drivers 
+     #   ansible.builtin.apt:
+      #    pkg:
+       #     -       
+
 # Lightdm Display Manager
 
   - name: Install Lightdm 
@@ -297,6 +313,7 @@
           - /var/snap
           - /var/lib/snapd
           - /var/cache/snapd/
+          - /root/snap
 
       - name: Purge or remove completely snapd   
         ansible.builtin.shell: |
