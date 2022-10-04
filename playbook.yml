@@ -317,11 +317,17 @@
           name: snapd.seeded.service
           enabled: no 
 
-      - name: Remove snaps
+      - name: Remove snap lxd
         ansible.builtin.shell: |
           snap remove --purge lxd
+
+      - name: Remove snap core20
+        ansible.builtin.shell: |
           snap remove --purge core20
-          snap remove --purge snapd
+
+      - name: Remove snap snapd
+        ansible.builtin.shell: |
+          snap remove --purge snapd    
       
       - name: Delete any leftover snap cached data
         ansible.builtin.file:
@@ -337,7 +343,7 @@
 
       - name: Purge or remove completely snapd   
         ansible.builtin.shell: |
-          sudo apt autoremove --purge snapd -y
+          apt autoremove --purge snapd -y
 
       - name: Create file with apt snap settings to avoid install
         ansible.builtin.file:
