@@ -369,7 +369,7 @@
           question: msttcorefonts/accepted-mscorefonts-eula
           vtype: select
           value: "'true'"
-
+          
       - name: Install Ubuntu restricted extras
         ansible.builtin.apt:
           pkg:
