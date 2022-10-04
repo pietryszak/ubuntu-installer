@@ -129,7 +129,8 @@
     #  - name: Install Mesa graphic card drivers 
      #   ansible.builtin.apt:
       #    pkg:
-       #     -       
+       #     -  
+    # become: true     
 
 # Lightdm Display Manager
 
@@ -379,13 +380,15 @@
 # FFmpeg
 
   - name: Install ffmpeg video and audio codecs
+    become: true
     ansible.buiultin.apt:
       pkg:
         - ffmpeg
 
 # Intel specific video accelaraion
 
-  - name: Install Intel(R) Media Driver Video Acceleration if Intel CPU exist 
+  - name: Install Intel(R) Media Driver Video Acceleration if Intel CPU exist
+    become: true 
     ansible.builtin.apt:
       pkg:
         - intel-media-va-driver-non-free
