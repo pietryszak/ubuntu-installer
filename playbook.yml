@@ -3,6 +3,15 @@
 
   tasks:
 
+# Cpu familly
+# https://stackoverflow.com/a/41610564
+
+  - name: Check CPU familly
+    ansible.builtin.debug:
+      msg: "{{ ansible_processor[1] }}"
+    register: cpu_familly
+    no_log: true
+    
 # Username of regular username
 # https://stackoverflow.com/a/58916467
 
@@ -288,6 +297,58 @@
             - ubuntu-restricted-extras
         
     become: true
+# FFmpeg
+
+  - name: Install ffmpeg video and audio codecs
+    ansible.buiultin.apt:
+      pkg:
+        - ffmpeg
+
+  - name: Install Intel(R) Media Driver Video Acceleration if Intel CPU exist 
+    ansible.builtin.apt:
+      pkg:
+        - intel-media-va-driver-non-free
+
+    when: cpu_familly.msg == "GenuineIntel"
+
+# Ubuntu restricted restricted video codecs
+# https://askubuntu.com/a/1433621/1086686
+
+  - name: Export variable for installation packet withput pop upgrades
+    ansible.builtin.shell: |
+      export DEBIAN_FRONTEND=noninteractive
+
+  - name: Install restricted video codecs  
+
+    block:
+      
+      - name: Install libdvd-pkg restricted video codecs
+        ansible.builtin.shell: |
+          DEBIAN_FRONTEND=noninteractive apt -yq install libdvd-pkg
+      
+      - name: Configure libdvd-pkg restricted video codecs
+        ansible.builtin.shell: |
+          bash /usr/lib/libdvd-pkg/b-i_libdvdcss.sh
+
+    become: true    
+
+# Celluloid video player        
+
+  - name: Install Celluloid video player
+
+    block:
+
+      - name: Add Celluloid video player ppa
+        ansible.builtin.shell: |
+          add-apt-repository --yes ppa:xuzhen666/gnome-mpv
+          
+      - name: Install Celluloid
+        ansible.builtin.apt:
+          pkg:
+            - celluloid
+          update_cache: yes      
+
+    become: true  
 
 # Vscode
 
@@ -575,25 +636,6 @@
     ansible.builtin.apt:
       pkg:  
         - libreoffice
-
-# Celluloid video player        
-
-  - name: Install Celluloid video player
-
-    block:
-
-      - name: Add Celluloid video player ppa
-        ansible.builtin.shell: |
-          add-apt-repository --yes ppa:xuzhen666/gnome-mpv
-          
-      - name: Install Celluloid
-        ansible.builtin.apt:
-          pkg:
-            - celluloid
-          update_cache: yes      
-
-    become: true  
-
 
 # Timeshift
 # https://github.com/linuxmint/timeshift
