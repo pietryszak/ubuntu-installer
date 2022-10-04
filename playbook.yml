@@ -843,14 +843,13 @@
       - name: Create folder for quarantine
         ansible.builtin.file:
           path: "{{ item }}" 
-          state: absent
+          state: present
           owner: root
           group: root
           mode: '0755'
         with_items:
           - /root/.clamav/quarantine
           - /root/.clamav/logs
-
 
       - name: Create a new crontab file for scan system every 20 day of month at 21:00 
         ansible.builtin.shell: |
@@ -873,6 +872,27 @@
         ansible.builtin.systemd:
           name: clamav-daemon
           state: restarted
+
+      - name: Create folder for extra antivirus signatures 
+        ansible.builtin.file:
+          path: /var/lib/fangfrisch
+          state: present
+          owner: root
+          group: clamav
+          mode: '0770'
+
+      - name: Install extra antivirus signatures dependiences
+        ansible.buiultin.apt:
+          pkg:
+            - python3-venv 
+            - python3-pip
+      
+      - name: Install fangfrisch 
+        ansible.builtin.shell: |
+          cd /var/lib/fangfrisch
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install fangfrisch
 
     become: true
 
