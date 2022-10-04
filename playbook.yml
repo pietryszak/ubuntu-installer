@@ -369,7 +369,7 @@
           question: msttcorefonts/accepted-mscorefonts-eula
           vtype: select
           value: "'true'"
-          
+
       - name: Install Ubuntu restricted extras
         ansible.builtin.apt:
           pkg:
@@ -381,7 +381,7 @@
 
   - name: Install ffmpeg video and audio codecs
     become: true
-    ansible.buiultin.apt:
+    ansible.builtin.apt:
       pkg:
         - ffmpeg
 
