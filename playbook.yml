@@ -18,6 +18,10 @@
     register: cpu_familly
     no_log: true
 
+  - name: Export variable for installation packet withput pop upgrades
+    ansible.builtin.shell: |
+      export DEBIAN_FRONTEND=noninteractive
+  
 #############################################################################################################
 
 # Drivers
@@ -41,6 +45,24 @@
        #     -  
     # become: true  
 
+# Linux firmware
+
+  - name: Install Drivers 
+
+    block:
+
+      - name: Install Linux firmware, ubuntu drivers 
+        ansible.builtin.apt:
+          pkg:
+            - linux-firmware
+            - ubuntu-drivers-common
+          update_cache: yes   
+
+      - name: Autoinstall discovered ubuntu drivers
+        ansible.builtin.shell: ubuntu-drivers autoinstall
+    
+    become: true 
+
 # Xorg
 
   - name: Install Xorg 
@@ -48,24 +70,18 @@
     ansible.builtin.apt:
       pkg:
         - xorg
-      update_cache: yes    
+       
 
-# Linux firmware
+# Pulseaudio audio drivers
 
-  - name: Install Drivers 
-
-    block:
-
-    - name: Install Linux firmware, ubuntu drivers 
-      ansible.builtin.apt:
-        pkg:
-          - linux-firmware
-          - ubuntu-drivers-common
-
-    - name: Autoinstall discovered ubuntu drivers
-      ansible.builtin.shell: ubuntu-drivers autoinstall
-    
-    become: true 
+  - name: Install sound drivers
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - pulseaudio
+        - pavucontrol
+        - alsa-utils
+        - alsamixer
 
 #############################################################################################################
 
@@ -395,6 +411,36 @@
 
 #############################################################################################################
 
+# Virtualization
+
+#############################################################################################################         
+  - name: Install Virtualbox
+
+    block:
+
+      - name: Accept virtualbox-ext-pack seen license
+        debconf:
+          name: virtualbox-ext-pack
+          question: virtualbox-ext-pack/license
+          value: 'true'
+          vtype: seen
+
+      - name: Accept virtualbox-ext-pack select license
+        debconf:
+          name: virtualbox-ext-pack
+          question: virtualbox-ext-pack/license
+          value: 'true'
+          vtype: select
+          
+      - name: Install Virtualbox extensions pack
+        ansible.builtin.apt:
+          pkg:
+            - virtualbox-ext-pack
+              
+    become: true
+
+#############################################################################################################
+
 # Apps
 
 #############################################################################################################         
@@ -406,7 +452,7 @@
     block:
 
       - name: Prepare eula for microsoft fonts on Ubuntu
-        debconf:
+        ansible.builtin.debconf:
           name: ttf-mscorefonts-installer
           question: msttcorefonts/accepted-mscorefonts-eula
           vtype: select
@@ -439,10 +485,6 @@
 
 # Ubuntu restricted restricted video codecs
 # https://askubuntu.com/a/1433621/1086686
-
-  - name: Export variable for installation packet withput pop upgrades
-    ansible.builtin.shell: |
-      export DEBIAN_FRONTEND=noninteractive
 
   - name: Install restricted video codecs  
 
