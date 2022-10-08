@@ -9,6 +9,18 @@
 
 #############################################################################################################    
 
+# Username of regular username
+# https://stackoverflow.com/a/58916467
+
+  - name: Run whoami without become for regular username
+    command: whoami
+    changed_when: false
+    become: false
+    register: whoami
+  - name: Set a fact with the username
+    set_fact:
+      login_user: "{{ whoami.stdout }}"
+
 # Cpu familly
 # https://stackoverflow.com/a/41610564
 
@@ -414,6 +426,9 @@
 # Virtualization
 
 #############################################################################################################         
+
+# Virtualbox
+
   - name: Install Virtualbox
 
     block:
@@ -450,13 +465,13 @@
         when: virtualbox_natnetwork.stdout | regex_search('0 networks found')
 
       - name: Install virtualbox guest tool dependiences if virtual mashine detected
-        become: true
         ansible.builtin.shell: |
           apt install linux-headers-$(uname -r) 
-        when: ansible_virtualization_type =="virtualbox"
+        when: 
+          - ansible_virtualization_type == "virtualbox"
+          - ansible_virtualization_role == "guest"
 
       - name: Install virtualbox guest tool if virtual mashine is detected
-        become: true
         ansible.builtin.apt:
           pkg:
             - build-essential 
@@ -464,10 +479,45 @@
             - virtualbox-guest-utils 
             - virtualbox-guest-x11 
             - virtualbox-dkms
-        when: ansible_virtualization_type == "virtualbox"
-
+        when: 
+          - ansible_virtualization_type == "virtualbox"
+          - ansible_virtualization_role == "guest"
 
     become: true
+
+# KVM
+
+  - name: Install KVM
+
+    block:
+
+      - name: Install KVM virtualization dependiences
+        ansible.builtin.apt:
+          pkg:
+            - qemu-kvm 
+            - libvirt-daemon-system 
+            - virtinst 
+            - libvirt-clients
+            - bridge-utils
+            - virt-manager 
+          
+      - name: Enable services to Virtualize KVM
+        ansible.builtin.systemd:
+          name: libvirtd
+          enabled: yes
+          state: started
+
+      - name: Add user to KVM and Libvirt group
+        ansible.builtin.user:
+          name: "{{ login_user }}"
+          append: yes
+          groups:
+            - kvm
+            - libvirt
+
+    become: true
+
+   
 
 #############################################################################################################
 
@@ -581,6 +631,7 @@
       code --install-extension esbenp.prettier-vscode 
       code --install-extension redhat.vscode-xml 
       code --install-extension redhat.vscode-yaml 
+      code --install-extension redhat.ansible
       code --install-extension ms-azuretools.vscode-docker 
       code --install-extension xadillax.viml 
       code --install-extension jdinhlife.gruvbox 
@@ -590,6 +641,7 @@
       code --install-extension dlasagno.rasi 
       code --install-extension dcasella.i3 
       code --install-extension jonathanharty.gruvbox-material-icon-theme 
+      
  
 # Teamviewer
 
