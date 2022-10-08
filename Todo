@@ -8,10 +8,6 @@ sudo dnf install -y nodejs
 echo "${green}${bold}INSTALLING NNN. FILE MANAGER IN TERMINAL${reset}"
 sudo dnf install -y nnn 
 
-# Firewalld GUI
-echo "${green}${bold}INSTALLING FIREWALL GUI${reset}"
-sudo dnf install -y firewall-config 
-
 # Perl for fzf, Rust, Python pip
 echo "${green}${bold}INSTALLING PERL, RUST. POPULAR PROGRAMMING LANGUAGES IN LINUX. FOR APPS USED IN SYSTEM${reset}"
 sudo dnf install -y perl 
@@ -26,10 +22,6 @@ sudo dnf install -y jq
 
 # Xfce polkit for password popups
 sudo dnf install -y xfce-polkit
-
-# Firewall rule for kde-connect
-sudo firewall-cmd --permanent --zone=public --add-service=kdeconnect
-sudo firewall-cmd --reload
 
 # Playerctl for control media with keyboard
 sudo dnf install -y playerctl

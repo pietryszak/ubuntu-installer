@@ -329,6 +329,235 @@
 
 #############################################################################################################
 
+# Virtualization
+
+#############################################################################################################         
+
+# Virtualbox
+
+  - name: Install Virtualbox
+
+    block:
+
+      - name: Accept virtualbox-ext-pack seen license
+        ansible.builtin.debconf:
+          name: virtualbox-ext-pack
+          question: virtualbox-ext-pack/license
+          value: 'true'
+          vtype: seen
+
+      - name: Accept virtualbox-ext-pack select license
+        ansible.builtin.debconf:
+          name: virtualbox-ext-pack
+          question: virtualbox-ext-pack/license
+          value: 'true'
+          vtype: select
+          
+      - name: Install Virtualbox extensions pack
+        ansible.builtin.apt:
+          pkg:
+            - virtualbox-ext-pack
+
+      - name: Register virtualbox network list
+        ansible.builtin.shell: |
+          VBoxManage natnetwork list
+        register: virtualbox_natnetwork
+
+      - debug: var=virtualbox_natnetwork.stdout_lines
+
+      - name: Add Nat network to virtualbox
+        ansible.builtin.shell: |
+          VBoxManage natnetwork add --netname NatNetwork --network "10.0.2.0/24" --enable 
+        when: virtualbox_natnetwork.stdout | regex_search('0 networks found')
+
+      - name: Install virtualbox guest tool dependiences if virtual mashine detected
+        ansible.builtin.shell: |
+          apt install linux-headers-$(uname -r) 
+        when: 
+          - ansible_virtualization_type == "virtualbox"
+          - ansible_virtualization_role == "guest"
+
+      - name: Install virtualbox guest tool if virtual mashine is detected
+        ansible.builtin.apt:
+          pkg:
+            - build-essential 
+            - dkms 
+            - virtualbox-guest-utils 
+            - virtualbox-guest-x11 
+            - virtualbox-dkms
+        when: 
+          - ansible_virtualization_type == "virtualbox"
+          - ansible_virtualization_role == "guest"
+
+    become: true
+
+# KVM
+
+  - name: Install KVM
+
+    block:
+
+      - name: Install KVM virtualization dependiences
+        ansible.builtin.apt:
+          pkg:
+            - qemu-kvm 
+            - libvirt-daemon-system 
+            - virtinst 
+            - libvirt-clients
+            - bridge-utils
+            - virt-manager 
+          
+      - name: Enable services to Virtualize KVM
+        ansible.builtin.systemd:
+          name: libvirtd
+          enabled: yes
+          state: started
+
+      - name: Add user to KVM and Libvirt group
+        ansible.builtin.user:
+          name: "{{ login_user }}"
+          append: yes
+          groups:
+            - kvm
+            - libvirt
+
+    become: true 
+
+#############################################################################################################
+
+# Security
+
+#############################################################################################################         
+
+# ClamAV is an open-source and free antivirus software toolkit
+# https://aaronbrighton.medium.com/installation-configuration-of-clamav-antivirus-on-ubuntu-18-04-a6416bab3b41
+
+  - name: Install Clamav antivirus
+
+    block:
+
+      - name: Install Clamav - open-source and free antivirus software toolkit
+        ansible.builtin.apt:
+          pkg:
+            - clamav 
+            - clamav-daemon
+            - clamtk
+
+      - name: Stop the clamav-freshclam service before update
+        ansible.builtin.systemd:
+          name: clamav-freshclam
+          state: stopped
+
+      - name: Update antivirus database
+        ansible.builtin.shell: |
+          freshclam
+
+      - name: Start the clamav-freshclam service after update
+        ansible.builtin.systemd:
+          name: clamav-freshclam
+          state: started
+
+      - name: Enable service clamav-deamon that loads the virus database definitions into memory, and handles scanning of files
+        ansible.builtin.systemd:
+          name: clamav-daemon
+          enabled: yes
+          state: started
+
+      - name: Create folder for quarantine
+        ansible.builtin.file:
+          path: "{{ item }}" 
+          state: directory
+          owner: root
+          group: root
+          mode: '0755'
+        with_items:
+          - /root/.clamav/quarantine
+          - /root/.clamav/logs
+
+      - name: Create a new crontab file for scan system every 20 day of month at 21:00 
+        ansible.builtin.shell: |
+          echo "0 21 20 * 0 root /usr/bin/clamdscan --fdpass --log=/root/.clamav/logs/scan-$(date +'%d-%m-%Y-%T').log --move=/root/.clamav/quarantine /" | tee /etc/cron.d/clamdscan
+
+      - name: Add exlude path to clamav settings file
+        ansible.builtin.blockinfile:
+          path: /etc/clamav/clamd.conf      
+          block: |
+
+            # Exlude from scanning
+            ExcludePath ^/proc
+            ExcludePath ^/sys
+            ExcludePath ^/run
+            ExcludePath ^/dev
+            ExcludePath ^/var/lib/lxcfs/cgroup
+            ExcludePath ^/root/clamav/quarantine
+
+      - name: Restart service clamav-daemon after changes in config file
+        ansible.builtin.systemd:
+          name: clamav-daemon
+          state: restarted
+
+    become: true
+
+  - name: Install firewall
+
+    block:
+
+      - name: Install gufw firewall gui
+        ansible.builtin.apt:
+          pkg:
+            - gufw
+
+      - name: Deny incoming policy on host pc
+        community.general.ufw:
+          state: enabled
+          logging: 'on'
+          direction: incoming 
+          policy: deny
+        when:  
+          - ansible_virtualization_role == "host"
+
+      - name: Allow incoming policy if virtual mashine detected
+        community.general.ufw:
+          state: enabled
+          logging: 'on'
+          direction: incoming 
+          policy: deny
+        when:  
+          - ansible_virtualization_role == "guest"
+
+      - name: Allow outgoing policy
+        community.general.ufw:
+          direction: outgoing 
+          policy: deny 
+ 
+      - name: Allow ssh policy if virtual mashine detected
+        community.general.ufw:
+            rule: limit
+            port: ssh
+            proto: tcp
+        when:  
+          - ansible_virtualization_role == "guest"
+
+      - name: Allow Kde connect udp ports for android devices
+        community.general.ufw:
+          rule: allow
+          port: 1714:1764
+          proto: udp
+        when:  
+          - ansible_virtualization_role == "host"
+
+      - name: Allow Kde connect tcp ports for android devices
+        community.general.ufw:
+          rule: allow
+          port: 1714:1764
+          proto: tcp
+        when:  
+          - ansible_virtualization_role == "host"
+
+    become: true
+
+#############################################################################################################
+
 # Flathub
 
 #############################################################################################################  
@@ -430,102 +659,6 @@
           flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
     become: true
-
-#############################################################################################################
-
-# Virtualization
-
-#############################################################################################################         
-
-# Virtualbox
-
-  - name: Install Virtualbox
-
-    block:
-
-      - name: Accept virtualbox-ext-pack seen license
-        ansible.builtin.debconf:
-          name: virtualbox-ext-pack
-          question: virtualbox-ext-pack/license
-          value: 'true'
-          vtype: seen
-
-      - name: Accept virtualbox-ext-pack select license
-        ansible.builtin.debconf:
-          name: virtualbox-ext-pack
-          question: virtualbox-ext-pack/license
-          value: 'true'
-          vtype: select
-          
-      - name: Install Virtualbox extensions pack
-        ansible.builtin.apt:
-          pkg:
-            - virtualbox-ext-pack
-
-      - name: Register virtualbox network list
-        ansible.builtin.shell: |
-          VBoxManage natnetwork list
-        register: virtualbox_natnetwork
-
-      - debug: var=virtualbox_natnetwork.stdout_lines
-
-      - name: Add Nat network to virtualbox
-        ansible.builtin.shell: |
-          VBoxManage natnetwork add --netname NatNetwork --network "10.0.2.0/24" --enable 
-        when: virtualbox_natnetwork.stdout | regex_search('0 networks found')
-
-      - name: Install virtualbox guest tool dependiences if virtual mashine detected
-        ansible.builtin.shell: |
-          apt install linux-headers-$(uname -r) 
-        when: 
-          - ansible_virtualization_type == "virtualbox"
-          - ansible_virtualization_role == "guest"
-
-      - name: Install virtualbox guest tool if virtual mashine is detected
-        ansible.builtin.apt:
-          pkg:
-            - build-essential 
-            - dkms 
-            - virtualbox-guest-utils 
-            - virtualbox-guest-x11 
-            - virtualbox-dkms
-        when: 
-          - ansible_virtualization_type == "virtualbox"
-          - ansible_virtualization_role == "guest"
-
-    become: true
-
-# KVM
-
-  - name: Install KVM
-
-    block:
-
-      - name: Install KVM virtualization dependiences
-        ansible.builtin.apt:
-          pkg:
-            - qemu-kvm 
-            - libvirt-daemon-system 
-            - virtinst 
-            - libvirt-clients
-            - bridge-utils
-            - virt-manager 
-          
-      - name: Enable services to Virtualize KVM
-        ansible.builtin.systemd:
-          name: libvirtd
-          enabled: yes
-          state: started
-
-      - name: Add user to KVM and Libvirt group
-        ansible.builtin.user:
-          name: "{{ login_user }}"
-          append: yes
-          groups:
-            - kvm
-            - libvirt
-
-    become: true 
 
 #############################################################################################################
 
@@ -645,11 +778,9 @@
       code --install-extension jdinhlife.gruvbox 
       code --install-extension naumovs.color-highlight 
       code --install-extension nico-castell.linux-desktop-file 
-      code --install-extension xadillax.viml 
       code --install-extension dlasagno.rasi 
       code --install-extension dcasella.i3 
-      code --install-extension jonathanharty.gruvbox-material-icon-theme 
-      
+      code --install-extension jonathanharty.gruvbox-material-icon-theme      
  
 # Teamviewer
 
@@ -998,75 +1129,6 @@
           update_cache: yes    
 
     become: true 
-
-# ClamAV is an open-source and free antivirus software toolkit
-# https://aaronbrighton.medium.com/installation-configuration-of-clamav-antivirus-on-ubuntu-18-04-a6416bab3b41
-
-  - name: Install Clamav antivirus
-
-    block:
-
-      - name: Install Clamav - open-source and free antivirus software toolkit
-        ansible.builtin.apt:
-          pkg:
-            - clamav 
-            - clamav-daemon
-            - clamtk
-
-      - name: Stop the clamav-freshclam service before update
-        ansible.builtin.systemd:
-          name: clamav-freshclam
-          state: stopped
-
-      - name: Update antivirus database
-        ansible.builtin.shell: |
-          freshclam
-
-      - name: Start the clamav-freshclam service after update
-        ansible.builtin.systemd:
-          name: clamav-freshclam
-          state: started
-
-      - name: Enable service clamav-deamon that loads the virus database definitions into memory, and handles scanning of files
-        ansible.builtin.systemd:
-          name: clamav-daemon
-          enabled: yes
-          state: started
-
-      - name: Create folder for quarantine
-        ansible.builtin.file:
-          path: "{{ item }}" 
-          state: directory
-          owner: root
-          group: root
-          mode: '0755'
-        with_items:
-          - /root/.clamav/quarantine
-          - /root/.clamav/logs
-
-      - name: Create a new crontab file for scan system every 20 day of month at 21:00 
-        ansible.builtin.shell: |
-          echo "0 21 20 * 0 root /usr/bin/clamdscan --fdpass --log=/root/.clamav/logs/scan-$(date +'%d-%m-%Y-%T').log --move=/root/.clamav/quarantine /" | tee /etc/cron.d/clamdscan
-
-      - name: Add exlude path to clamav settings file
-        ansible.builtin.blockinfile:
-          path: /etc/clamav/clamd.conf      
-          block: |
-
-            # Exlude from scanning
-            ExcludePath ^/proc
-            ExcludePath ^/sys
-            ExcludePath ^/run
-            ExcludePath ^/dev
-            ExcludePath ^/var/lib/lxcfs/cgroup
-            ExcludePath ^/root/clamav/quarantine
-
-      - name: Restart service clamav-daemon after changes in config file
-        ansible.builtin.systemd:
-          name: clamav-daemon
-          state: restarted
-
-    become: true
 
 # KDE connect for bluetooth connection with android phone
 
