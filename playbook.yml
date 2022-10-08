@@ -449,16 +449,22 @@
           VBoxManage natnetwork add --netname NatNetwork --network "10.0.2.0/24" --enable 
         when: virtualbox_natnetwork.stdout | regex_search('0 networks found')
 
+      - name: Install virtualbox guest tool dependiences if virtual mashine detected
+        become: true
+        ansible.builtin.shell: |
+          apt install linux-headers-$(uname -r) 
+        when: ansible_virtualization_type =="virtualbox"
+
       - name: Install virtualbox guest tool if virtual mashine is detected
-        ansbible.builtin.apt:
+        become: true
+        ansible.builtin.apt:
           pkg:
             - build-essential 
             - dkms 
-            - linux-headers-$(uname -r)
             - virtualbox-guest-utils 
             - virtualbox-guest-x11 
-            - virtualbox-guest-dkms
-        when: 
+            - virtualbox-dkms
+        when: ansible_virtualization_type == "virtualbox"
 
 
     become: true
