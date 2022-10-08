@@ -1,51 +1,3 @@
-sudo dnf install -y neovim python3-neovim 
-
-# Nodejs for neovim plugins
-echo "${green}${bold}INSTALLING NODEJS FOR VIM PLUGINS${reset}"
-sudo dnf install -y nodejs 
-
-# Nnn
-echo "${green}${bold}INSTALLING NNN. FILE MANAGER IN TERMINAL${reset}"
-sudo dnf install -y nnn 
-
-# Perl for fzf, Rust, Python pip
-echo "${green}${bold}INSTALLING PERL, RUST. POPULAR PROGRAMMING LANGUAGES IN LINUX. FOR APPS USED IN SYSTEM${reset}"
-sudo dnf install -y perl 
-sudo dnf install -y rust cargo 
-
-# Python pip, meson
-echo "${green}${bold}INSTALLING PHP PIP, MESON, CMAKE, JQ. BUILD SYSTEM FOR APPS${reset}"
-sudo dnf install -y python3-pip 
-sudo dnf install -y meson 
-sudo dnf install -y cmake 
-sudo dnf install -y jq 
-
-# Xfce polkit for password popups
-sudo dnf install -y xfce-polkit
-
-# Playerctl for control media with keyboard
-sudo dnf install -y playerctl
-
-# Bash aliases for user
-echo "${green}${bold}ADING BASH ALIASES FOR USER${reset}"
-bash -c 'echo "
-if [ -f ~/.bash_aliases ]; then
-. ~/.bash_aliases
-fi">> ~/.bashrc'
-
-# Bash aliases for sudo/root
-echo "${green}${bold}ADDING BASH ALIASES TO ROOT USER${reset}"
-sudo bash -c 'echo "
-if [ -f ~/.bash_aliases ]; then
-. ~/.bash_aliases
-fi">> ~/.bashrc'
-
-# ZSH 
-echo "${green}${bold}INSTALLING ZSH. UNIX SHELL WITH NEW FUTURES${reset}"
-sudo dnf install -y util-linux-user 
-sudo dnf install -y sqlite zsh 
-sudo chsh -s $(which zsh) $USER 
-
 # FZF
 echo "${green}${bold}INSTALLING FZF. COMMAND LINE FUZY FINDER ${reset}"
 cd .gc
@@ -93,13 +45,6 @@ cd ~/.gc
 git clone --quiet https://github.com/Jvanrhijn/polybar-spotify.git 
 cd
 
-# Gnome-polkit - dispaly popup fot password for sudo 
-echo "${green}${bold}INSTALLING GNOME POLKIT. POPUP WITH PASSWORD OF SUDO${reset}"
-sudo dnf install -y polkit-gnome 
-
-# Solaar logitch devices control app
-sudo dnf install -y solaar
- 
 # GTK Gruvbox theme
 echo "${green}${bold}INSTALLING GRUVBOX THEME${reset}"
 cd ~/.gc
@@ -308,3 +253,24 @@ sudo dnf autoremove -y
 # Reboot
 echo "${MAGENTA}${bold}INSTALLATION SUCCESFULL !! REBOOT SYSTEM${reset}"
 sudo reboot
+
+################# check
+
+# Neovim
+sudo dnf install -y neovim python3-neovim 
+
+# Nodejs for neovim plugins
+echo "${green}${bold}INSTALLING NODEJS FOR VIM PLUGINS${reset}"
+sudo dnf install -y nodejs 
+
+# Perl for fzf, Rust, Python pip
+echo "${green}${bold}INSTALLING PERL, RUST. POPULAR PROGRAMMING LANGUAGES IN LINUX. FOR APPS USED IN SYSTEM${reset}"
+sudo dnf install -y perl 
+sudo dnf install -y rust cargo 
+
+# Python pip, meson
+echo "${green}${bold}INSTALLING PHP PIP, MESON, CMAKE, JQ. BUILD SYSTEM FOR APPS${reset}"
+sudo dnf install -y python3-pip 
+sudo dnf install -y meson 
+sudo dnf install -y cmake 
+sudo dnf install -y jq 

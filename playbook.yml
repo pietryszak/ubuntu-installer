@@ -207,7 +207,36 @@
           name: lightdm.service
           enabled: yes
 
-    become: true          
+    become: true    
+
+#############################################################################################################
+
+# Zsh + oh-my-zsh for user instead bash
+
+#############################################################################################################      
+
+# Zsh for user instead bash
+
+  - name: Install zsh
+
+    block:
+
+      - name: Install Zsh for user instead bash
+        ansible.builtin.apt:
+          pkg:
+            - zsh
+
+      - name: Set zsh as default to user instead bash
+        ansible.builtin.user:
+          name: "{{ login_user }}"
+          shell: /bin/zsh
+
+    become: true
+
+      
+
+
+
 
 #############################################################################################################
 
@@ -319,13 +348,32 @@
       pkg:
         - arandr
 
-# Feh for i3 wallpapers
+# Feh for i3-gaps wallpapers
 
   - name: Install Feh - i3-gaps wallpapers
     become: true
     ansible.builtin.apt:
       pkg:
         - feh
+
+# Playerctl for i3-gaps media control
+# https://github.com/altdesktop/playerctl
+
+  - name: Install Playerctl for i3-gaps media control
+
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - playerctl
+
+# Gnome-polkit - display popup fot password for sudo in i3-gaps
+
+  - name: Install Playerctl for i3-gaps media control
+
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - policykit-1-gnome
 
 #############################################################################################################
 
@@ -1145,6 +1193,21 @@
     ansible.builtin.apt:
       pkg:
         - scrcpy
+
+# Solaar - Logitech mouse and keyboard configuration app    
+
+  - name: Install Solaar - Logitech mouse and keyboard configuration app
+    ansible.builtin.apt:
+      pkg:
+        - solaar
+
+# NNN - terminal file manager 
+# https://github.com/jarun/nnn
+
+  - name: Install NNN - terminal file manager 
+    ansible.builtin.apt:
+      pkg:
+        - nnn
 
 # Ferdium - app for app for communication, facebook messenger, microsoft teams
 
