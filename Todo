@@ -1,15 +1,3 @@
-# FZF
-echo "${green}${bold}INSTALLING FZF. COMMAND LINE FUZY FINDER ${reset}"
-cd .gc
-git clone --quiet --depth 1 https://github.com/junegunn/fzf.git ~/.fzf 
-yes | ~/.fzf/install 
-cd
-
-# Powerlevel10k zsh
-echo "${green}${bold}INSTALLING POWERLEVEL10K. ZSH THEME${reset}"
-cd ~/.gc
-git clone --quiet --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k 
-
 # Fonts 
 echo "${green}${bold}ADDING FONTS TO SYSTEM ${reset}"
 sudo dnf install -y powerline-fonts 
@@ -29,12 +17,6 @@ cd
 # i3-wifi applet
 echo "${green}${bold}INSTALLING I3 WIFI APPLET${reset}"
 sudo dnf install -y network-manager-applet 
-
-# Polybar Spotify 
-echo "${green}${bold}INSTALLING POLYBAR SPOTIFY APPLET${reset}"
-cd ~/.gc
-git clone --quiet https://github.com/Jvanrhijn/polybar-spotify.git 
-cd
 
 # GTK Gruvbox theme
 echo "${green}${bold}INSTALLING GRUVBOX THEME${reset}"

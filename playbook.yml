@@ -21,16 +21,16 @@
     set_fact:
       login_user: "{{ whoami.stdout }}"
 
-# Cpu familly
+# Cpu family
 # https://stackoverflow.com/a/41610564
 
-  - name: Check CPU familly
+  - name: Check CPU family
     ansible.builtin.debug:
       msg: "{{ ansible_processor[1] }}"
-    register: cpu_familly
+    register: cpu_family
     no_log: true
 
-  - name: Export variable for installation packet withput pop upgrades
+  - name: Export variable for installation packet without pop upgrades
     ansible.builtin.shell: |
       export DEBIAN_FRONTEND=noninteractive
   
@@ -90,7 +90,7 @@
             - bluez
             - bluez-tools
       
-      - name: Install blueman - bluetooth managment tool
+      - name: Install blueman - bluetooth management tool
         ansible.builtin.apt:
           pkg:
             - blueman
@@ -195,7 +195,7 @@
 
     block:
 
-      - name: Install a lightdm dependiences
+      - name: Install a lightdm dependencies
         ansible.builtin.apt:
           pkg:
             - lightdm
@@ -263,30 +263,37 @@
 # Zsh plugins
 
   - name: Install zsh autosuggestions plugin
-    ansible.builtin.get_url:
-      url: https://github.com/zsh-users/zsh-autosuggestions
+    ansible.builtin.git:
+      repo: https://github.com/zsh-users/zsh-autosuggestions
       dest: ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
-  - name: Install zsh syntax highlightings plugin
-    ansible.builtin.get_url:
-      url: https://github.com/zsh-users/zsh-syntax-highlighting.git
+
+  - name: Install zsh syntax highlighting plugin
+    ansible.builtin.git:
+      repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
       dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
   
   - name: Install zsh completions plugin
-    ansible.builtin.get_url:
-      url: https://github.com/zsh-users/zsh-completions
+    ansible.builtin.git:
+      repo: https://github.com/zsh-users/zsh-completions
       dest: ~/.oh-my-zsh/custom/plugins/zsh-completions
 
 # Powerlevel10k zsh
 
-          
+  - name: Install powerlevel10k theme for zsh
+    ansible.builtin.git:
+      repo: https://github.com/romkatv/powerlevel10k.git
+      dest: ~/.oh-my-zsh/custom/themes/powerlevel10k
+      depth: 1
 
-    
+# Fzf - A command-line fuzzy finder 
+# https://github.com/junegunn/fzf
 
-      
-
-
-
+  - name: Install Fzf - A command-line fuzzy finder for faster searching
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - fzf
 
 #############################################################################################################
 
@@ -425,6 +432,20 @@
       pkg:
         - policykit-1-gnome
 
+# Polybar Spotify module for i3-gaps 
+
+  - name: Install Polybar Spotify module dependencies
+    ansible.builtin.apt:
+      pkg:
+        - python3-pip
+  
+  - name: Install python dependencies for Polybar Spotify module 
+    ansible.builtin.shell: |
+      - pip install dbus-python
+  
+  - name: Install Polybar Spotify module
+    ansible.builtin.git:
+      repo: https://github.com/Jvanrhijn/polybar-spotify.git
 #############################################################################################################
 
 # Virtualization
@@ -468,14 +489,14 @@
           VBoxManage natnetwork add --netname NatNetwork --network "10.0.2.0/24" --enable 
         when: virtualbox_natnetwork.stdout | regex_search('0 networks found')
 
-      - name: Install virtualbox guest tool dependiences if virtual mashine detected
+      - name: Install virtualbox guest tool dependencies if virtual machine detected
         ansible.builtin.shell: |
           apt install linux-headers-$(uname -r) 
         when: 
           - ansible_virtualization_type == "virtualbox"
           - ansible_virtualization_role == "guest"
 
-      - name: Install virtualbox guest tool if virtual mashine is detected
+      - name: Install virtualbox guest tool if virtual machine is detected
         ansible.builtin.apt:
           pkg:
             - build-essential 
@@ -581,7 +602,7 @@
           path: /etc/clamav/clamd.conf      
           block: |
 
-            # Exlude from scanning
+            # Exclude from scanning
             ExcludePath ^/proc
             ExcludePath ^/sys
             ExcludePath ^/run
@@ -800,7 +821,7 @@
       pkg:
         - intel-media-va-driver-non-free
 
-    when: cpu_familly.msg == "GenuineIntel"
+    when: cpu_family.msg == "GenuineIntel"
 
 # Ubuntu restricted restricted video codecs
 # https://askubuntu.com/a/1433621/1086686
@@ -865,21 +886,51 @@
 
   - name: Install Vscode extensions ( takes time, please wait )
     ansible.builtin.shell: |
+      # AI-assisted development etension
       code --install-extension visualstudioexptteam.vscodeintellicode 
-      code --install-extension ms-python.python 
-      code --install-extension esbenp.prettier-vscode 
+
+      # Code formatter 
+      code --install-extension esbenp.prettier-vscode
+
+      # Python extension
+      code --install-extension ms-python.python  
+
+      # Ansible extensions
       code --install-extension redhat.vscode-xml 
       code --install-extension redhat.vscode-yaml 
       code --install-extension redhat.ansible
+
+      # Docker extension
       code --install-extension ms-azuretools.vscode-docker 
-      code --install-extension xadillax.viml 
-      code --install-extension jdinhlife.gruvbox 
-      code --install-extension naumovs.color-highlight 
-      code --install-extension nico-castell.linux-desktop-file 
-      code --install-extension dlasagno.rasi 
-      code --install-extension dcasella.i3 
-      code --install-extension jonathanharty.gruvbox-material-icon-theme      
- 
+
+      # Git extension
+      code --install-extension eamodio.gitlens
+
+      # Bookmarks extension    
+      code --install-extension alefragnani.Bookmarks
+
+      # Terraform extension
+      code --install-extension hashicorp.terraform
+
+      # Vim Script language extension
+      code --install-extension xadillax.viml
+
+      # Highlight web colors extension
+      code --install-extension naumovs.color-highlight
+      
+      # Support for .desktop files extension
+      code --install-extension nico-castell.linux-desktop-file
+
+      # Rofi theme language support extension
+      code --install-extension dlasagno.rasi
+
+      # Syntax definition for the i3wm configuration file extension
+      code --install-extension dcasella.i3
+
+      # Themes
+      code --install-extension jdinhlife.gruvbox  
+      code --install-extension jonathanharty.gruvbox-material-icon-theme
+      
 # Teamviewer
 
   - name: Install Teamviewer
@@ -1292,7 +1343,15 @@
     become: true
     community.general.flatpak:
       name: io.github.peazip.PeaZip
-      state: present  
+      state: present 
+
+# Guiscrcpy -  gui for android screen sharing
+
+  - name: Install # Guiscrcpy -  gui for android screen sharing
+    become: true
+    community.general.flatpak:
+      name: in.srev.guiscrcpy
+      state: present 
 
 # Joplin notes app and extensions
 
