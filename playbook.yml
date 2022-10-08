@@ -525,9 +525,7 @@
             - kvm
             - libvirt
 
-    become: true
-
-   
+    become: true 
 
 #############################################################################################################
 
@@ -1070,6 +1068,21 @@
 
     become: true
 
+# KDE connect for bluetooth connection with android phone
+
+  - name: Install KDE connect for bluetooth connection with android phone
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - kdeconnect
+
+# Scrcpy - screen copy for android devices (Android 5.0+ and enabled adb debugging)
+
+  - name: Install Scrcpy - screen copy for android devices
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - scrcpy
 
 # Ferdium - app for app for communication, facebook messenger, microsoft teams
 

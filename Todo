@@ -27,25 +27,9 @@ sudo dnf install -y jq
 # Xfce polkit for password popups
 sudo dnf install -y xfce-polkit
 
-# Bluez for bluetooth 
-echo "${green}${bold}INSTALLING BLUEZ. BLUETOOTH PROTOCOL STACK FOR LINUX${reset}"
-sudo dnf -y install bluez bluez-tools 
-# bluetoothctl discoverable on 
-
-# Blueman for bluetooth applet
-echo "${green}${bold}INSTALLING BLUEMAN. BLUETOOTH APPLET${reset}"
-sudo dnf install -y blueman 
-
-# KDE connect for bluetooth connection with android phone
-sudo dnf install -y sudo dnf install kde-connect
-
 # Firewall rule for kde-connect
 sudo firewall-cmd --permanent --zone=public --add-service=kdeconnect
 sudo firewall-cmd --reload
-
-# Scrcpy for android phone screen sharing when connected by usb and usb-debbuging is enabled
-sudo dnf copr enable -y zeno/scrcpy
-sudo dnf install -y scrcpy
 
 # Playerctl for control media with keyboard
 sudo dnf install -y playerctl
