@@ -5,15 +5,6 @@ git clone --quiet --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 yes | ~/.fzf/install 
 cd
 
-# Oh-my-zsh
-echo "${green}${bold}INSTALLING OH MY ZSH. FRAMEWORK FOR ZSH${reset}"
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended 
-
-# Oh-my-zsh plugins
-echo "${green}${bold}ADDING ZSH PLUGINS${reset}"
-git clone --quiet https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting 
-git clone --quiet https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 
-
 # Powerlevel10k zsh
 echo "${green}${bold}INSTALLING POWERLEVEL10K. ZSH THEME${reset}"
 cd ~/.gc
@@ -120,10 +111,6 @@ cp -r ~/.gc/dotfiles/nvim ~/.config
 # Copy VirtualBox config to proper folder 
 cp -r ~/.gc/dotfiles/VirtualBox ~/.config
 chmod +x ~/.config/VirtualBox/update.sh
-
-# Copy VmWare config to proper folder
-mkdir ~/.vmware
-cp -r ~/.gc/dotfiles/vmware/preferences ~/.vmware
 
 # Copy zsh sripts to proper folder
 cp -r ~/.gc/dotfiles/zsh/scripts/* ~/.oh-my-zsh/custom
@@ -274,3 +261,7 @@ sudo dnf install -y python3-pip
 sudo dnf install -y meson 
 sudo dnf install -y cmake 
 sudo dnf install -y jq 
+
+
+# add geoclue2 redhisft confog file
+https://wiki.archlinux.org/title/redshift

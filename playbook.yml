@@ -230,8 +230,58 @@
         ansible.builtin.user:
           name: "{{ login_user }}"
           shell: /bin/zsh
-
+    
     become: true
+
+  - name: Create a directory for oh-my-zsh installation script
+    ansible.builtin.file:
+      path: ~/.gc/ohmyzsh/
+      state: directory
+      mode: '0755'
+
+  - name: Download oh-my-zsh
+    ansible.builtin.get_url:
+      url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+      dest: ~/.gc/ohmyzsh/install.sh
+
+  - name: Make oh-my-zsh script executable
+    ansible.builtin.file:
+      path: ~/.gc/ohmyzsh/install.sh
+      mode: u+x
+  
+  - name: Check that oh-my-zsh is installed
+    ansible.builtin.stat:
+        path: ~/.oh-my-zsh
+    register: zsh_installation_status
+
+  - name: Install oh-my-zsh
+    ansible.builtin.shell: |
+      sh -c "~/.gc/ohmyzsh/install.sh" --unattended
+    when:
+      not zsh_installation_status.stat.exists
+
+# Zsh plugins
+
+  - name: Install zsh autosuggestions plugin
+    ansible.builtin.get_url:
+      url: https://github.com/zsh-users/zsh-autosuggestions
+      dest: ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+
+  - name: Install zsh syntax highlightings plugin
+    ansible.builtin.get_url:
+      url: https://github.com/zsh-users/zsh-syntax-highlighting.git
+      dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+  
+  - name: Install zsh completions plugin
+    ansible.builtin.get_url:
+      url: https://github.com/zsh-users/zsh-completions
+      dest: ~/.oh-my-zsh/custom/plugins/zsh-completions
+
+# Powerlevel10k zsh
+
+          
+
+    
 
       
 
@@ -1118,6 +1168,9 @@
     ansible.builtin.apt:
       pkg:  
         - redshift-gtk
+        - redshift
+        - geoclue-2.0
+
 
 # Galculator - scientific calculator  
 # https://github.com/galculator/galculator
