@@ -40,23 +40,6 @@
 
 #############################################################################################################         
 
-# Mesa graphic drivers
-# https://itsfoss.com/install-mesa-ubuntu/
-
-#  - name: Install Mesa graphic drivers 
-
-#    block:
-
-      #- name: Add Mesa ppa
-       # ansible.builtin.shell: |
-        #  add-apt-repository --yes ppa:kisak/kisak-mesa
-
-    #  - name: Install Mesa graphic card drivers 
-     #   ansible.builtin.apt:
-      #    pkg:
-       #     -  
-    # become: true  
-
 # Linux firmware
 
   - name: Install Drivers 
@@ -94,6 +77,33 @@
         - pavucontrol
         - alsa-utils
         - alsamixer
+
+# Bluetooth
+
+  - name: Install bluetooth
+
+    block:
+
+      - name: Install bluetooth support
+        ansible.builtin.apt:
+          pkg:
+            - bluez
+            - bluez-tools
+      
+      - name: Install blueman - bluetooth managment tool
+        ansible.builtin.apt:
+          pkg:
+            - blueman
+
+      - name: Enabling bluetooth
+        ansible.builtin.systemd:
+          name: bluetooth.service
+          state: started
+          enabled: yes
+        when:  
+          - ansible_virtualization_role == "host"
+    
+    become: true
 
 #############################################################################################################
 
