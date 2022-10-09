@@ -446,6 +446,15 @@
   - name: Install Polybar Spotify module
     ansible.builtin.git:
       repo: https://github.com/Jvanrhijn/polybar-spotify.git
+
+# i3-wifi applet
+
+  - name: Install Polybar Spotify module dependencies
+    ansible.builtin.apt:
+      pkg:
+        - network-manager
+        - nm-tray
+
 #############################################################################################################
 
 # Virtualization
