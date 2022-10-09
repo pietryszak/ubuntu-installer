@@ -172,7 +172,12 @@
           name: cups
           state: started
           enabled: yes
-    
+
+      - name: Install system config printer app to add printer from GUI
+        ansible.builtin.apt:
+          pkg:
+            - system-config-printer
+
     become: true
 
 #############################################################################################################
@@ -446,14 +451,6 @@
       pkg:
         - numlockx       
 
-# Network manager
-
-  - name: Install network manager
-    become: true
-    ansible.builtin.apt:
-      pkg:
-        - network-manager
-
 # Arandr - screen layout
 
   - name: Install arandr for screen layout
@@ -506,7 +503,7 @@
 
 # i3-wifi applet
 
-  - name: Install Polybar Spotify module dependencies
+  - name: Install network manager and applet for networks in i3-gaps
     ansible.builtin.apt:
       pkg:
         - network-manager
