@@ -75,6 +75,7 @@
       pkg:
         - pulseaudio
         - pavucontrol
+        - pavumeter
         - alsa-utils
         - alsamixer
 
@@ -102,6 +103,75 @@
           enabled: yes
         when:  
           - ansible_virtualization_role == "host"
+    
+    become: true
+
+# Cups - printing system
+
+  - name: Cups - printing system
+
+    block:
+
+      - name:  Install Cups - printing system and printer drivers
+        ansible.builtin.apt:
+          pkg:
+            - cups
+            - printer-driver-all
+
+      - name: Adjust cups listening port configuration
+        ansible.builtin.lineinfile:
+          backup: yes
+          path: /etc/cups/cupsd.conf
+          regexp: "{{ item.regexp }}"
+          line: "{{ item.line }}"
+        loop:
+          - { regexp: 'Browsing No', line: 'Browsing On' }
+          - { regexp: 'Listen localhost:631', line: 'Port 631' }
+
+      - name: Adjust cups to listen to all interfaces.
+        ansible.builtin.blockinfile:
+          path: /etc/cups/cupsd.conf
+          marker: "{mark}"
+          marker_begin: "# Restrict access to the server..."
+          marker_end: "# Restrict access to the admin pages..."
+          block: |
+            
+            <Location />
+              Order allow,deny
+              Allow @LOCAL
+            </Location>
+            #
+          state: present
+      
+      - name: Adjust cups administration panel configuration
+        ansible.builtin.blockinfile:
+          path: /etc/cups/cupsd.conf
+          marker: "{mark}"
+          marker_begin: "# Restrict access to the admin pages..."
+          marker_end: "# Restrict access to configuration files..."
+          block: |
+            
+            <Location /admin>
+              AuthType Default
+              Require valid-user
+              Order allow,deny
+              Allow @LOCAL
+            </Location>
+            #
+          state: present
+
+      - name: Add user to lpadmin group for cups administration
+        ansible.builtin.user:
+          name: "{{ login_user }}"
+          append: yes
+          groups:
+            - lpadmin
+
+      - name: Enabling printing system
+        ansible.builtin.systemd:
+          name: cups
+          state: started
+          enabled: yes
     
     become: true
 
@@ -134,18 +204,17 @@
           src: ~/.gc/distro-grub-themes/customize/ubuntu/
           dest: /boot/grub/themes
 
-      - name: Adjust grub display resolution
+      - name: Adjust grub display resolution, display time, theme, splash screen
         ansible.builtin.lineinfile:
-          path: /etc/default/grub
-          regexp: '#GRUB_GFXMODE=640x480'
-          line: GRUB_GFXMODE=2560x1440
           backup: yes
-
-      - name: Adjust grub display time
-        ansible.builtin.lineinfile:
           path: /etc/default/grub
-          regexp: 'GRUB_TIMEOUT=0'
-          line: GRUB_TIMEOUT=4
+          regexp: "{{ item.regexp }}"
+          line: "{{ item.line }}"
+        loop:
+          - { regexp: '#GRUB_GFXMODE=640x480', line: 'RUB_GFXMODE=2560x1440' }
+          - { regexp: 'GRUB_TIMEOUT=0', line: 'GRUB_TIMEOUT=4' }
+          - { regexp: 'GRUB_TIMEOUT_STYLE=hidden', line: 'GRUB_TIMEOUT_STYLE=menu' }
+          - { regexp: 'GRUB_CMDLINE_LINUX_DEFAULT=""', line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 rd.systemd.show_status=auto rd.udev.log_level=3 splash"' }
 
       - name: Add path of theme to grub configure
         ansible.builtin.blockinfile:
@@ -155,18 +224,6 @@
             # Ubuntu grub theme
             GRUB_THEME=/boot/grub/themes/theme.txt
 
-      - name: Show grub theme
-        ansible.builtin.lineinfile:
-          path: /etc/default/grub
-          regexp: 'GRUB_TIMEOUT_STYLE=hidden'
-          line: GRUB_TIMEOUT_STYLE=menu
-
-      - name: Show splash screen
-        ansible.builtin.lineinfile:
-          path: /etc/default/grub
-          regexp: 'GRUB_CMDLINE_LINUX_DEFAULT=""'
-          line: GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 rd.systemd.show_status=auto rd.udev.log_level=3 splash"
-      
       - name: Hide any kernel messages from the console
         ansible.builtin.blockinfile:
           path: /etc/sysctl.d/20-quiet-printk.conf

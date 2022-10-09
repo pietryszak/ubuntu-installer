@@ -225,9 +225,6 @@ sudo reboot
 
 ################# check
 
-# Neovim
-sudo dnf install -y neovim python3-neovim 
-
 # Nodejs for neovim plugins
 echo "${green}${bold}INSTALLING NODEJS FOR VIM PLUGINS${reset}"
 sudo dnf install -y nodejs 
