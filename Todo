@@ -14,10 +14,6 @@ cp weathericons-regular-webfont.ttf ~/.local/share/fonts
 fc-cache -fv >> ~/.gc/fedora-installer/install-log
 cd
 
-# i3-wifi applet
-echo "${green}${bold}INSTALLING I3 WIFI APPLET${reset}"
-sudo dnf install -y network-manager-applet 
-
 # GTK Gruvbox theme
 echo "${green}${bold}INSTALLING GRUVBOX THEME${reset}"
 cd ~/.gc
@@ -236,7 +232,6 @@ sudo dnf install -y rust cargo
 
 # Python pip, meson
 echo "${green}${bold}INSTALLING PHP PIP, MESON, CMAKE, JQ. BUILD SYSTEM FOR APPS${reset}"
-sudo dnf install -y python3-pip 
 sudo dnf install -y meson 
 sudo dnf install -y cmake 
 sudo dnf install -y jq 
@@ -244,3 +239,7 @@ sudo dnf install -y jq
 
 # add geoclue2 redhisft confog file
 https://wiki.archlinux.org/title/redshift
+
+# i3-wifi applet
+echo "${green}${bold}INSTALLING I3 WIFI APPLET${reset}"
+sudo dnf install -y network-manager-applet 

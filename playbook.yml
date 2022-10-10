@@ -106,6 +106,13 @@
     
     become: true
 
+# Exfatprogs - tool to create, check and label exFAT filesystems
+
+  - name: Install Exfatprogs - tool to create, check and label exFAT filesystems
+    ansible.builtin.apt:
+      pkg:
+        - exfatprogs
+
 # Cups - printing system
 
   - name: Cups - printing system
