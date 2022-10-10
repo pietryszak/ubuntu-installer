@@ -123,7 +123,7 @@
         ansible.builtin.apt:
           pkg:
             - cups
-            - printer-driver-all
+            - foomatic-db
 
       - name: Adjust cups listening port configuration
         ansible.builtin.lineinfile:
@@ -1237,13 +1237,23 @@
           state: directory
           mode: '0755'
 
-# Libreoffice
+# Onlyoffice  - office suite
 
-  - name: Install libreoffice - office suite
-    become: true
-    ansible.builtin.apt:
-      pkg:  
-        - libreoffice
+  - name: Install Onlyoffice  - office suite
+
+    block:
+
+      - name: Add an apt key by id from a keyserver for Onlyoffice
+        ansible.builtin.apt_key:
+          keyserver: keyserver.ubuntu.com
+          id: 8320CA65CB2DE8E5
+
+      - name: Install Onlyoffice - office suite
+        become: true
+        ansible.builtin.apt:
+          pkg:  
+            - onlyoffice-desktopeditors 
+            - onlyoffice-desktopeditors-help 
 
 # Timeshift
 # https://github.com/linuxmint/timeshift
