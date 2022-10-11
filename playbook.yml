@@ -112,6 +112,7 @@
 # Exfatprogs - tool to create, check and label exFAT filesystems
 
   - name: Install Exfatprogs - tool to create, check and label exFAT filesystems
+    become: true
     ansible.builtin.apt:
       pkg:
         - exfatprogs
