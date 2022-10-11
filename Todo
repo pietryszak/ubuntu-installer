@@ -1,17 +1,11 @@
-# Fonts 
-echo "${green}${bold}ADDING FONTS TO SYSTEM ${reset}"
-sudo dnf install -y powerline-fonts 
-sudo dnf install -y cabextract xorg-x11-font-utils 
-cd ~/.gc
-git clone --quiet https://github.com/pietryszak/fonts.git 
-cd fonts
-sudo dnf install -y msttcore-fonts-installer-2.6-1.noarch.rpm 
+
+
 mkdir -p ~/.local/share/fonts
 cp feather.ttf ~/.local/share/fonts
 cp iosevka_nerd_font.ttf ~/.local/share/fonts
 cp MesloLGS* ~/.local/share/fonts/
 cp weathericons-regular-webfont.ttf ~/.local/share/fonts
-fc-cache -fv >> ~/.gc/fedora-installer/install-log
+fc-cache -fv
 cd
 
 # GTK Gruvbox theme

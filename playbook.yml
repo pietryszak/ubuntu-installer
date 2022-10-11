@@ -17,6 +17,7 @@
     changed_when: false
     become: false
     register: whoami
+
   - name: Set a fact with the username
     set_fact:
       login_user: "{{ whoami.stdout }}"
@@ -232,7 +233,7 @@
           - { regexp: 'GRUB_TIMEOUT=0', line: 'GRUB_TIMEOUT=4' }
           - { regexp: 'GRUB_TIMEOUT_STYLE=hidden', line: 'GRUB_TIMEOUT_STYLE=menu' }
           - { regexp: 'GRUB_CMDLINE_LINUX_DEFAULT=""', line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 rd.systemd.show_status=auto rd.udev.log_level=3 splash"' }
-
+      
       - name: Add path of theme to grub configure
         ansible.builtin.blockinfile:
           path: /etc/default/grub      
@@ -240,7 +241,7 @@
 
             # Ubuntu grub theme
             GRUB_THEME=/boot/grub/themes/theme.txt
-
+      
       - name: Hide any kernel messages from the console
         ansible.builtin.blockinfile:
           path: /etc/sysctl.d/20-quiet-printk.conf
@@ -249,41 +250,41 @@
 
             # Hide any kernel messages from the console
             kernel.printk = 3 3 3 3
-
+      
       - name: Update Grub config file
         ansible.builtin.shell: |
           update-grub2
-
+      
       - name: Install a plymouth (splash screen) theme
         ansible.builtin.apt:
           pkg:
             - plymouth-themes
-
+      
       - name: Update initial ramfs for new plymouth theme
         ansible.builtin.shell: |
-          update-initramfs -u 
-
+          update-initramfs -u
+    
     become: true
 
 # Lightdm Display Manager
-
+  
   - name: Install Lightdm 
-
+    
     block:
-
+      
       - name: Install a lightdm dependencies
         ansible.builtin.apt:
           pkg:
             - lightdm
             - lightdm-gtk-greeter
             - lightdm-gtk-greeter-settings
-
+      
       - name: Enable lightdm service
         ansible.builtin.systemd:
           name: lightdm.service
           enabled: yes
-
-    become: true    
+    
+    become: true
 
 #############################################################################################################
 
@@ -682,9 +683,11 @@
         failed_when: "unused_snaps is failed and ('find' not in unused_snaps.msg and 'found' not in unused_snaps.msg)"
         with_items:
           - lxd
+
       - name: Pause for 15 senonds to avoid snap remove issue
         ansible.builtin.pause:
-          seconds: 15   
+          seconds: 15
+
       - name: Remove snap core20
         community.general.snap:
           name={{item}} 
@@ -692,7 +695,8 @@
         register: unused_snaps
         failed_when: "unused_snaps is failed and ('find' not in unused_snaps.msg and 'found' not in unused_snaps.msg)"
         with_items:
-          - core20   
+          - core20 
+
       - name: Remove snap snapd
         community.general.snap:
           name={{item}} 
@@ -701,6 +705,7 @@
         failed_when: "unused_snaps is failed and ('find' not in unused_snaps.msg and 'found' not in unused_snaps.msg)"
         with_items:
           - snapd
+
       - name: Stop and disable unused snap services
         ansible.builtin.systemd: 
           name={{item}} 
@@ -712,6 +717,7 @@
           - snapd.service
           - snapd.socket
           - snapd.seeded.service
+
       - name: Delete any leftover snap cached data
         ansible.builtin.file:
           path: "{{ item }}" 
@@ -723,14 +729,17 @@
           - /var/lib/snapd
           - /var/cache/snapd/
           - /root/snap
+
       - name: Purge or remove completely snapd   
         ansible.builtin.shell: |
           apt autoremove --purge snapd -y
+
       - name: Create file with apt snap settings to avoid install
         ansible.builtin.file:
           path: /etc/apt/preferences.d/nosnap.pref
           state: touch
-          mode: u=rw,g=r,o=r           
+          mode: u=rw,g=r,o=r
+
       - name: Set snap priority to avoid install in future
         ansible.builtin.blockinfile:
           path: /etc/apt/preferences.d/nosnap.pref     
@@ -738,17 +747,21 @@
             Package: snapd
             Pin: release a=*
             Pin-Priority: -10
+
     become: true
+    
   - name: Enable flatpak
   
     block:
       - name: Install flatpak
         ansible.builtin.apt:
           pkg:
-          - flatpak 
+          - flatpak
+
       - name: Enable the Flathub - a popular destination for searching the application
         ansible.builtin.shell: |
           flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    
     become: true
 
 #############################################################################################################
@@ -1262,7 +1275,7 @@
             - onlyoffice-desktopeditors-help
           update_cache: yes 
     
-    become: true    
+    become: true     
 
 # Timeshift
 # https://github.com/linuxmint/timeshift
@@ -1291,8 +1304,8 @@
           pkg:
             - terminator 
 
-    become: true     
-
+    become: true
+    
 # Transmission a fast, easy, and free BitTorrent client
  
   - name: Install transmission a fast, easy, and free BitTorrent client
@@ -1486,6 +1499,35 @@
         ansible.builtin.get_url:
           url: https://github.com/joplin/plugins/raw/master/plugins/joplin.plugin.benji.persistentLayout/plugin.jpl
           dest: ~/.config/joplin-desktop/plugins/joplin.plugin.benji.persistentLayout.jpl
+
+#############################################################################################################
+
+# Look
+
+#############################################################################################################
+  
+  - name: Download fonts
+    ansible.builtin.git:
+      repo: https://github.com/pietryszak/fonts.git
+      dest: ~/.gc/fonts
+
+  - name: Copy fonts to proper folder
+    become: true
+    become_user: "{{ login_user }}"
+    ansible.builtin.copy:
+      src: "{{ item }}" 
+      dest: /usr/local/share/fonts/
+    with_items:
+      -  ~/.gc/fonts/'MesloLGS NF Bold Italic.ttf'
+      -  ~/.gc/fonts/'MesloLGS NF Bold.ttf'
+      -  ~/.gc/fonts/'MesloLGS NF Italic.ttf'
+      -  ~/.gc/fonts/'MesloLGS NF Regular.ttf'
+      -  ~/.gc/fonts/feather.ttf
+      -  ~/.gc/fonts/iosevka_nerd_font.ttf
+      -  ~/.gc/fonts/weathericons-regular-webfont.ttf
+
+      
+
 
 #############################################################################################################
 
