@@ -816,7 +816,7 @@
 
       - name: Install virtualbox guest tool
         ansible.builtin.shell: |
-          sh -c "yes | /media/iso/VBoxLinuxAdditions.run"
+          sh -c "yes | /media/iso/VBoxLinuxAdditions.run --nox11"
 
       - name: Unmount iso with virtualbox guest tool
         ansible.builtin.shell: |
