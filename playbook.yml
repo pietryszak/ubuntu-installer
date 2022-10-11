@@ -781,11 +781,14 @@
             - virtualbox-ext-pack
           
       - name: Register virtualbox network list
+        become_user: "{{ login_user }}"
         ansible.builtin.shell: |
           VBoxManage natnetwork list
         register: virtualbox_natnetwork
 
       - name: Add Nat network to virtualbox
+        become: true
+        become_user: "{{ login_user }}"
         ansible.builtin.shell: |
           VBoxManage natnetwork add --netname NatNetwork --network "10.0.2.0/24" --enable 
         when: virtualbox_natnetwork.stdout | regex_search('0 networks found')
