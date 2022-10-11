@@ -736,8 +736,21 @@
             Package: snapd
             Pin: release a=*
             Pin-Priority: -10
+      
+      - name: Delete any leftover temporary files
+        ansible.builtin.file:
+          path: "{{ item }}" 
+          state: absent
+        with_items:
+          - ~/snap
+          - /snap
+          - /var/snap
+          - /var/lib/snapd
+          - /var/cache/snapd/
+          - /root/snap
 
     become: true
+
 
   - name: Enable flatpak
   
@@ -1519,12 +1532,6 @@
       path: "{{ item }}" 
       state: absent
     with_items:
-      - ~/snap
-      - /snap
-      - /var/snap
-      - /var/lib/snapd
-      - /var/cache/snapd/
-      - /root/snap
       - /etc/apt/keyrings/regolith.key
       - /etc/apt/keyrings/regolith.gpg
       - /etc/apt/keyrings/pubkey_spotify.gpg
