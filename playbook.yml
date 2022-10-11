@@ -73,11 +73,15 @@
     become: true
     ansible.builtin.apt:
       pkg:
+        - alsa-base
+        - alsa-topology-conf
+        - alsa-tools
+        - alsa-ucm-conf
         - pulseaudio
+        - pulseaudio-utils
+        - pulseaudio-module-bluetooth/
         - pavucontrol
         - pavumeter
-        - alsa-utils
-        - alsamixer
 
 # Bluetooth
 
