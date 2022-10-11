@@ -563,6 +563,7 @@
         ansible.builtin.shell: |
           VBoxManage natnetwork list
         register: virtualbox_natnetwork
+        no_log: true
 
       - debug: var=virtualbox_natnetwork.stdout_lines
 
@@ -780,9 +781,9 @@
         with_items:
           - lxd
 
-      - name: Pause for 30 senonds to avoid snap remove issue
+      - name: Pause for 15 senonds to avoid snap remove issue
         ansible.builtin.pause:
-          seconds: 30   
+          seconds: 15   
 
       - name: Remove snap core20
         community.general.snap:
@@ -838,10 +839,12 @@
   
     block:
 
-      - name: Install flatpak
+      - name: Install flatpak (takes time, please wait)
         ansible.builtin.apt:
           pkg:
-          - flatpak 
+          - flatpak
+          update_cache: yes 
+        
 
       - name: Enable the Flathub - a popular destination for searching the application
         ansible.builtin.shell: |
