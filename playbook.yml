@@ -34,7 +34,6 @@
       pkg:
         - xorg
        
-
 # Pulseaudio audio drivers
 
   - name: Install sound drivers
@@ -1188,7 +1187,6 @@
     
     become: true   
  
-
 # Gimp
 
   - name: Install gimp - image manipulation program
@@ -1289,7 +1287,6 @@
         - redshift-gtk
         - redshift
         - geoclue-2.0
-
 
 # Galculator - scientific calculator  
 # https://github.com/galculator/galculator
@@ -1477,23 +1474,28 @@
       repo: https://github.com/pietryszak/fonts.git
       dest: ~/.gc/fonts
 
+  - name: Create a directory for oh-my-zsh installation script
+    ansible.builtin.file:
+      path: ~/.local/share/fonts
+      state: directory
+      mode: '0755'
+
   - name: Copy fonts to proper folder
-    become: true
-    become_user: "{{ login_user }}"
     ansible.builtin.copy:
       src: "{{ item }}" 
-      dest: /usr/local/share/fonts/
+      dest: ~/.local/share/fonts
     with_items:
-      -  ~/.gc/fonts/'MesloLGS NF Bold Italic.ttf'
-      -  ~/.gc/fonts/'MesloLGS NF Bold.ttf'
-      -  ~/.gc/fonts/'MesloLGS NF Italic.ttf'
-      -  ~/.gc/fonts/'MesloLGS NF Regular.ttf'
+      -  ~/.gc/fonts/MesloLGS-NF-Bold-Italic.ttf
+      -  ~/.gc/fonts/MesloLGS-NF-Bold.ttf
+      -  ~/.gc/fonts/MesloLGS-NF-Italic.ttf
+      -  ~/.gc/fonts/MesloLGS-NF-Regular.ttf
       -  ~/.gc/fonts/feather.ttf
       -  ~/.gc/fonts/iosevka_nerd_font.ttf
       -  ~/.gc/fonts/weathericons-regular-webfont.ttf
 
-      
-
+  - name: Update fonts cache
+    ansible.builtin.shell: |
+      fc-cache -fv
 
 #############################################################################################################
 
