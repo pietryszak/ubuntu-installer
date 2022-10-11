@@ -663,7 +663,9 @@
     become: true
 
 #############################################################################################################
+
 # Flathub
+
 #############################################################################################################  
 # https://ubuntuhandbook.org/index.php/2022/04/remove-snap-block-ubuntu-2204/
 # https://onlinux.systems/guides/20220524_how-to-disable-and-remove-snap-on-ubuntu-2204
@@ -792,11 +794,8 @@
       - name: Install virtualbox guest tool dependencies if virtual machine detected
         ansible.builtin.shell: |
           apt install linux-headers-$(uname -r) 
-        when: 
-          - ansible_virtualization_type == "virtualbox"
-          - ansible_virtualization_role == "guest"
 
-      - name: Install virtualbox guest tool if virtual machine is detected
+      - name: Install virtualbox guest tool dependiences
         ansible.builtin.apt:
           pkg:
             - build-essential 
@@ -804,9 +803,26 @@
             - virtualbox-guest-utils 
             - virtualbox-guest-x11 
             - virtualbox-dkms
-        when: 
-          - ansible_virtualization_type == "virtualbox"
-          - ansible_virtualization_role == "guest"
+
+    become: true
+
+  - name: Folder for virtualbox guest tool
+    ansible.builtin.file:
+      path: ~/.gc/virtual-box-guest-additions/
+      state: directory
+      mode: '0755'
+
+  - name: Install Virtualbox guest tool
+
+    block:
+
+      - name: Unpack virtualbox guest tool ( takes time, please wait )
+        ansible.builtin.shell: |
+          7z x /usr/share/virtual-box-guest-additions/VBoxGuestAdditions.iso
+
+      - name: Install virtualbox guest tool
+        ansible.builtin.shell: |
+          sh -c "~/.gc/VBoxGuestAdditions/VBoxLinuxAdditions.run --nox11"
 
     become: true
 
