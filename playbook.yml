@@ -663,19 +663,14 @@
     become: true
 
 #############################################################################################################
-
 # Flathub
-
 #############################################################################################################  
-
 # https://ubuntuhandbook.org/index.php/2022/04/remove-snap-block-ubuntu-2204/
 # https://onlinux.systems/guides/20220524_how-to-disable-and-remove-snap-on-ubuntu-2204
 # https://gist.github.com/tyrells/0a79681de339237cb04c?permalink_comment_id=3668310#gistcomment-3668310
-
   - name: Disable unnecessary snap
   
     block:
-
       - name: Remove snap lxd
         community.general.snap:
           name={{item}} 
@@ -684,11 +679,9 @@
         failed_when: "unused_snaps is failed and ('find' not in unused_snaps.msg and 'found' not in unused_snaps.msg)"
         with_items:
           - lxd
-
-      - name: Pause for 15 senonds to avoid snap remove issue
+      - name: Pause for 30 senonds to avoid snap remove issue
         ansible.builtin.pause:
-          seconds: 15   
-
+          seconds: 30   
       - name: Remove snap core20
         community.general.snap:
           name={{item}} 
@@ -697,7 +690,6 @@
         failed_when: "unused_snaps is failed and ('find' not in unused_snaps.msg and 'found' not in unused_snaps.msg)"
         with_items:
           - core20   
-
       - name: Remove snap snapd
         community.general.snap:
           name={{item}} 
@@ -706,7 +698,6 @@
         failed_when: "unused_snaps is failed and ('find' not in unused_snaps.msg and 'found' not in unused_snaps.msg)"
         with_items:
           - snapd
-
       - name: Stop and disable unused snap services
         ansible.builtin.systemd: 
           name={{item}} 
@@ -718,26 +709,7 @@
           - snapd.service
           - snapd.socket
           - snapd.seeded.service
-
-      - name: Purge or remove completely snapd   
-        ansible.builtin.shell: |
-          apt autoremove --purge snapd -y
-
-      - name: Create file with apt snap settings to avoid install
-        ansible.builtin.file:
-          path: /etc/apt/preferences.d/nosnap.pref
-          state: touch
-          mode: u=rw,g=r,o=r           
-
-      - name: Set snap priority to avoid install in future
-        ansible.builtin.blockinfile:
-          path: /etc/apt/preferences.d/nosnap.pref     
-          block: |
-            Package: snapd
-            Pin: release a=*
-            Pin-Priority: -10
-      
-      - name: Delete any leftover temporary files
+      - name: Delete any leftover snap cached data
         ansible.builtin.file:
           path: "{{ item }}" 
           state: absent
@@ -748,27 +720,34 @@
           - /var/lib/snapd
           - /var/cache/snapd/
           - /root/snap
-
+      - name: Purge or remove completely snapd   
+        ansible.builtin.shell: |
+          apt autoremove --purge snapd -y
+      - name: Create file with apt snap settings to avoid install
+        ansible.builtin.file:
+          path: /etc/apt/preferences.d/nosnap.pref
+          state: touch
+          mode: u=rw,g=r,o=r           
+      - name: Set snap priority to avoid install in future
+        ansible.builtin.blockinfile:
+          path: /etc/apt/preferences.d/nosnap.pref     
+          block: |
+            Package: snapd
+            Pin: release a=*
+            Pin-Priority: -10
     become: true
-
-
   - name: Enable flatpak
   
     block:
-
-      - name: Install flatpak (takes time, please wait)
+      - name: Install flatpak
         ansible.builtin.apt:
           pkg:
-          - flatpak
-          update_cache: yes 
-        
-
+          - flatpak 
       - name: Enable the Flathub - a popular destination for searching the application
         ansible.builtin.shell: |
           flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-
     become: true
-
+    
 #############################################################################################################
 
 # Apps
