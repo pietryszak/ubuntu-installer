@@ -538,6 +538,12 @@
 
     block:
 
+      - name: Install Virtualbox extensions pack
+        ansible.builtin.apt:
+          pkg:
+            - virtualbox
+            - virtualbox-guest-additions-iso
+
       - name: Accept virtualbox-ext-pack seen license
         ansible.builtin.debconf:
           name: virtualbox-ext-pack
