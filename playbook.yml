@@ -531,102 +531,6 @@
 
 #############################################################################################################
 
-# Virtualization
-
-#############################################################################################################         
-
-# Virtualbox
-
-  - name: Install Virtualbox
-
-    block:
-
-      - name: Install Virtualbox extensions pack
-        ansible.builtin.apt:
-          pkg:
-            - virtualbox
-            - virtualbox-guest-additions-iso
-
-      - name: Accept virtualbox-ext-pack select license
-        ansible.builtin.debconf:
-          name: virtualbox-ext-pack
-          question: virtualbox-ext-pack/license
-          value: 'true'
-          vtype: select
-          
-      - name: Install Virtualbox extensions pack
-        ansible.builtin.apt:
-          pkg:
-            - virtualbox-ext-pack
-          
-      - name: Register virtualbox network list
-        ansible.builtin.shell: |
-          VBoxManage natnetwork list
-        register: virtualbox_natnetwork
-        no_log: true
-
-      - debug: var=virtualbox_natnetwork.stdout_lines
-
-      - name: Add Nat network to virtualbox
-        ansible.builtin.shell: |
-          VBoxManage natnetwork add --netname NatNetwork --network "10.0.2.0/24" --enable 
-        when: virtualbox_natnetwork.stdout | regex_search('0 networks found')
-
-      - name: Install virtualbox guest tool dependencies if virtual machine detected
-        ansible.builtin.shell: |
-          apt install linux-headers-$(uname -r) 
-        when: 
-          - ansible_virtualization_type == "virtualbox"
-          - ansible_virtualization_role == "guest"
-
-      - name: Install virtualbox guest tool if virtual machine is detected
-        ansible.builtin.apt:
-          pkg:
-            - build-essential 
-            - dkms 
-            - virtualbox-guest-utils 
-            - virtualbox-guest-x11 
-            - virtualbox-dkms
-        when: 
-          - ansible_virtualization_type == "virtualbox"
-          - ansible_virtualization_role == "guest"
-
-    become: true
-
-# KVM
-
-  - name: Install KVM
-
-    block:
-
-      - name: Install KVM virtualization dependiences
-        ansible.builtin.apt:
-          pkg:
-            - qemu-kvm 
-            - libvirt-daemon-system 
-            - virtinst 
-            - libvirt-clients
-            - bridge-utils
-            - virt-manager 
-          
-      - name: Enable services to Virtualize KVM
-        ansible.builtin.systemd:
-          name: libvirtd
-          enabled: yes
-          state: started
-
-      - name: Add user to KVM and Libvirt group
-        ansible.builtin.user:
-          name: "{{ login_user }}"
-          append: yes
-          groups:
-            - kvm
-            - libvirt
-
-    become: true 
-
-#############################################################################################################
-
 # Security
 
 #############################################################################################################         
@@ -1508,6 +1412,100 @@
       repo: https://github.com/pietryszak/ubuntu-dotfiles
       dest: ~/.gc/ubuntu-dotfiles
       clone: yes
+
+#############################################################################################################
+
+# Virtualization
+
+#############################################################################################################         
+
+# Virtualbox
+
+  - name: Install Virtualbox
+
+    block:
+
+      - name: Install Virtualbox extensions pack
+        ansible.builtin.apt:
+          pkg:
+            - virtualbox
+            - virtualbox-guest-additions-iso
+
+      - name: Accept virtualbox-ext-pack select license
+        ansible.builtin.debconf:
+          name: virtualbox-ext-pack
+          question: virtualbox-ext-pack/license
+          value: 'true'
+          vtype: select
+          
+      - name: Install Virtualbox extensions pack
+        ansible.builtin.apt:
+          pkg:
+            - virtualbox-ext-pack
+          
+      - name: Register virtualbox network list
+        ansible.builtin.shell: |
+          VBoxManage natnetwork list
+        register: virtualbox_natnetwork
+
+      - name: Add Nat network to virtualbox
+        ansible.builtin.shell: |
+          VBoxManage natnetwork add --netname NatNetwork --network "10.0.2.0/24" --enable 
+        when: virtualbox_natnetwork.stdout | regex_search('0 networks found')
+
+      - name: Install virtualbox guest tool dependencies if virtual machine detected
+        ansible.builtin.shell: |
+          apt install linux-headers-$(uname -r) 
+        when: 
+          - ansible_virtualization_type == "virtualbox"
+          - ansible_virtualization_role == "guest"
+
+      - name: Install virtualbox guest tool if virtual machine is detected
+        ansible.builtin.apt:
+          pkg:
+            - build-essential 
+            - dkms 
+            - virtualbox-guest-utils 
+            - virtualbox-guest-x11 
+            - virtualbox-dkms
+        when: 
+          - ansible_virtualization_type == "virtualbox"
+          - ansible_virtualization_role == "guest"
+
+    become: true
+
+# KVM
+
+  - name: Install KVM
+
+    block:
+
+      - name: Install KVM virtualization dependiences
+        ansible.builtin.apt:
+          pkg:
+            - qemu-kvm 
+            - libvirt-daemon-system 
+            - virtinst 
+            - libvirt-clients
+            - bridge-utils
+            - virt-manager 
+          
+      - name: Enable services to Virtualize KVM
+        ansible.builtin.systemd:
+          name: libvirtd
+          enabled: yes
+          state: started
+
+      - name: Add user to KVM and Libvirt group
+        ansible.builtin.user:
+          name: "{{ login_user }}"
+          append: yes
+          groups:
+            - kvm
+            - libvirt
+
+    become: true 
+
 
 #############################################################################################################
 
