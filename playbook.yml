@@ -767,7 +767,6 @@
         ansible.builtin.apt:
           pkg:
             - virtualbox
-            - virtualbox-guest-additions-iso
 
       - name: Accept virtualbox-ext-pack select license
         ansible.builtin.debconf:
@@ -803,24 +802,6 @@
             - virtualbox-guest-utils 
             - virtualbox-guest-x11 
             - virtualbox-dkms
-      
-      - name: Folder for virtualbox guest tool
-        ansible.builtin.file:
-          path: /media/iso
-          state: directory
-          mode: '0755'
-
-      - name: Mount iso with virtualbox guest tool
-        ansible.builtin.shell: |
-          mount -o loop /usr/share/virtualbox/VBoxGuestAdditions.iso /media/iso
-
-      - name: Install virtualbox guest tool
-        ansible.builtin.shell: |
-          sh -c "yes | /media/iso/VBoxLinuxAdditions.run --nox11"
-
-      - name: Unmount iso with virtualbox guest tool
-        ansible.builtin.shell: |
-           umount /media/iso
 
     become: true
 
