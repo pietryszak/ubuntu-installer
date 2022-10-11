@@ -515,6 +515,7 @@
   - name: Install Polybar Spotify module
     ansible.builtin.git:
       repo: https://github.com/Jvanrhijn/polybar-spotify.git
+      dest: ~/.gc/polybar-spotify
 
 # i3-wifi applet
 
