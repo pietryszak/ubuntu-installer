@@ -503,6 +503,7 @@
 # Polybar Spotify module for i3-gaps 
 
   - name: Install Polybar Spotify module dependencies
+    become: true
     ansible.builtin.apt:
       pkg:
         - python3-pip
@@ -518,6 +519,7 @@
 # i3-wifi applet
 
   - name: Install network manager and applet for networks in i3-gaps
+    become: true
     ansible.builtin.apt:
       pkg:
         - network-manager
