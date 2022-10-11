@@ -28,41 +28,7 @@
   - name: Check CPU family
     ansible.builtin.debug:
       msg: "{{ ansible_processor[1] }}"
-    register: cpu_family
-    no_log: true
-
-  - name: Export variable for installation packet without pop upgrades
-    ansible.builtin.shell: |
-      export DEBIAN_FRONTEND=noninteractive
-  
-#############################################################################################################
-
-# Drivers
-
-#############################################################################################################         
-
-# Linux firmware
-
-  - name: Install Drivers 
-
-    block:
-
-      - name: Install Linux firmware, ubuntu drivers 
-        ansible.builtin.apt:
-          pkg:
-            - linux-firmware
-            - ubuntu-drivers-common
-          update_cache: yes   
-
-      - name: Autoinstall discovered ubuntu drivers
-        ansible.builtin.shell: |
-          ubuntu-drivers autoinstall
-    
-    become: true 
-
-# Xorg
-
-  - name: Install Xorg 
+    register: cpu_familyAdd fonts to system
     become: true 
     ansible.builtin.apt:
       pkg:
@@ -1281,7 +1247,7 @@
 # https://github.com/linuxmint/timeshift
 
   - name: Install Timeshift - system restore tool
-    become: true
+    become: trueAdd fonts to system
     ansible.builtin.apt:
       pkg:
         - timeshift  
@@ -1305,7 +1271,7 @@
             - terminator 
 
     become: true
-    
+
 # Transmission a fast, easy, and free BitTorrent client
  
   - name: Install transmission a fast, easy, and free BitTorrent client
