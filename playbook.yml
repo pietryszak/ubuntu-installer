@@ -1392,7 +1392,7 @@
 # Solaar - Logitech mouse and keyboard configuration app    
 
   - name: Install Solaar - Logitech mouse and keyboard configuration app
-     ecome: true
+    become: true
     ansible.builtin.apt:
       pkg:
         - solaar
