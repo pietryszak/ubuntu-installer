@@ -54,7 +54,8 @@
           update_cache: yes   
 
       - name: Autoinstall discovered ubuntu drivers
-        ansible.builtin.shell: ubuntu-drivers autoinstall
+        ansible.builtin.shell: |
+          ubuntu-drivers autoinstall
     
     become: true 
 
@@ -250,7 +251,8 @@
             kernel.printk = 3 3 3 3
 
       - name: Update Grub config file
-        ansible.builtin.shell: update-grub2
+        ansible.builtin.shell: |
+          update-grub2
 
       - name: Install a plymouth (splash screen) theme
         ansible.builtin.apt:
@@ -258,7 +260,8 @@
             - plymouth-themes
 
       - name: Update initial ramfs for new plymouth theme
-        ansible.builtin.shell: update-initramfs -u 
+        ansible.builtin.shell: |
+          update-initramfs -u 
 
     become: true
 
@@ -544,13 +547,6 @@
             - virtualbox
             - virtualbox-guest-additions-iso
 
-      - name: Accept virtualbox-ext-pack seen license
-        ansible.builtin.debconf:
-          name: virtualbox-ext-pack
-          question: virtualbox-ext-pack/license
-          value: 'true'
-          vtype: seen
-
       - name: Accept virtualbox-ext-pack select license
         ansible.builtin.debconf:
           name: virtualbox-ext-pack
@@ -562,7 +558,7 @@
         ansible.builtin.apt:
           pkg:
             - virtualbox-ext-pack
-
+          
       - name: Register virtualbox network list
         ansible.builtin.shell: |
           VBoxManage natnetwork list

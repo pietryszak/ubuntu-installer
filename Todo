@@ -243,3 +243,6 @@ https://wiki.archlinux.org/title/redshift
 # i3-wifi applet
 echo "${green}${bold}INSTALLING I3 WIFI APPLET${reset}"
 sudo dnf install -y network-manager-applet 
+
+
+https://unix.stackexchange.com/questions/36380/how-to-properly-and-easily-configure-xdg-open-without-any-environment/36451#36451
