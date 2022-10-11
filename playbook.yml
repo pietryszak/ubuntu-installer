@@ -79,7 +79,7 @@
         - alsa-ucm-conf
         - pulseaudio
         - pulseaudio-utils
-        - pulseaudio-module-bluetooth/
+        - pulseaudio-module-bluetooth
         - pavucontrol
 
 # Bluetooth
