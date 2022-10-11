@@ -791,7 +791,7 @@
           VBoxManage natnetwork add --netname NatNetwork --network "10.0.2.0/24" --enable 
         when: virtualbox_natnetwork.stdout | regex_search('0 networks found')
 
-      - name: Install virtualbox guest tool dependencies if virtual machine detected
+      - name: Install virtualbox guest tool dependencies
         ansible.builtin.shell: |
           apt install linux-headers-$(uname -r) 
 
@@ -803,26 +803,24 @@
             - virtualbox-guest-utils 
             - virtualbox-guest-x11 
             - virtualbox-dkms
+      
+      - name: Folder for virtualbox guest tool
+        ansible.builtin.file:
+          path: /media/iso
+          state: directory
+          mode: '0755'
 
-    become: true
-
-  - name: Folder for virtualbox guest tool
-    ansible.builtin.file:
-      path: ~/.gc/virtual-box-guest-additions/
-      state: directory
-      mode: '0755'
-
-  - name: Install Virtualbox guest tool
-
-    block:
-
-      - name: Unpack virtualbox guest tool ( takes time, please wait )
+      - name: Mount iso with virtualbox guest tool
         ansible.builtin.shell: |
-          7z x /usr/share/virtual-box-guest-additions/VBoxGuestAdditions.iso
+          mount -o loop /usr/share/virtualbox/VBoxGuestAdditions.iso /media/iso
 
       - name: Install virtualbox guest tool
         ansible.builtin.shell: |
-          sh -c "~/.gc/VBoxGuestAdditions/VBoxLinuxAdditions.run --nox11"
+          sh -c "yes | /media/iso/VBoxLinuxAdditions.run"
+
+      - name: Unmount iso with virtualbox guest tool
+        ansible.builtin.shell: |
+           umount /media/iso
 
     become: true
 
