@@ -680,9 +680,9 @@
         failed_when: "unused_snaps is failed and ('find' not in unused_snaps.msg and 'found' not in unused_snaps.msg)"
         with_items:
           - lxd
-      - name: Pause for 30 senonds to avoid snap remove issue
+      - name: Pause for 15 senonds to avoid snap remove issue
         ansible.builtin.pause:
-          seconds: 30   
+          seconds: 15   
       - name: Remove snap core20
         community.general.snap:
           name={{item}} 
@@ -1484,7 +1484,7 @@
           url: https://github.com/joplin/plugins/raw/master/plugins/joplin.plugin.note.tabs/plugin.jpl
           dest: ~/.config/joplin-desktop/plugins/joplin.plugin.note.tabs.jpl
 
-      - name: Download Joplin Note tabs extension
+      - name: Download Joplin Persistent Layout extension
         ansible.builtin.get_url:
           url: https://github.com/joplin/plugins/raw/master/plugins/joplin.plugin.benji.persistentLayout/plugin.jpl
           dest: ~/.config/joplin-desktop/plugins/joplin.plugin.benji.persistentLayout.jpl
@@ -1497,9 +1497,8 @@
 
   - name: Clone a repo with dotfiles
     ansible.builtin.git:
-      repo: https://github.com/pietryszak/ubuntu-dotfiles
+      repo: https://github.com/pietryszak/dotfiles.git
       dest: ~/.gc/ubuntu-dotfiles
-      clone: yes
 
 #############################################################################################################
 
