@@ -973,7 +973,6 @@
       # Ansible extensions
       code --install-extension redhat.vscode-xml 
       code --install-extension redhat.vscode-yaml 
-      code --install-extension redhat.ansible
 
       # Docker extension
       code --install-extension ms-azuretools.vscode-docker 
