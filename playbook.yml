@@ -536,6 +536,7 @@
 
 # ClamAV is an open-source and free antivirus software toolkit
 # https://aaronbrighton.medium.com/installation-configuration-of-clamav-antivirus-on-ubuntu-18-04-a6416bab3b41
+# https://betatim.github.io/posts/clamav-memory-usage/
 
   - name: Install Clamav antivirus
 
@@ -587,6 +588,9 @@
         ansible.builtin.blockinfile:
           path: /etc/clamav/clamd.conf      
           block: |
+
+            # Limiting clamav memory usage 
+            ConcurrentDatabaseReload no
 
             # Exclude from scanning
             ExcludePath ^/proc
