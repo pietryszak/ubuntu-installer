@@ -43,7 +43,7 @@
 
 # Linux firmware
 
-  - name: Install Drivers 
+  - name: Install Drivers
     block:
       - name: Install Linux firmware, ubuntu drivers 
         ansible.builtin.apt:
@@ -633,7 +633,7 @@
         community.general.ufw:
           direction: outgoing 
           policy: allow 
- 
+
       - name: Allow ssh policy if virtual mashine detected
         community.general.ufw:
             rule: limit
@@ -672,7 +672,8 @@
   - name: Disable unnecessary snap
   
     block:
-      - name: Remove snap lxd
+
+      - name: Remove lxd snap
         community.general.snap:
           name={{item}} 
           state=absent 
@@ -1191,7 +1192,7 @@
 
 # Spotify  
 
-  - name: Install Spotify 
+  - name: Install Spotify
 
     block:
 
@@ -1218,7 +1219,7 @@
           update_cache: yes
     
     become: true   
- 
+
 # Gimp
 
   - name: Install gimp - image manipulation program
@@ -1303,7 +1304,7 @@
     become: true
 
 # Transmission a fast, easy, and free BitTorrent client
- 
+
   - name: Install transmission a fast, easy, and free BitTorrent client
     become: true
     ansible.builtin.apt:
@@ -1343,7 +1344,7 @@
         ansible.builtin.apt:
           pkg:
             - nextcloud-client
-          update_cache: yes      
+          update_cache: yes  
 
     become: true  
 
