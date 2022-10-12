@@ -563,11 +563,16 @@
           name: clamav-freshclam
           state: started
 
+# Clamav setings only for host pc, auto scanning, but takes 1gb ram at least (databases always in ram)
+# Vm can scan system with ClamTK manually
+
       - name: Enable service clamav-deamon that loads the virus database definitions into memory, and handles scanning of files
         ansible.builtin.systemd:
           name: clamav-daemon
           enabled: yes
           state: started
+        when:  
+          - ansible_virtualization_role == "host"
 
       - name: Create folder for quarantine
         ansible.builtin.file:
@@ -579,18 +584,19 @@
         with_items:
           - /root/.clamav/quarantine
           - /root/.clamav/logs
+        when:  
+          - ansible_virtualization_role == "host"
 
       - name: Create a new crontab file for scan system every 20 day of month at 21:00 
         ansible.builtin.shell: |
           echo "0 21 20 * 0 root /usr/bin/clamdscan --fdpass --log=/root/.clamav/logs/scan-$(date +'%d-%m-%Y-%T').log --move=/root/.clamav/quarantine /" | tee /etc/cron.d/clamdscan
+        when:  
+          - ansible_virtualization_role == "host"
 
       - name: Add exlude path to clamav settings file
         ansible.builtin.blockinfile:
           path: /etc/clamav/clamd.conf      
           block: |
-
-            # Limiting clamav memory usage 
-            ConcurrentDatabaseReload no
 
             # Exclude from scanning
             ExcludePath ^/proc
@@ -599,11 +605,15 @@
             ExcludePath ^/dev
             ExcludePath ^/var/lib/lxcfs/cgroup
             ExcludePath ^/root/clamav/quarantine
+        when:  
+          - ansible_virtualization_role == "host"
 
       - name: Restart service clamav-daemon after changes in config file
         ansible.builtin.systemd:
           name: clamav-daemon
           state: restarted
+        when:  
+          - ansible_virtualization_role == "host"
 
     become: true
 
