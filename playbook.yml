@@ -850,7 +850,7 @@
             - kvm
             - libvirt
 
-    become: true 
+    become: true
   
 #############################################################################################################
 
@@ -912,6 +912,8 @@
           bash /usr/lib/libdvd-pkg/b-i_libdvdcss.sh
 
     become: true
+
+# Gnome disk utility
 
   - name: Install Gnome disk utility
     become: true 
@@ -1282,7 +1284,7 @@
 # https://github.com/linuxmint/timeshift
 
   - name: Install Timeshift - system restore tool
-    become: trueAdd fonts to system
+    become: true
     ansible.builtin.apt:
       pkg:
         - timeshift  
