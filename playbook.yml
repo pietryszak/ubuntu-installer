@@ -28,12 +28,44 @@
   - name: Check CPU family
     ansible.builtin.debug:
       msg: "{{ ansible_processor[1] }}"
-    register: cpu_familyAdd fonts to system
+    register: cpu_family
+    no_log: true
+
+  - name: Export variable for installation packet without pop upgrades
+    ansible.builtin.shell: |
+      export DEBIAN_FRONTEND=noninteractive
+  
+#############################################################################################################
+
+# Drivers
+
+#############################################################################################################  
+
+# Linux firmware
+
+  - name: Install Drivers 
+    block:
+      - name: Install Linux firmware, ubuntu drivers 
+        ansible.builtin.apt:
+          pkg:
+            - linux-firmware
+            - ubuntu-drivers-common
+          update_cache: yes  
+
+      - name: Autoinstall discovered ubuntu drivers
+        ansible.builtin.shell: |
+          ubuntu-drivers autoinstall
+    
+    become: true 
+
+# Xorg
+
+  - name: Install Xorg 
     become: true 
     ansible.builtin.apt:
       pkg:
         - xorg
-       
+
 # Pulseaudio audio drivers
 
   - name: Install sound drivers
@@ -1526,4 +1558,4 @@
       - /etc/apt/keyrings/spotify.gpg
       - /etc/apt/keyrings/microsoft.asc
       - /etc/apt/keyrings/microsoft.gpg
-      - /tmp/teamviewer_amd64.deb 
+      - /tmp/teamviewer_amd64.deb
