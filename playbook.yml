@@ -3,6 +3,7 @@
 - hosts: all
 
   tasks:
+
 #############################################################################################################
 
 # Ansible config, variables
@@ -910,7 +911,13 @@
         ansible.builtin.shell: |
           bash /usr/lib/libdvd-pkg/b-i_libdvdcss.sh
 
-    become: true    
+    become: true
+
+  - name: Install Gnome disk utility
+    become: true 
+    ansible.builtin.apt:
+      pkg:
+        - gnome-disk-utility    
 
 # Celluloid video player        
 
