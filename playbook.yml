@@ -1,19 +1,19 @@
 ---
+
 - hosts: all
 
   tasks:
-
 #############################################################################################################
 
 # Ansible config, variables
 
-#############################################################################################################    
+#############################################################################################################  
 
 # Username of regular username
 # https://stackoverflow.com/a/58916467
 
   - name: Run whoami without become for regular username
-    command: whoami
+    ansible.builtin.command: whoami
     changed_when: false
     become: false
     register: whoami
@@ -34,7 +34,7 @@
   - name: Export variable for installation packet without pop upgrades
     ansible.builtin.shell: |
       export DEBIAN_FRONTEND=noninteractive
-  
+
 #############################################################################################################
 
 # Drivers
@@ -205,9 +205,9 @@
       dest: ~/.gc/distro-grub-themes
 
   - name: Install grub theme and plymouth theme, configure it
-  
+
     block:
-  
+
       - name: Create a folder for grub theme
         ansible.builtin.file:
           path: /boot/grub/themes/
@@ -264,7 +264,7 @@
     become: true
 
 # Lightdm Display Manager
-  
+
   - name: Install Lightdm 
     
     block:
@@ -322,7 +322,7 @@
     ansible.builtin.file:
       path: ~/.gc/ohmyzsh/install.sh
       mode: u+x
-  
+
   - name: Check that oh-my-zsh is installed
     ansible.builtin.stat:
         path: ~/.oh-my-zsh
@@ -346,13 +346,13 @@
     ansible.builtin.git:
       repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
       dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-  
+
   - name: Install zsh completions plugin
     ansible.builtin.git:
       repo: https://github.com/zsh-users/zsh-completions
       dest: ~/.oh-my-zsh/custom/plugins/zsh-completions
 
-# Powerlevel10k zsh
+  # Powerlevel10k zsh
 
   - name: Install powerlevel10k theme for zsh
     ansible.builtin.git:
@@ -508,11 +508,11 @@
     ansible.builtin.apt:
       pkg:
         - python3-pip
-  
+
   - name: Install python dependencies for Polybar Spotify module 
     ansible.builtin.shell: |
       pip install dbus-python
-  
+
   - name: Install Polybar Spotify module
     ansible.builtin.git:
       repo: https://github.com/Jvanrhijn/polybar-spotify.git
@@ -670,7 +670,7 @@
 # https://gist.github.com/tyrells/0a79681de339237cb04c?permalink_comment_id=3668310#gistcomment-3668310
 
   - name: Disable unnecessary snap
-  
+
     block:
 
       - name: Remove lxd snap
@@ -749,7 +749,7 @@
     become: true
     
   - name: Enable flatpak
-  
+
     block:
       - name: Install flatpak
         ansible.builtin.apt:
@@ -850,7 +850,7 @@
             - libvirt
 
     become: true 
-    
+  
 #############################################################################################################
 
 # Apps
@@ -1005,7 +1005,7 @@
       # Themes
       code --install-extension jdinhlife.gruvbox  
       code --install-extension jonathanharty.gruvbox-material-icon-theme
-      
+    
 # Teamviewer
 
   - name: Install Teamviewer
@@ -1062,7 +1062,7 @@
 
 # Ripgrep
 # https://github.com/BurntSushi/ripgrep
-  
+
   - name: Install ripgrep - a search tool that recursively searches the current directory for a regex pattern
     become: true
     ansible.builtin.apt:
@@ -1160,9 +1160,7 @@
 
 # Vivaldi browser
 
-# Onlyoffice  - office suite
-
-  - name: Install Onlyoffice  - office suite
+  - name: Install Vivaldi borwser
 
     block:
 
@@ -1358,7 +1356,7 @@
         - p7zip-rar
 
 # Nemo file manager
-  
+
   - name: Install nemo file manager end extensions
 
     block:
@@ -1501,7 +1499,7 @@
 # Look
 
 #############################################################################################################
-  
+
   - name: Download fonts
     ansible.builtin.git:
       repo: https://github.com/pietryszak/fonts.git
