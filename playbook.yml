@@ -942,8 +942,8 @@
     block:
 
       - name: Add Celluloid video player ppa
-        ansible.builtin.shell: |
-          add-apt-repository --yes ppa:xuzhen666/gnome-mpv
+        ansible.builtin.apt_repository:
+          repo: ppa:xuzhen666/gnome-mpv
           
       - name: Install Celluloid
         ansible.builtin.apt:
@@ -1140,8 +1140,8 @@
     block:
 
       - name: Add firefox ppa
-        ansible.builtin.shell: |
-          add-apt-repository --yes ppa:mozillateam/ppa
+        ansible.builtin.apt_repository:
+          repo: ppa:mozillateam/ppa
           
       - name: Create files with apt firefox settings
         ansible.builtin.file:
@@ -1364,8 +1364,8 @@
     block:
 
       - name: Add nexcloud ppa
-        ansible.builtin.shell: |
-          add-apt-repository --yes ppa:nextcloud-devs/client
+        ansible.builtin.apt_repository:
+          repo: ppa:nextcloud-devs/client
           
       - name: Install Nexcloud client
         ansible.builtin.apt:
@@ -1391,8 +1391,8 @@
     block:
       
       - name: Add nemo file manager ppa
-        ansible.builtin.shell: |
-          add-apt-repository --yes ppa:ubuntubudgie/backports
+        ansible.builtin.apt_repository:
+          repo: ppa:ubuntubudgie/backports
           
       - name: Install Nemo file manager
         ansible.builtin.apt:
@@ -1406,8 +1406,8 @@
           update_cache: yes
 
       - name: Add nemo file manager ppa
-        ansible.builtin.shell: |
-          add-apt-repository --yes ppa:costales/folder-color
+        ansible.builtin.apt_repository:
+          repo: ppa:costales/folder-color
 
       - name: Install Nemo folder colors menu
         ansible.builtin.apt:
@@ -1574,8 +1574,8 @@
     block:
 
       - name: Add Papirus icons ppa
-        ansible.builtin.shell: |
-          add-apt-repository --yes ppa:papirus/papirus
+        ansible.builtin.apt_repository:
+          repo: ppa:papirus/papirus
           
       - name: Install Papirus icons ( takes time up to 5 minutes, please wait )
         ansible.builtin.apt:
@@ -1584,14 +1584,16 @@
           update_cache: yes
 
       - name: Add Papirus icons ppa
-        ansible.builtin.shell: |
-          add-apt-repository --yes papirus/hardcode-tray
+        ansible.builtin.apt_repository:
+          repo: papirus/hardcode-tray
           
       - name: Install Papirus hardcoded icons for i3-gaps polybar 
         ansible.builtin.apt:
           pkg:
             - hardcode-tray
           update_cache: yes
+
+
 
       - name: Install Papirus folders icons
         ansible.builtin.apt:
@@ -1640,7 +1642,6 @@
       - /etc/apt/keyrings/microsoft.gpg
       - /etc/apt/keyrings/TeamViewer2017.asc
       - /etc/apt/keyrings/teamviewer.gpg
-      - /tmp/teamviewer_amd64.deb
       - /etc/apt/trusted.gpg.d/mozillateam-ubuntu-ppa.gpg~
       - /etc/apt/trusted.gpg.d/ubuntubudgie-ubuntu-backports.gpg~
       - /etc/apt/trusted.gpg.d/onlyoffice.gpg~ 
