@@ -6,7 +6,7 @@ cp -r themes/* ~/.themes
 sudo cp -r themes/* /usr/share/themes/
 cd
 sudo flatpak override --filesystem=$HOME/.themes
-sudo flatpak override --env=GTK_THEME=Gruvbox-Material-Dark
+sudo flatpak override --env=GTK_THEME=Adwaita
 sudo bash -c 'echo "GTK_THEME=Gruvbox-Material-Dark" >> /etc/environment'
 
 
