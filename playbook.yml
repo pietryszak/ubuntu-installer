@@ -1034,14 +1034,21 @@
 
     block: 
 
-      - name: Download latest teamviewer deb package
+      - name: Download Teamviewer public key
         ansible.builtin.get_url:
-          url: https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
-          dest: /tmp/teamviewer_amd64.deb
+          url: https://download.teamviewer.com/download/linux/signature/TeamViewer2017.asc
+          dest: /etc/apt/keyrings/TeamViewer2017.asc
 
-      - name: Install a teamviewer deb package
+      - name: Add Teamviewer gpg key
+        ansible.builtin.shell: |
+          gpg --dearmor < /etc/apt/keyrings/TeamViewer2017.asc > /etc/apt/keyrings/teamviewer.gpg
+          install -D -o root -g root -m 644 /etc/apt/keyrings/teamviewer.gpg /etc/apt/trusted.gpg.d/teamviewer.gpg
+          sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/teamviewer.gpg] http://linux.teamviewer.com/deb stable main" > /etc/apt/sources.list.d/teamviewer.list'
+
+      - name: Install Teamviewer
         ansible.builtin.apt:
-          deb: /tmp/teamviewer_amd64.deb
+          pkg:
+            - teamviewer
           update_cache: yes
 
     become: true
@@ -1396,6 +1403,16 @@
             - nemo-gtkhash     
             - nemo-nextcloud
             - nemo-preview
+          update_cache: yes
+
+      - name: Add nemo file manager ppa
+        ansible.builtin.shell: |
+          add-apt-repository --yes ppa:costales/folder-color
+
+      - name: Install Nemo folder colors menu
+        ansible.builtin.apt:
+          pkg: 
+            - folder-color-nemo
           update_cache: yes    
 
     become: true 
@@ -1550,6 +1567,48 @@
     ansible.builtin.shell: |
       fc-cache -fv
 
+# Papirus icons for gruvbox
+
+  - name: Install Papirus icons for gruvbox
+
+    block:
+
+      - name: Add Papirus icons ppa
+        ansible.builtin.shell: |
+          add-apt-repository --yes ppa:papirus/papirus
+          
+      - name: Install Papirus icons ( takes time up to 5 minutes, please wait )
+        ansible.builtin.apt:
+          pkg:
+            - papirus-icon-theme
+          update_cache: yes
+
+      - name: Add Papirus icons ppa
+        ansible.builtin.shell: |
+          add-apt-repository --yes papirus/hardcode-tray
+          
+      - name: Install Papirus hardcoded icons for i3-gaps polybar 
+        ansible.builtin.apt:
+          pkg:
+            - hardcode-tray
+          update_cache: yes
+
+      - name: Install Papirus folders icons
+        ansible.builtin.apt:
+          pkg:
+            - papirus-folder
+
+      - name: Set color of folders with Papirus folders icons
+        ansible.builtin.shell: |
+          papirus-folders -C brown --theme Papirus-Dark
+ 
+      - name: Install Papirus theme for filezilla
+        ansible.builtin.apt:
+          pkg:
+            - filezilla-theme-papirus  
+        
+    become: true  
+
 #############################################################################################################
 
 # Dotfiles
@@ -1579,4 +1638,11 @@
       - /etc/apt/keyrings/spotify.gpg
       - /etc/apt/keyrings/microsoft.asc
       - /etc/apt/keyrings/microsoft.gpg
+      - /etc/apt/keyrings/TeamViewer2017.asc
+      - /etc/apt/keyrings/teamviewer.gpg
       - /tmp/teamviewer_amd64.deb
+      - /etc/apt/trusted.gpg.d/mozillateam-ubuntu-ppa.gpg~
+      - /etc/apt/trusted.gpg.d/ubuntubudgie-ubuntu-backports.gpg~
+      - /etc/apt/trusted.gpg.d/onlyoffice.gpg~ 
+      - /etc/apt/trusted.gpg.d/xuzhen666-ubuntu-gnome-mpv.gpg~
+      - /etc/apt/trusted.gpg.d/nextcloud-devs-ubuntu-client.gpg~ 
