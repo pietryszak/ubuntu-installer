@@ -1,7 +1,3 @@
-# GTK Gruvbox theme
-echo "${green}${bold}INSTALLING GRUVBOX THEME${reset}"
-cd ~/.gc
-git clone --quiet https://github.com/pietryszak/gruvbox-material-gtk.git 
 cd gruvbox-material-gtk
 mkdir -p ~/.local/share/themes/
 cp -r themes/* ~/.local/share/themes/
@@ -13,21 +9,18 @@ sudo flatpak override --filesystem=$HOME/.themes
 sudo flatpak override --env=GTK_THEME=Gruvbox-Material-Dark
 sudo bash -c 'echo "GTK_THEME=Gruvbox-Material-Dark" >> /etc/environment'
 
-# QT5 apps theme
-echo "${green}${bold}SET QT5 APPS THEME${reset}"
-sudo dnf install -y qt5ct 
-sudo bash -c 'echo "QT_QPA_PLATFORMTHEME=qt5ct" >> /etc/environment'
-sudo dnf install -y qt5-qtstyleplugins 
 
-# Papirus hardcoded icons
-sudo dnf config-manager --add-repo https://download.opensuse.org/repositories/home:SmartFinn:hardcode-tray/Fedora_35/home:SmartFinn:hardcode-tray.repo -y
-sudo dnf install -y hardcode-tray
-sudo -E hardcode-tray --apply --conversion-tool RSVGConvert --size 22 --theme Papirus
 
 # GTK theme
 echo "${green}${bold}SETTING DARK GTK THEME${reset}"
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 gsettings set org.gnome.desktop.interface gtk-theme "Gruvbox-Material-Dark"
+
+# QT5 apps theme
+echo "${green}${bold}SET QT5 APPS THEME${reset}"
+sudo dnf install -y qt5ct 
+sudo bash -c 'echo "QT_QPA_PLATFORMTHEME=qt5ct" >> /etc/environment'
+sudo dnf install -y qt5-qtstyleplugins 
 
 # Sensors
 echo "${green}${bold}INSTALLING SENSORS APP AND FINDING ALL SENSORS IN SYSEM. IT'S TAKE A TIME. PLEASE WAIT!${reset}"
