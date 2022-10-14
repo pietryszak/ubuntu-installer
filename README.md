@@ -1,4 +1,5 @@
-# ubuntu-installer
+# Ubuntu installer
+
 My ubuntu i3-gaps installer
 
 ```bash
