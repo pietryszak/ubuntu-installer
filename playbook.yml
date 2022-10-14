@@ -823,13 +823,14 @@
         ansible.builtin.shell: |
           VBoxManage list hostonlyifs
         register: virtualbox_host_only_network
-        
+
       - name: Add host-only network to virtualbox
         become: true
         become_user: "{{ login_user }}"
         ansible.builtin.shell: |
           VBoxManage hostonlyif create
-        when: not virtualbox_host_only_network.stdout.exsist
+        when: virtualbox_host_only_network.stdout == ""
+
 
       - name: Install virtualbox guest tool dependencies
         ansible.builtin.shell: |
