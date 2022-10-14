@@ -1570,9 +1570,8 @@
 
       - name: Add Papirus icons ppa
         ansible.builtin.shell: |
-          add-apt-repository --yes papirus/hardcode-tray
-
-          
+          add-apt-repository --yes ppa:papirus/hardcode-tray
+     
       - name: Install Papirus hardcoded icons for i3-gaps polybar 
         ansible.builtin.apt:
           pkg:
