@@ -1615,24 +1615,20 @@
 
 #############################################################################################################  
 
-  - name: Delete any leftover temporary files
+  - name: Cleaning temporary files
+  
+    block:
+
+      - name: Cleaning directory with templorary ppa and repo keys
+        ansible.builtin.file:
+          state: absent
+          path: /etc/apt/keyrings/
+
+      - name: Delete any leftover temporary files
+        ansible.builtin.file:
+          path: "{{ item }}" 
+          state: absent
+        with_items:
+          - /tmp/teamviewer_amd64.deb
+
     become: true
-    ansible.builtin.file:
-      path: "{{ item }}" 
-      state: absent
-    with_items:
-      - /etc/apt/keyrings/regolith.key
-      - /etc/apt/keyrings/regolith.gpg
-      - /etc/apt/keyrings/pubkey_spotify.gpg
-      - /etc/apt/keyrings/spotify.gpg
-      - /etc/apt/keyrings/microsoft.asc
-      - /etc/apt/keyrings/microsoft.gpg
-      - /etc/apt/keyrings/TeamViewer2017.asc
-      - /etc/apt/keyrings/teamviewer.gpg
-      - /etc/apt/keyrings/shiftkey-desktop.asc
-      - /etc/apt/keyrings/shiftkey-desktop.gpg
-      - /etc/apt/trusted.gpg.d/mozillateam-ubuntu-ppa.gpg~
-      - /etc/apt/trusted.gpg.d/ubuntubudgie-ubuntu-backports.gpg~
-      - /etc/apt/trusted.gpg.d/onlyoffice.gpg~ 
-      - /etc/apt/trusted.gpg.d/xuzhen666-ubuntu-gnome-mpv.gpg~
-      - /etc/apt/trusted.gpg.d/nextcloud-devs-ubuntu-client.gpg~ 
