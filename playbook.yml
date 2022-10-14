@@ -1107,10 +1107,27 @@
       pkg:
         - neofetch     
 
+# Sensors for cpu temperature
+
+  - name: Install and detect sensors for cpu temperature
+
+    block:
+
+      - name: Install Sensors for cpu temperature 
+        ansible.builtin.apt:
+          pkg:
+            - lm-sensors
+
+      - name: Detect Sensors
+        ansible.builtin.shell: |
+          yes | sensors-detect
+
+    become: true
+
 # Htop
 # https://github.com/htop-dev/htop/
 
-  - name: Install htop an interactive process viewer 
+  - name: Install htop an interactive process viewer
     become: true
     ansible.builtin.apt:
       pkg:
