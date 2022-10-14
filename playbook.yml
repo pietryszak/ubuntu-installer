@@ -1133,8 +1133,8 @@
     block:
 
       - name: Add firefox ppa
-        ansible.builtin.apt_repository:
-          repo: ppa:mozillateam/ppa
+        ansible.builtin.shell: |
+          add-apt-repository --yes ppa:mozillateam/ppa
           
       - name: Create files with apt firefox settings
         ansible.builtin.file:
@@ -1357,8 +1357,9 @@
     block:
 
       - name: Add nexcloud ppa
-        ansible.builtin.apt_repository:
-          repo: ppa:nextcloud-devs/client
+        ansible.builtin.shell: |
+          add-apt-repository --yes ppa:nextcloud-devs/client
+
           
       - name: Install Nexcloud client
         ansible.builtin.apt:
