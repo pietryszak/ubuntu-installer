@@ -9,8 +9,6 @@ sudo flatpak override --filesystem=$HOME/.themes
 sudo flatpak override --env=GTK_THEME=Adwaita
 sudo bash -c 'echo "GTK_THEME=Gruvbox-Material-Dark" >> /etc/environment'
 
-
-
 # GTK theme
 echo "${green}${bold}SETTING DARK GTK THEME${reset}"
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
@@ -21,11 +19,6 @@ echo "${green}${bold}SET QT5 APPS THEME${reset}"
 sudo dnf install -y qt5ct 
 sudo bash -c 'echo "QT_QPA_PLATFORMTHEME=qt5ct" >> /etc/environment'
 sudo dnf install -y qt5-qtstyleplugins 
-
-# Sensors
-echo "${green}${bold}INSTALLING SENSORS APP AND FINDING ALL SENSORS IN SYSEM. IT'S TAKE A TIME. PLEASE WAIT!${reset}"
-sudo dnf install -y lm_sensors 
-yes | sudo sensors-detect 
 
 # Copy bat  config to proper folder
 cp -r ~/.gc/dotfiles/bat ~/.config
@@ -164,16 +157,6 @@ wget -q https://sysoply.pl/download/public/thunderbird-cache-public.7z
 7z x thunderbird-cache-public.7z 
 cp -r thunderbird ~/.cache
 cd
-
-# Last update
-echo "${green}${bold}UPDATE SYSTEM BEFORE RESTART${reset}"
-sudo dnf upgrade --refresh 
-sudo dnf upgrade -y 
-sudo dnf autoremove -y 
-
-# Reboot
-echo "${MAGENTA}${bold}INSTALLATION SUCCESFULL !! REBOOT SYSTEM${reset}"
-sudo reboot
 
 ################# check
 
