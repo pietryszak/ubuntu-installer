@@ -1400,17 +1400,6 @@
             - nemo-preview
           update_cache: yes
 
-      - name: Add nemo file manager ppa
-        ansible.builtin.shell: |
-          add-apt-repository --yes ppa:costales/folder-color
-
-
-      - name: Install Nemo folder colors menu
-        ansible.builtin.apt:
-          pkg: 
-            - folder-color-nemo
-          update_cache: yes    
-
     become: true 
 
 # KDE connect for bluetooth connection with android phone
