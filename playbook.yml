@@ -788,7 +788,7 @@
 
     block:
 
-      - name: Install Virtualbox and guest tools iso
+      - name: Install Virtualbox
         ansible.builtin.apt:
           pkg:
             - virtualbox
