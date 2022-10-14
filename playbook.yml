@@ -1573,20 +1573,20 @@
           add-apt-repository --yes ppa:papirus/hardcode-tray
      
       - name: Install Papirus hardcoded icons for i3-gaps polybar 
-        ansible.builtin.apt:
+        ansible.builtin.apt: 
           pkg:
             - hardcode-tray
           update_cache: yes
 
       - name: Apply Papirus hardcoded icons for i3-gaps polybar 
         ansible.builtin.shell: |
-          sudo -E hardcode-tray --apply --conversion-tool RSVGConvert --size 22 --theme Papirus
+          hardcode-tray --apply --conversion-tool RSVGConvert --size 22 --theme Papirus
 
       - name: Install Papirus folders icons
         ansible.builtin.apt:
           pkg:
-            - papirus-folder
-
+            - papirus-folders
+      
       - name: Set color of folders with Papirus folders icons
         ansible.builtin.shell: |
           papirus-folders -C brown --theme Papirus-Dark

@@ -27,16 +27,6 @@ echo "${green}${bold}INSTALLING SENSORS APP AND FINDING ALL SENSORS IN SYSEM. IT
 sudo dnf install -y lm_sensors 
 yes | sudo sensors-detect 
 
-# My dotfiles
-echo "${green}${bold}COPY ALL MY DOTFILES TO PROPER FOLDERS${reset}"
-cd ~/.gc
-git clone --quiet https://github.com/pietryszak/dotfiles.git 
-cd
-
-# Copy libreoffice config to to proper folde
-mkdir -p ~/.config/libreoffice/4/user
-cp -r ~/.gc/dotfiles/libreoffice/* ~/.config/libreoffice/4/user/
-
 # Copy bat  config to proper folder
 cp -r ~/.gc/dotfiles/bat ~/.config
 
@@ -77,7 +67,7 @@ cp -r ~/.gc/dotfiles/teamviewer/ ~/.config
 # Copy Redshift config to proper folder
 cp -r ~/.gc/dotfiles/redshift/ ~/.config
 
-# Copy Redshift config to proper folder
+# Copy Joplin config to proper folder
 cp -r ~/.gc/dotfiles/joplin/* ~/.config/joplin-desktop
 
 # Copy bash_aliases to user folder
