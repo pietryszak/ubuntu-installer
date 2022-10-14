@@ -1384,8 +1384,9 @@
     block:
       
       - name: Add nemo file manager ppa
-        ansible.builtin.apt_repository:
-          repo: ppa:ubuntubudgie/backports
+        ansible.builtin.shell: |
+          add-apt-repository --yes ppa:ubuntubudgie/backports
+
           
       - name: Install Nemo file manager
         ansible.builtin.apt:
@@ -1399,8 +1400,9 @@
           update_cache: yes
 
       - name: Add nemo file manager ppa
-        ansible.builtin.apt_repository:
-          repo: ppa:costales/folder-color
+        ansible.builtin.shell: |
+          add-apt-repository --yes ppa:costales/folder-color
+
 
       - name: Install Nemo folder colors menu
         ansible.builtin.apt:
@@ -1566,8 +1568,9 @@
     block:
 
       - name: Add Papirus icons ppa
-        ansible.builtin.apt_repository:
-          repo: ppa:papirus/papirus
+        ansible.builtin.shell: |
+          add-apt-repository --yes ppa:papirus/papirus
+
           
       - name: Install Papirus icons ( takes time up to 5 minutes, please wait )
         ansible.builtin.apt:
@@ -1576,8 +1579,9 @@
           update_cache: yes
 
       - name: Add Papirus icons ppa
-        ansible.builtin.apt_repository:
-          repo: papirus/hardcode-tray
+        ansible.builtin.shell: |
+          add-apt-repository --yes papirus/hardcode-tray
+
           
       - name: Install Papirus hardcoded icons for i3-gaps polybar 
         ansible.builtin.apt:
