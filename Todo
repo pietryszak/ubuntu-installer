@@ -1,18 +1,8 @@
-cd gruvbox-material-gtk
-mkdir -p ~/.local/share/themes/
-cp -r themes/* ~/.local/share/themes/
-mkdir -p ~/.themes
-cp -r themes/* ~/.themes
-sudo cp -r themes/* /usr/share/themes/
-cd
-sudo flatpak override --filesystem=$HOME/.themes
-sudo flatpak override --env=GTK_THEME=Gruvbox-Material-Dark
-sudo bash -c 'echo "GTK_THEME=Gruvbox-Material-Dark" >> /etc/environment'
 
-# GTK theme
-echo "${green}${bold}SETTING DARK GTK THEME${reset}"
-gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-gsettings set org.gnome.desktop.interface gtk-theme "Gruvbox-Material-Dark"
+
+cp -r themes/* ~/.themes
+cp -r cursors/* ~/.icons
+
 
 # QT5 apps theme
 echo "${green}${bold}SET QT5 APPS THEME${reset}"

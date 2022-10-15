@@ -1045,7 +1045,7 @@
       code --install-extension dcasella.i3
 
       # Themes
-      code --install-extension jdinhlife.gruvbox 
+      code --install-extension sainnhe.gruvbox-material
       code --install-extension jonathanharty.gruvbox-material-icon-theme
 
 # Teamviewer
@@ -1595,6 +1595,37 @@
       repo: https://github.com/pietryszak/gruvbox-material-gtk.git
       dest: ~/.gc/gruvbox-material-gtk
 
+  - name: Copy GTK theme to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/gruvbox-material-gtk/themes/
+      dest: ~/.themes
+
+  - name: Copy cursor theme to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/gruvbox-material-gtk/cursors/
+      dest: ~/.icons
+
+# Set GTK theme
+
+  - name: Set default theme
+  
+    block:
+
+      - name: Set GTK theme for flatpak Apps
+        ansible.builtin.shell: |
+          flatpak override --filesystem=$HOME/.themes
+          flatpak override --env=GTK_THEME=Gruvbox-Material-Dark
+
+      - name: Set GTK theme to profile settings
+        ansible.builtin.blockinfile:
+          path: /etc/environment      
+          block: |
+
+            # Default GTK theme
+            GTK_THEME=Gruvbox-Material-Dark
+
+    become: true
+
 # Papirus icons for gruvbox
 
   - name: Install Papirus icons for gruvbox
@@ -1669,7 +1700,7 @@
   - name: Clone a repo with dotfiles
     ansible.builtin.git:
       repo: https://github.com/pietryszak/dotfiles.git
-      dest: ~/.gc/ubuntu-dotfiles
+      dest: ~/.gc/dotfiles
 
 #############################################################################################################
 
