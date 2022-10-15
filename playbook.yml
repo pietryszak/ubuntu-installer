@@ -1069,25 +1069,12 @@
 # Neovim
 # https://github.com/neovim/neovim
 
-  - name: Install neovim 
-
-    block:
-
-      - name: Install a neovim
-        ansible.builtin.apt:
-          pkg:
-            - neovim
-        
-      - name: Use neovim as default editor
-        ansible.builtin.blockinfile:
-          path: /etc/environment      
-          block: |
-
-            # Neovim as default editor
-            EDITOR=nvim
-
+  - name: Install a neovim
     become: true
-
+    ansible.builtin.apt:
+      pkg:
+        - neovim
+      
   - name: Install vim-plug - a vim plugin manager
     ansible.builtin.shell: |
       sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
@@ -1651,7 +1638,7 @@
           pkg:
             - qt5ct 
 
-      - name: Set GTK theme to profile settings
+      - name: Set QT theme to profile settings
         ansible.builtin.blockinfile:
           path: /etc/environment      
           block: |
