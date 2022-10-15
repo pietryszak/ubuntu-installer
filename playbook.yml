@@ -1475,7 +1475,7 @@
 # Filezilla - FTP files manager
 
   - name: Install Filezilla - FTP files manager
-    ansible.builtin.apt_key:
+    ansible.builtin.apt:
       pkg:
         - filezilla 
 
