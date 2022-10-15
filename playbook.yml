@@ -788,10 +788,11 @@
 
     block:
 
-      - name: Install Virtualbox
+      - name: Install Virtualbox and guest additions iso
         ansible.builtin.apt:
           pkg:
             - virtualbox
+            - virtualbox-guest-additions-iso
 
       - name: Accept virtualbox-ext-pack select license
         ansible.builtin.debconf:
@@ -1044,7 +1045,7 @@
       code --install-extension dcasella.i3
 
       # Themes
-      code --install-extension jdinhlife.gruvbox  
+      code --install-extension jdinhlife.gruvbox 
       code --install-extension jonathanharty.gruvbox-material-icon-theme
 
 # Teamviewer
@@ -1299,7 +1300,7 @@
 
       - name: Create folder for flameshot screenshots
         ansible.builtin.file:
-          path: ~/pictures/screenshots
+          path: ~/Pictures/screenshots
           state: directory
           mode: '0755'
 
@@ -1471,6 +1472,13 @@
       pkg:
         - nnn
 
+# Filezilla - FTP files manager
+
+  - name: Install Filezilla - FTP files manager
+    ansible.builtin.apt_key:
+      pkg:
+        - filezilla 
+
 # Ferdium - app for app for communication, facebook messenger, microsoft teams
 
   - name: Install Ferdium - app for communication, facebook messenger, microsoft teams
@@ -1632,7 +1640,25 @@
           pkg:
             - filezilla-theme-papirus  
         
-    become: true  
+    become: true 
+
+# Nemo file manager folders colors 
+
+  - name: Install Nemo file manager folders colors 
+
+    block:
+
+      - name: Add nemo file manager folder colors ppa
+        ansible.builtin.shell: |
+          add-apt-repository --yes ppa:costales/folder-color
+
+      - name: Install Nemo folder colors menu
+        ansible.builtin.apt:
+          pkg: 
+            - folder-color-nemo
+          update_cache: yes    
+
+    become: true 
 
 #############################################################################################################
 
