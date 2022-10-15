@@ -1720,10 +1720,108 @@
 
 #############################################################################################################  
 
+# Dotfiles - configuration files
   - name: Clone a repo with dotfiles
     ansible.builtin.git:
       repo: https://github.com/pietryszak/dotfiles.git
       dest: ~/.gc/dotfiles
+
+# Copy files to proper configuration folder
+
+  - name: Copy bat config to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/bat
+      dest: ~/.config
+  
+  - name: Copy Vscode config to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/Code/settings.json
+      dest: ~/.config/Code/User/
+
+  - name: Copy htop config to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/htop
+      dest: ~/.config
+  
+  - name: Copy neofetch config to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/neofetch
+      dest: ~/.config
+
+  - name: Copy nvim config to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/nvim
+      dest: ~/.config
+
+  - name: Copy zsh sripts to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/zsh/scripts/
+      dest: ~/.oh-my-zsh/custom
+  
+  - name: Copy zsh sripts to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/zsh/scripts/
+      dest: ~/.oh-my-zsh/custom
+  
+  - name: Copy zshrc config to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/zsh/.zshrc
+      dest: ~/
+
+  - name: Copy powerlevel10k config to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/zsh/.p10k.zsh
+      dest: ~/
+
+  - name: Copy terminator config to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/terminator/
+      dest: ~/.config
+
+  - name: Copy kitty config to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/kitty/
+      dest: ~/.config
+
+  - name: Copy TeamViewer config to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/teamviewer/
+      dest: ~/.config
+
+  - name: Copy Redshift config to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/redshift/
+      dest: ~/.config
+
+  - name: Copy bash_aliases to user folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/bashrc/.bash_aliases
+      dest: ~/
+
+  - name: Copy qt5ct config to to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/qt5ct
+      dest: ~/.config
+
+  - name: Copy shortcuts list to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/shortcuts
+      dest: ~/.config
+
+  - name: Copy i3 config to to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/i3
+      dest: ~/.config
+
+  - name: Copy btop config to to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/btop/
+      dest: ~/.config
+  
+  
+  
+
+
 
 #############################################################################################################
 
