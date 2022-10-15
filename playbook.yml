@@ -1101,6 +1101,19 @@
     ansible.builtin.apt:
       pkg:
         - bat
+  
+  - name: Make folder for bat
+    ansible.builtin.file:
+      path: ~/.local/bin
+      state: directory
+      mode: '0755'
+
+
+  - name: Add bat symbolic link
+    ansible.builtin.file:
+      src: /usr/bin/batcat
+      dest: ~/.local/bin/bat
+      state: link 
 
 # Ripgrep
 # https://github.com/BurntSushi/ripgrep
@@ -1300,7 +1313,7 @@
 
       - name: Create folder for flameshot screenshots
         ansible.builtin.file:
-          path: ~/Pictures/screenshots
+          path: ~/pictures/screenshots
           state: directory
           mode: '0755'
 
@@ -1506,7 +1519,7 @@
 
 # Guiscrcpy -  gui for android screen sharing
 
-  - name: Install # Guiscrcpy -  gui for android screen sharing
+  - name: Install Guiscrcpy -  gui for android screen sharing
     become: true
     community.general.flatpak:
       name: in.srev.guiscrcpy
@@ -1608,7 +1621,7 @@
 
 # Set GTK theme
 
-  - name: Set default theme
+  - name: Set default GTK theme
   
     block:
 
@@ -1626,6 +1639,28 @@
             GTK_THEME=Gruvbox-Material-Dark
 
     become: true
+
+# QT 5 theme
+
+  - name: Set default QT theme
+  
+    block:
+
+      - name: Download Qt5ct for set theme for QT apps
+        ansible.builtin.apt:
+          pkg:
+            - qt5ct 
+
+      - name: Set GTK theme to profile settings
+        ansible.builtin.blockinfile:
+          path: /etc/environment      
+          block: |
+
+            # Default QT theme
+            QT_QPA_PLATFORMTHEME=qt5ct
+
+    become: true
+
 
 # Papirus icons for gruvbox
 

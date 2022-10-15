@@ -1,15 +1,3 @@
-
-
-cp -r themes/* ~/.themes
-cp -r cursors/* ~/.icons
-
-
-# QT5 apps theme
-echo "${green}${bold}SET QT5 APPS THEME${reset}"
-sudo dnf install -y qt5ct 
-sudo bash -c 'echo "QT_QPA_PLATFORMTHEME=qt5ct" >> /etc/environment'
-sudo dnf install -y qt5-qtstyleplugins 
-
 # Copy bat  config to proper folder
 cp -r ~/.gc/dotfiles/bat ~/.config
 
@@ -24,10 +12,6 @@ cp -r ~/.gc/dotfiles/neofetch ~/.config
 
 # Copy nvim config to proper folder
 cp -r ~/.gc/dotfiles/nvim ~/.config
-
-# Copy VirtualBox config to proper folder 
-cp -r ~/.gc/dotfiles/VirtualBox ~/.config
-chmod +x ~/.config/VirtualBox/update.sh
 
 # Copy zsh sripts to proper folder
 cp -r ~/.gc/dotfiles/zsh/scripts/* ~/.oh-my-zsh/custom
@@ -106,7 +90,7 @@ sudo cp -r ~/.gc/dotfiles/lightdm/* /etc/lightdm/
 # Add Wallpapers
 cd ~/Pictures
 git clone https://github.com/pietryszak/wallpapers
-sudo cp ~/Pictures/wallpapers/caffe-gruvbox.png /usr/share/pixmaps/
+sudo cp ~/pictures/wallpapers/caffe-gruvbox.png /usr/share/pixmaps/
 
 # My Vivaldi browser profile public
 echo "${green}${bold}COPY VIVALDI PROFILE WITH ADDONS AND THEME${reset}"
