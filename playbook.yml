@@ -1480,6 +1480,19 @@
       pkg:
         - filezilla 
 
+  - name: Install network manager applet
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - budgie-network-manager-applet
+
+#############################################################################################################
+
+# Flatpak Apps
+
+#############################################################################################################         
+
+
 # Ferdium - app for app for communication, facebook messenger, microsoft teams
 
   - name: Install Ferdium - app for communication, facebook messenger, microsoft teams
@@ -1591,7 +1604,7 @@
 
 # GTK theme
 
-  - name: Download GTK theme
+  - name: Download GTK theme ( takes time, please wait )
     ansible.builtin.git:
       repo: https://github.com/pietryszak/gruvbox-material-gtk.git
       dest: ~/.gc/gruvbox-material-gtk
@@ -1818,6 +1831,28 @@
       src: ~/.gc/dotfiles/btop/
       dest: ~/.config
   
+  - name: Copy btop config to to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/volumeicon/
+      dest: ~/.config
+
+  - name: Copy config to folders as sudo
+
+    block:
+
+      - name: Copy lightdm config to to proper folder
+        ansible.builtin.copy:
+          src: ~/.gc/dotfiles/lightdm/
+          dest: /etc/lightdm/
+
+      - name: Copy bash_aliases to sudo/root folder
+        ansible.builtin.copy:
+          src: ~/.gc/dotfiles/bashrc/.bash_aliases
+          dest: /root
+
+    become: true
+    
+
   
   
 

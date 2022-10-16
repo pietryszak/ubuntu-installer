@@ -1,6 +1,3 @@
-# Copy bash_aliases to sudo/root folder
-sudo cp -r ~/.gc/dotfiles/bashrc/.bash_aliases /root  
-
 # Copy gtk config to to proper folder
 cp ~/.gc/dotfiles/gtk/.gtkrc-2.0 ~
 mkdir ~/.config/gtk-3.0/
@@ -19,12 +16,6 @@ chmod +x ~/.config/polybar/scripts/*
 cp ~/.gc/polybar-spotify/spotify_status.py ~/.config/polybar/scripts/
 sed -i -e '/play_pause/s/25B6/F909/' ~/.config/polybar/scripts/spotify_status.py 
 sed -i -e '/play_pause/s/23F8/F8E3/' ~/.config/polybar/scripts/spotify_status.py 
-
-# Copy volumeicon config to to proper folder
-cp -r ~/.gc/dotfiles/volumeicon/* ~/.config/volumeicon
-
-# Copy lightdm script to to proper folder
-sudo cp -r ~/.gc/dotfiles/lightdm/* /etc/lightdm/
 
 # Add Wallpapers
 cd ~/Pictures
@@ -51,10 +42,6 @@ sudo dnf install -y jq
 
 # add geoclue2 redhisft confog file
 https://wiki.archlinux.org/title/redshift
-
-# i3-wifi applet
-echo "${green}${bold}INSTALLING I3 WIFI APPLET${reset}"
-sudo dnf install -y network-manager-applet 
 
 
 https://unix.stackexchange.com/questions/36380/how-to-properly-and-easily-configure-xdg-open-without-any-environment/36451#36451
