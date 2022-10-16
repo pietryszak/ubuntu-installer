@@ -1,9 +1,5 @@
 ################# check
 
-# Nodejs for neovim plugins
-echo "${green}${bold}INSTALLING NODEJS FOR VIM PLUGINS${reset}"
-sudo dnf install -y nodejs 
-
 # Perl for fzf, Rust, Python pip
 echo "${green}${bold}INSTALLING PERL, RUST. POPULAR PROGRAMMING LANGUAGES IN LINUX. FOR APPS USED IN SYSTEM${reset}"
 sudo dnf install -y perl 

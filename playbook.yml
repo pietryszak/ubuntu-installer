@@ -1078,7 +1078,43 @@
   - name: Install vim-plug - a vim plugin manager
     ansible.builtin.shell: |
       sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'       
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+
+# Nodejs for neovim plugins
+
+  - name: Install a nodejs
+
+    block:
+
+      - name: Download Nodejs browser public key
+        ansible.builtin.get_url:
+          url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+          dest: /etc/apt/keyrings/nodesource.gpg.key
+      
+      - name: Add Nodejs gpg key
+        ansible.builtin.shell: |
+          gpg --dearmor < /etc/apt/keyrings/nodesource.gpg.key > /etc/apt/keyrings/nodesource.gpg
+          install -D -o root -g root -m 644 /etc/apt/keyrings/nodesource.gpg /etc/apt/trusted.gpg.d/nodesource.gpg
+
+      - name: Add Nodejs to sources list
+        ansible.builtin.apt_repository: 
+          repo: deb https://deb.nodesource.com/node_16.x jammy main     
+          state: present
+          filename: nodesource
+
+      - name: Add Nodejs-src to sources list
+        ansible.builtin.apt_repository: 
+          repo: deb-src https://deb.nodesource.com/node_16.x jammy main     
+          state: present
+          filename: nodesource
+
+      - name: Install a Nodejs for neovim plugins  
+        ansible.builtin.apt:
+          pkg:
+            - nodejs
+          update_cache: yes
+
+    become: true
 
 # Bat
 # https://github.com/sharkdp/bat
@@ -1300,7 +1336,7 @@
             
       - name: Create folder for flameshot screenshots
         ansible.builtin.file:
-          path: ~/pictures/screenshots
+          path: ~/Pictures/screenshots
           state: directory
           mode: '0755'
 
@@ -1604,12 +1640,12 @@
 
 # GTK theme
 
-  - name: Download GTK theme ( takes time, please wait )
+  - name: Download GTK theme
     ansible.builtin.git:
       repo: https://github.com/pietryszak/gruvbox-material-gtk.git
       dest: ~/.gc/gruvbox-material-gtk
 
-  - name: Copy GTK theme to proper folder
+  - name: Copy GTK theme to proper folder ( takes time, please wait )
     ansible.builtin.copy:
       src: ~/.gc/gruvbox-material-gtk/themes/
       dest: ~/.themes
@@ -1875,7 +1911,7 @@
   - name: Make scripts of polybar executable
     ansible.builtin.file:
       path: "{{ item }}" 
-      state: present
+      state: file
       mode: '0755'
     with_items:
       - ~/.config/polybar/cuts/scripts/launcher.sh
@@ -1914,12 +1950,12 @@
   - name: Clone wallpapers from my repo
     ansible.builtin.git:
       repo: https://github.com/pietryszak/wallpapers
-      dest: ~/pictures/wallpapers
+      dest: ~/Pictures/wallpapers
 
   - name: Add wallpaper to lightdm
     become: true
     ansible.builtin.copy:
-      src: ~/pictures/wallpapers/caffe-gruvbox.png
+      src: ~/Pictures/wallpapers/caffe-gruvbox.png
       dest: /usr/share/pixmaps/
 
 #############################################################################################################
