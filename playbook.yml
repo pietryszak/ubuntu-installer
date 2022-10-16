@@ -1313,14 +1313,6 @@
     
     become: true   
 
-# Gimp
-
-  - name: Install gimp - image manipulation program
-    become: true
-    ansible.builtin.apt:
-      pkg:
-        - gimp
-
 # Flameshot
 # https://github.com/flameshot-org/flameshot
 
@@ -1525,6 +1517,11 @@
 
 #############################################################################################################         
 
+  - name: Install GIMP - image manipulation program
+    community.general.flatpak:
+      name:  https://flathub.org/beta-repo/appstream/org.gimp.GIMP.flatpakref
+      method: user
+      state: present 
 
 # Ferdium - app for app for communication, facebook messenger, microsoft teams
 
