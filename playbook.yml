@@ -732,7 +732,7 @@
 
       - name: Delete any leftover snap cached data
         ansible.builtin.file:
-          path: "{{ item }}" 
+          path: "{{ item }}"
           state: absent
         with_items:
           - ~/snap
@@ -1296,7 +1296,11 @@
         become: true
         ansible.builtin.apt:
           pkg:  
-            - flameshot
+            - flameshot      - name: Create a folder for grub theme
+        ansible.builtin.file:
+          path: /boot/grub/themes/
+          state: directory
+          mode: '0755'
 
       - name: Create folder for flameshot screenshots
         ansible.builtin.file:
@@ -1739,6 +1743,27 @@
       repo: https://github.com/pietryszak/dotfiles.git
       dest: ~/.gc/dotfiles
 
+# Screen layout
+
+  - name: Create a folder for screen layout
+    ansible.builtin.file:
+      path: ~/.screenlayout
+      state: directory
+      mode: '0755'
+  
+  - name: Copy screen layout config to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/screenlayout/pc/
+      dest: ~/.screenlayout
+
+  - name: Make my scripts of screen layout executable
+    ansible.builtin.file:
+      path: ~/.screenlayout/ 
+      state: directory
+      mode: '0755'
+      recurse: yes
+
+
 # Copy files to proper configuration folder
 
   - name: Copy bat config to proper folder
@@ -1836,6 +1861,42 @@
       src: ~/.gc/dotfiles/volumeicon/
       dest: ~/.config
 
+  - name: Copy gtk 2 config to to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/gtk/.gtkrc-2.0
+      dest: ~/
+
+  - name: Copy gtk 3 config to to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/gtk/settings.ini
+      dest: ~/.config/gtk-3.0/
+
+  - name: Copy polybar config to to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/polybar
+      dest: ~/.config
+
+  - name: Make scripts of polybar executable
+    ansible.builtin.file:
+      path: "{{ item }}" 
+      state: present
+      mode: '0755'
+    with_items:
+      - ~/.config/polybar/cuts/scripts/launcher.sh
+      - ~/.config/polybar/cuts/scripts/powermenu.sh
+
+  - name: Make my scripts of polybar executable
+    ansible.builtin.file:
+      path: ~/.config/polybar/scripts/ 
+      state: directory
+      mode: '0755'
+      recurse: yes
+  
+  - name: Copy polybar config to to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/polybar-spotify/spotify_status.py
+      dest: ~/.config/polybar/scripts/
+
   - name: Copy config to folders as sudo
 
     block:
@@ -1851,12 +1912,19 @@
           dest: /root
 
     become: true
-    
 
-  
-  
+# Wallpapers
 
+  - name: Clone wallpapers from my repo
+    ansible.builtin.git:
+      repo: https://github.com/pietryszak/wallpapers
+      dest: ~/pictures/wallpapers
 
+  - name: Add wallpaper to lightdm
+    become: true
+    ansible.builtin.copy:
+      src: ~/pictures/wallpapers/caffe-gruvbox.png
+      dest: /usr/share/pixmaps/
 
 #############################################################################################################
 
