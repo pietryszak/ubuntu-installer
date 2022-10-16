@@ -1376,23 +1376,21 @@
       pkg:
         - timeshift  
 
-# Terminator and kitty terminals
-# https://github.com/gnome-terminator/terminator
-# https://github.com/kovidgoyal/kitty
+# Alacritty terminal
 
-  - name: Install terminals 
+  - name: Install Alacritty terminal
 
     block:
 
-      - name: Install kitty - cross-platform, fast, feature-rich, GPU based terminal
+      - name: Add Alacritty terminal ppa
+        ansible.builtin.shell: |
+          add-apt-repository --yes ppa:aslatter/ppa
+          
+      - name: Install Alacritty
         ansible.builtin.apt:
           pkg:
-            - kitty
-
-      - name: Install terminator - multiple terminals in one window 
-        ansible.builtin.apt:
-          pkg:
-            - terminator 
+            - alacritty
+          update_cache: yes   
 
     become: true
 
@@ -1841,16 +1839,6 @@
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/zsh/.p10k.zsh
       dest: ~/
-
-  - name: Copy terminator config to proper folder
-    ansible.builtin.copy:
-      src: ~/.gc/dotfiles/terminator/
-      dest: ~/.config
-
-  - name: Copy kitty config to proper folder
-    ansible.builtin.copy:
-      src: ~/.gc/dotfiles/kitty/
-      dest: ~/.config
 
   - name: Copy TeamViewer config to proper folder
     ansible.builtin.copy:
