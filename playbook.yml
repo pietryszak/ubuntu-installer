@@ -1414,14 +1414,13 @@
         - redshift
         - geoclue-2.0
 
-# Galculator - scientific calculator  
-# https://github.com/galculator/galculator
+# Gnome calculator
 
-  - name: Install galculator - linux scientific calculator
+  - name: Install gnome calculator
     become: true
     ansible.builtin.apt:
       pkg:  
-        - galculator
+        - gnome-calculator
 
 # Nextcloud client        
 
