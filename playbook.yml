@@ -1296,12 +1296,8 @@
         become: true
         ansible.builtin.apt:
           pkg:  
-            - flameshot      - name: Create a folder for grub theme
-        ansible.builtin.file:
-          path: /boot/grub/themes/
-          state: directory
-          mode: '0755'
-
+            - flameshot      
+            
       - name: Create folder for flameshot screenshots
         ansible.builtin.file:
           path: ~/pictures/screenshots
