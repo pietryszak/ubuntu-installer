@@ -1066,6 +1066,14 @@
 
     become: true
 
+# Micro better nano text editor
+
+  - name: Install a micro better nano text editor
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - micro
+
 # Neovim
 # https://github.com/neovim/neovim
 
@@ -1633,6 +1641,11 @@
       fc-cache -fv
 
 # GTK theme
+  - name: Download GTK theme required packets
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - gtk2-engines-murrine
 
   - name: Download GTK theme
     ansible.builtin.git:
@@ -1965,3 +1978,11 @@
       - /etc/apt/keyrings/vivaldi_linux_signing_key.pub
       - /etc/apt/keyrings/vivaldi.gpg
       - /tmp/teamviewer_amd64.deb
+
+  - name: Remove unused packets
+    become: true
+    ansible.builtin.apt:
+      name: "{{ item }}"
+      state: absent
+    with_items:
+      - nano
