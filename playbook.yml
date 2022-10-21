@@ -2095,6 +2095,8 @@
       - /usr/share/applications/gtkhash.desktop
       - /usr/share/applications/picom.desktop
       - /usr/share/applications/display-im6.q16.desktop
+      - /usr/share/applications/info.desktop
+      - /usr/share/applications/texdoctk.desktop
 
   - name: Remove unused packets
     become: true
@@ -2105,3 +2107,6 @@
       - nano
       - byobu
       - vim
+      - vim-tiny
+      - vim-common
+      - vim-runtime
