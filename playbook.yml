@@ -957,7 +957,7 @@
 
     when: cpu_family.msg == "GenuineIntel"
 
-# Ubuntu restricted restricted video codecs
+# Ubuntu restricted video codecs
 # https://askubuntu.com/a/1433621/1086686
 
   - name: Install restricted video codecs
