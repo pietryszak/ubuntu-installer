@@ -51,7 +51,7 @@
           pkg:
             - linux-firmware
             - ubuntu-drivers-common
-          update_cache: true
+          update_cache: true  
 
       - name: Autoinstall discovered ubuntu drivers
         ansible.builtin.shell: |
@@ -213,7 +213,7 @@
         ansible.builtin.file:
           path: /boot/grub/themes/
           state: directory
-          mode: '0755'
+          mode: '0744'
 
       - name: Copy grub theme to grub folder
         ansible.builtin.copy:
@@ -312,7 +312,7 @@
     ansible.builtin.file:
       path: ~/.gc/ohmyzsh/
       state: directory
-      mode: '0755'
+      mode: '0744'
 
   - name: Download oh-my-zsh
     ansible.builtin.get_url:
@@ -1138,7 +1138,7 @@
     ansible.builtin.file:
       path: ~/.local/bin
       state: directory
-      mode: '0755'
+      mode: '0744'
 
 
   - name: Add bat symbolic link
@@ -1339,7 +1339,7 @@
         ansible.builtin.file:
           path: ~/Pictures/screenshots
           state: directory
-          mode: '0755'
+          mode: '0744'
 
 # Onlyoffice  - office suite
 
@@ -1578,7 +1578,7 @@
         ansible.builtin.file:
           path: ~/.config/joplin-desktop/plugins
           state: directory
-          mode: '0755'
+          mode: '0744'
 
       - name: Download Joplin Better Markdown Viewer extension
         ansible.builtin.get_url:
@@ -1620,7 +1620,7 @@
     ansible.builtin.file:
       path: ~/.local/share/fonts
       state: directory
-      mode: '0755'
+      mode: '0744'
 
   - name: Copy fonts to proper folder
     ansible.builtin.copy:
@@ -1786,7 +1786,7 @@
     ansible.builtin.file:
       path: ~/.screenlayout
       state: directory
-      mode: '0755'
+      mode: '0744'
 
   - name: Copy screen layout config to proper folder
     ansible.builtin.copy:
@@ -1797,7 +1797,7 @@
     ansible.builtin.file:
       path: ~/.screenlayout/
       state: directory
-      mode: '0755'
+      mode: '0744'
       recurse: true
 
 
@@ -1807,107 +1807,127 @@
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/bat
       dest: ~/.config
+      mode: '0644'
 
   - name: Copy Vscode config to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/Code/settings.json
       dest: ~/.config/Code/User/
+      mode: '0644'
 
   - name: Copy htop config to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/htop
       dest: ~/.config
+      mode: '0644'
 
   - name: Copy neofetch config to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/neofetch
       dest: ~/.config
+      mode: '0644'
 
   - name: Copy nvim config to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/nvim
       dest: ~/.config
+      mode: '0744'
 
   - name: Copy zsh sripts to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/zsh/scripts/
       dest: ~/.oh-my-zsh/custom
+      mode: '0744'
 
   - name: Copy zsh sripts to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/zsh/scripts/
       dest: ~/.oh-my-zsh/custom
+      mode: '0744'
 
   - name: Copy zshrc config to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/zsh/.zshrc
       dest: ~/
+      mode: '0644'
 
   - name: Copy powerlevel10k config to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/zsh/.p10k.zsh
       dest: ~/
+      mode: '0644'
 
   - name: Copy TeamViewer config to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/teamviewer/
       dest: ~/.config
+      mode: '0644'
 
   - name: Copy Redshift config to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/redshift/
       dest: ~/.config
+      mode: '0644'
 
   - name: Copy bash_aliases to user folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/bashrc/.bash_aliases
       dest: ~/
+      mode: '0644'
 
   - name: Copy qt5ct config to to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/qt5ct
       dest: ~/.config
+      mode: '0644'
 
   - name: Copy shortcuts list to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/shortcuts
       dest: ~/.config
+      mode: '0644'
 
   - name: Copy i3 config to to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/i3
       dest: ~/.config
+      mode: '0644'
 
   - name: Copy btop config to to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/btop/
       dest: ~/.config
+      mode: '0644'
 
   - name: Copy btop config to to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/volumeicon/
       dest: ~/.config
+      mode: '0644'
 
   - name: Copy gtk 2 config to to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/gtk/.gtkrc-2.0
       dest: ~/
+      mode: '0644'
 
   - name: Copy gtk 3 config to to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/gtk/settings.ini
       dest: ~/.config/gtk-3.0/
+      mode: '0644'
 
   - name: Copy polybar config to to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/polybar
       dest: ~/.config
+      mode: '0644'
 
   - name: Make scripts of polybar executable
     ansible.builtin.file:
       path: "{{ item }}"
       state: file
-      mode: '0755'
+      mode: '0744'
     with_items:
       - ~/.config/polybar/cuts/scripts/launcher.sh
       - ~/.config/polybar/cuts/scripts/powermenu.sh
@@ -1916,13 +1936,14 @@
     ansible.builtin.file:
       path: ~/.config/polybar/scripts/
       state: directory
-      mode: '0755'
+      mode: '0744'
       recurse: true
 
   - name: Copy polybar config to to proper folder
     ansible.builtin.copy:
       src: ~/.gc/polybar-spotify/spotify_status.py
       dest: ~/.config/polybar/scripts/
+      mode: '0744'
 
   - name: Copy config to folders as sudo
 
@@ -1932,11 +1953,13 @@
         ansible.builtin.copy:
           src: ~/.gc/dotfiles/lightdm/
           dest: /etc/lightdm/
+          mode: '0644'
 
       - name: Copy bash_aliases to sudo/root folder
         ansible.builtin.copy:
           src: ~/.gc/dotfiles/bashrc/.bash_aliases
           dest: /root
+          mode: '0644'
 
     become: true
 
@@ -1952,6 +1975,7 @@
     ansible.builtin.copy:
       src: ~/Pictures/wallpapers/caffe-gruvbox.png
       dest: /usr/share/pixmaps/
+      mode: '0644'
 
 #############################################################################################################
 
