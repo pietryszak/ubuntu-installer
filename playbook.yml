@@ -1624,7 +1624,7 @@
         ansible.builtin.file:
           path: ~/.config/joplin-desktop/plugins
           state: directory
-          mode: '0664'
+          mode: '0744'
 
       - name: Download Joplin Better Markdown Viewer extension
         ansible.builtin.get_url:
