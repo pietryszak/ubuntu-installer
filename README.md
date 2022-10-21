@@ -3,7 +3,7 @@
 My ubuntu i3-gaps installer
 
 
-## When installed on host
+### When installed on host
 
 ```bash
 sudo apt update \
@@ -20,7 +20,7 @@ sudo apt update \
 Cups - printer panel accesible from browser
 http://localhost:631/ 
 
-## When installed on virtualbox
+### When installed on virtualbox
 
 ```bash
 sudo apt update \
