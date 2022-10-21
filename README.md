@@ -13,7 +13,7 @@ sudo apt update \
 && cd .gc \
 && git clone https://github.com/pietryszak/ubuntu-installer \
 && cd ubuntu-installer \
-&& ansible-playbook --ask-become-pass --connection=local --inventory 127.0.0.1, all.yml
+&& ansible-playbook --ask-become-pass --connection=local --inventory 127.0.0.1, all.yml \
 && ansible-playbook --ask-become-pass --connection=local --inventory 127.0.0.1, host.yml
 ```
 
@@ -31,7 +31,7 @@ sudo apt update \
 && cd .gc \
 && git clone https://github.com/pietryszak/ubuntu-installer \
 && cd ubuntu-installer \
-&& ansible-playbook --ask-become-pass --connection=local --inventory 127.0.0.1, all.yml
+&& ansible-playbook --ask-become-pass --connection=local --inventory 127.0.0.1, all.yml \
 && ansible-playbook --ask-become-pass --connection=local --inventory 127.0.0.1, virtualbox.yml
 ```
 
