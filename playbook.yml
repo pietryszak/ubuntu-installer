@@ -1368,10 +1368,10 @@
             - spotify-client
           update_cache: true
 
-      - name: Add bat symbolic link to Spotify
+      - name: Add symbolic link to Spotify
         ansible.builtin.file:
           src: /usr/share/spotify/spotify.desktop
-          dest: /usr/share/applications/
+          dest: /usr/share/applications/spotify.desktop
           state: link
 
     become: true
