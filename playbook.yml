@@ -1975,8 +1975,8 @@
   - name: Copy btop config to to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/btop/
-      dest: ~/.config
-      mode: '0644'
+      dest: ~/.config/btop
+      mode: '0664'
 
   - name: Copy btop config to to proper folder
     ansible.builtin.copy:
@@ -2056,6 +2056,13 @@
       src: ~/Pictures/wallpapers/caffe-gruvbox.png
       dest: /usr/share/pixmaps/
       mode: '0644'
+
+#############################################################################################################
+
+# System locale
+
+#############################################################################################################
+
 
 #############################################################################################################
 
