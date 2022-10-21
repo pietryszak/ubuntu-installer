@@ -730,5 +730,4 @@
       - /etc/apt/keyrings/vivaldi_linux_signing_key.pub
       - /etc/apt/keyrings/vivaldi.gpg
       - /tmp/teamviewer_amd64.deb
-      - ~/.config/polybar/cuts/config-virtualbox.ini
       - ~/.config/i3/scripts/workspaces-virtualbox
