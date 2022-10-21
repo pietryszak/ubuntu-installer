@@ -233,7 +233,8 @@
           - { regexp: '#GRUB_GFXMODE=640x480', line: 'GRUB_GFXMODE=2560x1440' }
           - { regexp: 'GRUB_TIMEOUT=0', line: 'GRUB_TIMEOUT=4' }
           - { regexp: 'GRUB_TIMEOUT_STYLE=hidden', line: 'GRUB_TIMEOUT_STYLE=menu' }
-          - { regexp: 'GRUB_CMDLINE_LINUX_DEFAULT=""', line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 rd.systemd.show_status=auto rd.udev.log_level=3 splash"' }
+          - { regexp: 'GRUB_CMDLINE_LINUX_DEFAULT=""',
+              line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 rd.systemd.show_status=auto rd.udev.log_level=3 splash"' }
 
       - name: Add path of theme to grub configure
         ansible.builtin.blockinfile:
@@ -391,6 +392,7 @@
         ansible.builtin.get_url:
           url: https://regolith-desktop.org/regolith.key
           dest: /etc/apt/keyrings/regolith.key
+          mode: '0644'
 
       - name: Add Regolith gpg key
         ansible.builtin.shell: |
@@ -594,7 +596,8 @@
 
       - name: Create a new crontab file for scan system every 20 day of month at 21:00
         ansible.builtin.shell: |
-          echo "0 21 20 * 0 root /usr/bin/clamdscan --fdpass --log=/root/.clamav/logs/scan-$(date +'%d-%m-%Y-%T').log --move=/root/.clamav/quarantine /" | tee /etc/cron.d/clamdscan
+          echo "0 21 20 * 0 root /usr/bin/clamdscan --fdpass --log=/root/.clamav/logs/scan-$(date +'%d-%m-%Y-%T').log --move=/root/.clamav/quarantine /" \
+          | tee /etc/cron.d/clamdscan
         when:
           - ansible_virtualization_role == "host"
 
@@ -989,6 +992,7 @@
         ansible.builtin.get_url:
           url: https://packages.microsoft.com/keys/microsoft.asc
           dest: /etc/apt/keyrings/microsoft.asc
+          mode: '0644'
 
       - name: Add Vscode gpg key
         ansible.builtin.shell: |
@@ -1105,6 +1109,7 @@
         ansible.builtin.get_url:
           url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
           dest: /etc/apt/keyrings/nodesource.gpg.key
+          mode: '0644'
 
       - name: Add Nodejs gpg key
         ansible.builtin.shell: |
@@ -1278,6 +1283,7 @@
         ansible.builtin.get_url:
           url: https://repo.vivaldi.com/archive/linux_signing_key.pub
           dest: /etc/apt/keyrings/vivaldi_linux_signing_key.pub
+          mode: '0644'
 
       - name: Add Vivaldi gpg key
         ansible.builtin.shell: |
@@ -1308,6 +1314,7 @@
         ansible.builtin.get_url:
           url: https://download.spotify.com/debian/pubkey_5E3C45D7B312C643.gpg
           dest: /etc/apt/keyrings/pubkey_spotify.gpg
+          mode: '0644'
 
       - name: Add Spotify gpg key
         ansible.builtin.shell: |
@@ -1843,7 +1850,7 @@
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/neofetch
       dest: ~/.config
-      mode: '0644'
+      mode: '0664'
 
   - name: Copy nvim config to proper folder
     ansible.builtin.copy:
