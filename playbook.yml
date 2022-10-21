@@ -1509,6 +1509,7 @@
           name: geoclue-agent.service
           state: started
           enabled: true
+          scope: user
 
     become: true
 
