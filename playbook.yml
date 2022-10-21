@@ -1460,13 +1460,30 @@
 
 # Redshift adjusts the color temperature of your screen according to your surrounding
 
-  - name: Install redshift - adjusts the color temperature of screen
+  - name: Install reedshift
+
+    block:
+
+      - name: Install redshift - adjusts the color temperature of screen
+        become: true
+        ansible.builtin.apt:
+          pkg:
+            - redshift-gtk
+            - redshift
+            - geoclue-2.0
+
+      - name: Set redshift geolocalization settings
+        ansible.builtin.blockinfile:
+          path: /etc/geoclue/geoclue.conf
+          block: |
+
+            # Redshift
+            [redshift]
+            allowed=true
+            system=false
+            users=
+
     become: true
-    ansible.builtin.apt:
-      pkg:
-        - redshift-gtk
-        - redshift
-        - geoclue-2.0
 
 # Gnome calculator
 
