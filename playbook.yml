@@ -1689,10 +1689,6 @@
       dest: ~/.local/share/fonts
       mode: '0755'
     with_items:
-      - ~/.gc/fonts/MesloLGS-NF-Bold-Italic.ttf
-      - ~/.gc/fonts/MesloLGS-NF-Bold.ttf
-      - ~/.gc/fonts/MesloLGS-NF-Italic.ttf
-      - ~/.gc/fonts/MesloLGS-NF-Regular.ttf
       - ~/.gc/fonts/feather.ttf
       - ~/.gc/fonts/iosevka_nerd_font.ttf
       - ~/.gc/fonts/weathericons-regular-webfont.ttf
