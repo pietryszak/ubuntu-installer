@@ -20,6 +20,7 @@ sudo apt update \
 Cups - printer panel accesible from browser
 http://localhost:631/ 
 
+---
 ### When installed on virtualbox
 
 ```bash
