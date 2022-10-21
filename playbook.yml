@@ -1852,11 +1852,13 @@
       state: directory
       mode: '0744'
 
-  - name: Copy screen layout config to proper folder
+  - name: Copy screen layout config for PC to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/screenlayout/
       dest: ~/.screenlayout
       mode: '0744'
+    when:
+      - ansible_virtualization_role == "host"
 
   - name: Make my scripts of screen layout executable
     ansible.builtin.file:
@@ -1865,6 +1867,13 @@
       mode: '0744'
       recurse: true
 
+  - name: Copy screen layout config for Virtualbox to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/screenlayout/virtualbox.sh
+      dest: ~/.screenlayout
+      mode: '0744'
+      when:
+        - ansible_virtualization_role == "guest"
 
 # Copy files to proper configuration folder
 
@@ -1952,11 +1961,16 @@
       dest: ~/.config
       mode: '0644'
 
-  - name: Copy i3 config to to proper folder
+  - name: Copy i3 config to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/i3
       dest: ~/.config
       mode: '0644'
+
+  - name: Remove unnecessary i3 config for Virtualbox
+    ansible.builtin.file:
+      path: ~/.config/i3/scripts/workspaces
+      state: absent
 
   - name: Copy btop config to to proper folder
     ansible.builtin.copy:
