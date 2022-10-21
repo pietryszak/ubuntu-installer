@@ -35,6 +35,7 @@
   - name: Export variable for installation packet without pop upgrades
     ansible.builtin.shell: |
       export DEBIAN_FRONTEND=noninteractive
+    changed_when: true
 
 #############################################################################################################
 
@@ -56,7 +57,7 @@
       - name: Autoinstall discovered ubuntu drivers
         ansible.builtin.shell: |
           ubuntu-drivers autoinstall
-        changed_when: false
+        changed_when: true
 
     become: true
 
@@ -258,6 +259,8 @@
         ansible.builtin.shell: |
           update-grub2
 
+        changed_when: true
+
       - name: Install a plymouth (splash screen) theme
         ansible.builtin.apt:
           pkg:
@@ -266,6 +269,8 @@
       - name: Update initial ramfs for new plymouth theme
         ansible.builtin.shell: |
           update-initramfs -u
+
+        changed_when: true
 
     become: true
 
@@ -398,6 +403,7 @@
         ansible.builtin.shell: |
           gpg --dearmor < /etc/apt/keyrings/regolith.key > /etc/apt/keyrings/regolith.gpg
           install -D -o root -g root -m 644 /etc/apt/keyrings/regolith.gpg /etc/apt/trusted.gpg.d/regolith-archive-keyring.gpg
+        changed_when: true
 
       - name: Add Regolith to sources list
         ansible.builtin.apt_repository:
@@ -517,8 +523,8 @@
         - python3-pip
 
   - name: Install python dependencies for Polybar Spotify module
-    ansible.builtin.shell: |
-      pip install dbus-python
+    ansible.builtin.pip:
+      name: dbus-python
 
   - name: Install Polybar Spotify module
     ansible.builtin.git:
@@ -564,6 +570,7 @@
       - name: Update antivirus database
         ansible.builtin.shell: |
           freshclam
+        changed_when: true
 
       - name: Start the clamav-freshclam service after update
         ansible.builtin.systemd:
@@ -754,6 +761,7 @@
       - name: Purge or remove completely snapd
         ansible.builtin.shell: |
           apt autoremove --purge snapd -y
+        changed_when: true
 
       - name: Create file with apt snap settings to avoid install
         ansible.builtin.file:
@@ -782,6 +790,7 @@
       - name: Enable the Flathub - a popular destination for searching the application
         ansible.builtin.shell: |
           flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+        changed_when: true
 
     become: true
 
@@ -809,7 +818,7 @@
           question: virtualbox-ext-pack/license
           value: 'true'
           vtype: select
- 
+
       - name: Install Virtualbox extensions pack
         ansible.builtin.apt:
           pkg:
@@ -819,6 +828,7 @@
         become_user: "{{ login_user }}"
         ansible.builtin.shell: |
           VBoxManage natnetwork list
+        changed_when: false
         register: virtualbox_natnetwork
 
       - name: Add Nat network to virtualbox
@@ -832,6 +842,7 @@
         become_user: "{{ login_user }}"
         ansible.builtin.shell: |
           VBoxManage list hostonlyifs
+        changed_when: false
         register: virtualbox_host_only_network
 
       - name: Add host-only network to virtualbox
@@ -844,6 +855,7 @@
       - name: Install virtualbox guest tool dependencies
         ansible.builtin.shell: |
           apt install linux-headers-$(uname -r)
+        changed_when: true
 
       - name: Install virtualbox guest tool dependiences
         ansible.builtin.apt:
@@ -949,10 +961,12 @@
       - name: Install libdvd-pkg restricted video codecs
         ansible.builtin.shell: |
           DEBIAN_FRONTEND=noninteractive apt -yq install libdvd-pkg
+        changed_when: true
 
       - name: Configure libdvd-pkg restricted video codecs
         ansible.builtin.shell: |
           bash /usr/lib/libdvd-pkg/b-i_libdvdcss.sh
+        changed_when: true
 
     become: true
 
@@ -973,6 +987,7 @@
       - name: Add Celluloid video player ppa
         ansible.builtin.shell: |
           add-apt-repository --yes ppa:xuzhen666/gnome-mpv
+        changed_when: true
 
       - name: Install Celluloid
         ansible.builtin.apt:
@@ -998,6 +1013,7 @@
         ansible.builtin.shell: |
           gpg --dearmor < /etc/apt/keyrings/microsoft.asc > /etc/apt/keyrings/microsoft.gpg
           install -D -o root -g root -m 644 /etc/apt/keyrings/microsoft.gpg /etc/apt/trusted.gpg.d/packages.microsoft.gpg
+        changed_when: true
 
       - name: Add Vscode to sources list
         ansible.builtin.apt_repository:
@@ -1057,6 +1073,7 @@
       # Themes
       code --install-extension sainnhe.gruvbox-material
       code --install-extension jonathanharty.gruvbox-material-icon-theme
+    changed_when: true
 
 # Teamviewer
 
@@ -1098,6 +1115,7 @@
     ansible.builtin.shell: |
       sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    changed_when: true
 
 # Nodejs for neovim plugins
 
@@ -1115,6 +1133,7 @@
         ansible.builtin.shell: |
           gpg --dearmor < /etc/apt/keyrings/nodesource.gpg.key > /etc/apt/keyrings/nodesource.gpg
           install -D -o root -g root -m 644 /etc/apt/keyrings/nodesource.gpg /etc/apt/trusted.gpg.d/nodesource.gpg
+        changed_when: true
 
       - name: Add Nodejs to sources list
         ansible.builtin.apt_repository:
@@ -1197,6 +1216,7 @@
       - name: Detect Sensors
         ansible.builtin.shell: |
           yes | sensors-detect
+        changed_when: true
 
     become: true
 
@@ -1228,6 +1248,7 @@
       - name: Add firefox ppa
         ansible.builtin.shell: |
           add-apt-repository --yes ppa:mozillateam/ppa
+        changed_when: true
 
       - name: Create files with apt firefox settings
         ansible.builtin.file:
@@ -1289,6 +1310,7 @@
         ansible.builtin.shell: |
           gpg --dearmor < /etc/apt/keyrings/vivaldi_linux_signing_key.pub > /etc/apt/keyrings/vivaldi.gpg
           install -D -o root -g root -m 644 /etc/apt/keyrings/vivaldi.gpg /etc/apt/trusted.gpg.d/packages.vivaldi.gpg
+        changed_when: true
 
       - name: Add Vivaldi to sources list
         ansible.builtin.apt_repository:
@@ -1320,6 +1342,7 @@
         ansible.builtin.shell: |
           gpg --dearmor < /etc/apt/keyrings/pubkey_spotify.gpg > /etc/apt/keyrings/spotify.gpg
           install -D -o root -g root -m 644 /etc/apt/keyrings/spotify.gpg /etc/apt/trusted.gpg.d/spotify.gpg
+        changed_when: true
 
       - name: Add Spotify to sources list
         ansible.builtin.apt_repository:
@@ -1399,6 +1422,7 @@
       - name: Add Alacritty terminal ppa
         ansible.builtin.shell: |
           add-apt-repository --yes ppa:aslatter/ppa
+        changed_when: true
 
       - name: Install Alacritty
         ansible.builtin.apt:
@@ -1443,6 +1467,7 @@
       - name: Add nexcloud ppa
         ansible.builtin.shell: |
           add-apt-repository --yes ppa:nextcloud-devs/client
+        changed_when: true
 
       - name: Install Nexcloud client
         ansible.builtin.apt:
@@ -1470,6 +1495,7 @@
       - name: Add nemo file manager ppa
         ansible.builtin.shell: |
           add-apt-repository --yes ppa:ubuntubudgie/backports
+        changed_when: true
 
       - name: Install Nemo file manager
         ansible.builtin.apt:
@@ -1658,6 +1684,7 @@
   - name: Update fonts cache
     ansible.builtin.shell: |
       fc-cache -fv
+    changed_when: true
 
 # GTK theme
   - name: Download GTK theme required packets
@@ -1694,6 +1721,7 @@
         ansible.builtin.shell: |
           flatpak override --filesystem=$HOME/.themes
           flatpak override --env=GTK_THEME=Gruvbox-Material-Dark
+        changed_when: true
 
       - name: Set GTK theme to profile settings
         ansible.builtin.blockinfile:
@@ -1736,6 +1764,7 @@
       - name: Add Papirus icons ppa
         ansible.builtin.shell: |
           add-apt-repository --yes ppa:papirus/papirus
+        changed_when: true
 
       - name: Install Papirus icons ( takes time up to 5 minutes, please wait )
         ansible.builtin.apt:
@@ -1746,8 +1775,9 @@
       - name: Add Papirus icons ppa
         ansible.builtin.shell: |
           add-apt-repository --yes ppa:papirus/hardcode-tray
+        changed_when: true
 
-      - name: Install Papirus hardcoded icons for i3-gaps polybar 
+      - name: Install Papirus hardcoded icons for i3-gaps polybar
         ansible.builtin.apt:
           pkg:
             - hardcode-tray
@@ -1756,6 +1786,7 @@
       - name: Apply Papirus hardcoded icons for i3-gaps polybar
         ansible.builtin.shell: |
           hardcode-tray --apply --conversion-tool RSVGConvert --size 22 --theme Papirus
+        changed_when: true
 
       - name: Install Papirus folders icons
         ansible.builtin.apt:
@@ -1765,6 +1796,7 @@
       - name: Set color of folders with Papirus folders icons
         ansible.builtin.shell: |
           papirus-folders -C brown --theme Papirus-Dark
+        changed_when: true
 
       - name: Install Papirus theme for filezilla
         ansible.builtin.apt:
@@ -1782,6 +1814,7 @@
       - name: Add nemo file manager folder colors ppa
         ansible.builtin.shell: |
           add-apt-repository --yes ppa:costales/folder-color
+        changed_when: true
 
       - name: Install Nemo folder colors menu
         ansible.builtin.apt:
