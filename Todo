@@ -4,12 +4,4 @@ https://www.reddit.com/r/linux/comments/q9vl3y/comment/hic8sph/?utm_source=share
 https://wiki.archlinux.org/title/redshift
 
 
-      - name: Create file with redshift service agent
-        ansible.builtin.file:
-          path: /usr/lib/systemd/user/geoclue-agent.service
-          state: touch
-          mode: u=rw,g=r,o=r
-
-
-
 https://unix.stackexchange.com/questions/36380/how-to-properly-and-easily-configure-xdg-open-without-any-environment/36451#36451
