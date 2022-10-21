@@ -465,6 +465,12 @@
 # Yad - dialog app for calendar in i3-gaps
 # https://github.com/v1cont/yad
 
+  - name: Install dependiences of yad dialog app for calendar in i3-gaps
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - xdotool
+
   - name: Install yad dialog app for calendar in i3-gaps
     become: true
     ansible.builtin.apt:
