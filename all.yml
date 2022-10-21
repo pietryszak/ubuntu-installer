@@ -420,24 +420,6 @@
       pkg:
         - policykit-1-gnome
 
-# Polybar Spotify module for i3-gaps
-
-  - name: Install Polybar Spotify module dependencies
-    become: true
-    ansible.builtin.apt:
-      pkg:
-        - python3-pip
-
-  - name: Install python dependencies for Polybar Spotify module
-    ansible.builtin.pip:
-      name: dbus-python
-
-  - name: Install Polybar Spotify module
-    ansible.builtin.git:
-      repo: https://github.com/Jvanrhijn/polybar-spotify.git
-      dest: ~/.gc/polybar-spotify
-      version: master
-
 # i3-wifi applet
 
   - name: Install network manager and applet for networks in i3-gaps
@@ -1362,12 +1344,6 @@
       state: directory
       mode: '0744'
       recurse: true
-
-  - name: Copy polybar config to to proper folder
-    ansible.builtin.copy:
-      src: ~/.gc/polybar-spotify/spotify_status.py
-      dest: ~/.config/polybar/scripts/
-      mode: '0744'
 
   - name: Copy config to folders as sudo
 

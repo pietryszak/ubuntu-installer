@@ -111,6 +111,30 @@
 
 #############################################################################################################
 
+# i3 gaps + things connected to i3
+
+#############################################################################################################
+
+# Polybar Spotify module for i3-gaps
+
+  - name: Install Polybar Spotify module dependencies
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - python3-pip
+
+  - name: Install python dependencies for Polybar Spotify module
+    ansible.builtin.pip:
+      name: dbus-python
+
+  - name: Install Polybar Spotify module
+    ansible.builtin.git:
+      repo: https://github.com/Jvanrhijn/polybar-spotify.git
+      dest: ~/.gc/polybar-spotify
+      version: master
+
+#############################################################################################################
+
 # Security
 
 #############################################################################################################
@@ -569,6 +593,14 @@
 
     become: true
 
+# Jq - json for weather module in polybar
+
+  - name: Install Jq - json for weather module in polybar
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - jq
+
 #############################################################################################################
 
 # Flatpak Apps
@@ -671,6 +703,12 @@
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/screenlayout/
       dest: ~/.screenlayout
+      mode: '0744'
+
+  - name: Copy polybar config to to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/polybar-spotify/spotify_status.py
+      dest: ~/.config/polybar/scripts/
       mode: '0744'
 
 #############################################################################################################
