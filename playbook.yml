@@ -1485,14 +1485,14 @@
 
       - name: Create file with redshift service agent
         ansible.builtin.file:
-          path: /usr/lib/systemd/user/geoclue-agent.service
+          path: /usr/lib/systemd/system/geoclue-agent.service
           state: touch
           mode: u=rw,g=r,o=r
 
 
       - name: Set redshift service agent
         ansible.builtin.blockinfile:
-          path: /usr/lib/systemd/user/geoclue-agent.service
+          path: /usr/lib/systemd/system/geoclue-agent.service
           block: |
 
             [Unit]
