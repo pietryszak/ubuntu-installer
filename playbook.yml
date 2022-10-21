@@ -20,7 +20,7 @@
     register: whoami
 
   - name: Set a fact with the username
-    set_fact:
+    ansible.builtin.set_fact:
       login_user: "{{ whoami.stdout }}"
 
 # Cpu family
@@ -51,11 +51,12 @@
           pkg:
             - linux-firmware
             - ubuntu-drivers-common
-          update_cache: true  
+          update_cache: true
 
       - name: Autoinstall discovered ubuntu drivers
         ansible.builtin.shell: |
           ubuntu-drivers autoinstall
+        changed_when: false
 
     become: true
 
@@ -204,6 +205,7 @@
     ansible.builtin.git:
       repo: https://github.com/AdisonCavani/distro-grub-themes.git
       dest: ~/.gc/distro-grub-themes
+      version: master
 
   - name: Install grub theme and plymouth theme, configure it
 
@@ -219,6 +221,7 @@
         ansible.builtin.copy:
           src: ~/.gc/distro-grub-themes/customize/ubuntu/
           dest: /boot/grub/themes
+          mode: '0644'
 
       - name: Adjust grub display resolution, display time, theme, splash screen
         ansible.builtin.lineinfile:
@@ -243,6 +246,7 @@
       - name: Hide any kernel messages from the console
         ansible.builtin.blockinfile:
           path: /etc/sysctl.d/20-quiet-printk.conf
+          mode: '0644'
           create: true
           block: |
 
@@ -318,11 +322,7 @@
     ansible.builtin.get_url:
       url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
       dest: ~/.gc/ohmyzsh/install.sh
-
-  - name: Make oh-my-zsh script executable
-    ansible.builtin.file:
-      path: ~/.gc/ohmyzsh/install.sh
-      mode: u+x
+      mode: '0744'
 
   - name: Check that oh-my-zsh is installed
     ansible.builtin.stat:
@@ -341,17 +341,20 @@
     ansible.builtin.git:
       repo: https://github.com/zsh-users/zsh-autosuggestions
       dest: ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+      version: master
 
 
   - name: Install zsh syntax highlighting plugin
     ansible.builtin.git:
       repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
       dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+      version: master
 
   - name: Install zsh completions plugin
     ansible.builtin.git:
       repo: https://github.com/zsh-users/zsh-completions
       dest: ~/.oh-my-zsh/custom/plugins/zsh-completions
+      version: master
 
   # Powerlevel10k zsh
 
@@ -360,6 +363,7 @@
       repo: https://github.com/romkatv/powerlevel10k.git
       dest: ~/.oh-my-zsh/custom/themes/powerlevel10k
       depth: 1
+      version: master
 
 # Fzf - A command-line fuzzy finder
 # https://github.com/junegunn/fzf
@@ -518,6 +522,7 @@
     ansible.builtin.git:
       repo: https://github.com/Jvanrhijn/polybar-spotify.git
       dest: ~/.gc/polybar-spotify
+      version: master
 
 # i3-wifi applet
 
@@ -1059,6 +1064,7 @@
         ansible.builtin.get_url:
           url: https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
           dest: /tmp/teamviewer_amd64.deb
+          mode: '0744'
 
       - name: Install a teamviewer deb package
         ansible.builtin.apt:
@@ -1578,32 +1584,37 @@
         ansible.builtin.file:
           path: ~/.config/joplin-desktop/plugins
           state: directory
-          mode: '0744'
+          mode: '0644'
 
       - name: Download Joplin Better Markdown Viewer extension
         ansible.builtin.get_url:
           url: https://github.com/joplin/plugins/raw/master/plugins/ylc395.betterMarkdownViewer/plugin.jpl
           dest: ~/.config/joplin-desktop/plugins/ylc395.betterMarkdownViewer.jpl
+          mode: '0644'
 
       - name: Download Joplin Email note extension
         ansible.builtin.get_url:
           url: https://github.com/joplin/plugins/raw/master/plugins/com.eliasvsimon.email-note/plugin.jpl
           dest: ~/.config/joplin-desktop/plugins/com.eliasvsimon.email-note.jpl
+          mode: '0644'
 
       - name: Download Joplin Home note extension
         ansible.builtin.get_url:
           url: https://github.com/joplin/plugins/raw/master/plugins/com.lki.homenote/plugin.jpl
           dest: ~/.config/joplin-desktop/plugins/com.lki.homenote.jpl
+          mode: '0644'
 
       - name: Download Joplin Note tabs extension
         ansible.builtin.get_url:
           url: https://github.com/joplin/plugins/raw/master/plugins/joplin.plugin.note.tabs/plugin.jpl
           dest: ~/.config/joplin-desktop/plugins/joplin.plugin.note.tabs.jpl
+          mode: '0644'
 
       - name: Download Joplin Persistent Layout extension
         ansible.builtin.get_url:
           url: https://github.com/joplin/plugins/raw/master/plugins/joplin.plugin.benji.persistentLayout/plugin.jpl
           dest: ~/.config/joplin-desktop/plugins/joplin.plugin.benji.persistentLayout.jpl
+          mode: '0644'
 
 #############################################################################################################
 
@@ -1615,6 +1626,7 @@
     ansible.builtin.git:
       repo: https://github.com/pietryszak/fonts.git
       dest: ~/.gc/fonts
+      version: main
 
   - name: Create a directory for oh-my-zsh installation script
     ansible.builtin.file:
@@ -1626,6 +1638,7 @@
     ansible.builtin.copy:
       src: "{{ item }}"
       dest: ~/.local/share/fonts
+      mode: '0755'
     with_items:
       - ~/.gc/fonts/MesloLGS-NF-Bold-Italic.ttf
       - ~/.gc/fonts/MesloLGS-NF-Bold.ttf
@@ -1650,16 +1663,19 @@
     ansible.builtin.git:
       repo: https://github.com/pietryszak/gruvbox-material-gtk.git
       dest: ~/.gc/gruvbox-material-gtk
+      version: master
 
   - name: Copy GTK theme to proper folder ( takes time, please wait )
     ansible.builtin.copy:
       src: ~/.gc/gruvbox-material-gtk/themes/
       dest: ~/.themes
+      mode: '0775'
 
   - name: Copy cursor theme to proper folder
     ansible.builtin.copy:
       src: ~/.gc/gruvbox-material-gtk/cursors/
       dest: ~/.icons
+      mode: '0775'
 
 # Set GTK theme
 
@@ -1779,6 +1795,7 @@
     ansible.builtin.git:
       repo: https://github.com/pietryszak/dotfiles.git
       dest: ~/.gc/dotfiles
+      version: main
 
 # Screen layout
 
@@ -1792,6 +1809,7 @@
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/screenlayout/
       dest: ~/.screenlayout
+      mode: '0744'
 
   - name: Make my scripts of screen layout executable
     ansible.builtin.file:
@@ -1969,6 +1987,7 @@
     ansible.builtin.git:
       repo: https://github.com/pietryszak/wallpapers
       dest: ~/Pictures/wallpapers
+      version: main
 
   - name: Add wallpaper to lightdm
     become: true
