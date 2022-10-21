@@ -652,25 +652,6 @@
 
     when: cpu_family.msg == "GenuineIntel"
 
-# Ubuntu restricted remainayer
-
-  - name: Install Celluloid video player
-
-    block:
-
-      - name: Add Celluloid video player ppa
-        ansible.builtin.shell: |
-          add-apt-repository --yes ppa:xuzhen666/gnome-mpv
-        changed_when: true
-
-      - name: Install Celluloid
-        ansible.builtin.apt:
-          pkg:
-            - celluloid
-          update_cache: true
-
-    become: true
-
 # Vscode
 
   - name: Install Vscode
@@ -965,15 +946,6 @@
           state: directory
           mode: '0744'
 
-# Timeshift
-# https://github.com/linuxmint/timeshift
-
-  - name: Install Timeshift - system restore tool
-    become: true
-    ansible.builtin.apt:
-      pkg:
-        - timeshift
-
 # Alacritty terminal
 
   - name: Install Alacritty terminal
@@ -1000,25 +972,6 @@
     ansible.builtin.apt:
       pkg:
         - gnome-calculator
-
-# Nextcloud client
-
-  - name: Install nexcloud client
-
-    block:
-
-      - name: Add nexcloud ppa
-        ansible.builtin.shell: |
-          add-apt-repository --yes ppa:nextcloud-devs/client
-        changed_when: true
-
-      - name: Install Nexcloud client
-        ansible.builtin.apt:
-          pkg:
-            - nextcloud-client
-          update_cache: true
-
-    become: true
 
 # 7zip
 
@@ -1451,13 +1404,6 @@
 
 #############################################################################################################
 
-# System locale
-
-#############################################################################################################
-
-
-#############################################################################################################
-
 # Last commands before restart
 
 #############################################################################################################
@@ -1470,15 +1416,10 @@
     with_items:
       - /etc/apt/keyrings/regolith.key
       - /etc/apt/keyrings/regolith.gpg
-      - /etc/apt/keyrings/pubkey_spotify.gpg
-      - /etc/apt/keyrings/spotify.gpg
       - /etc/apt/keyrings/microsoft.asc
       - /etc/apt/keyrings/microsoft.gpg
-      - /etc/apt/keyrings/TeamViewer2017.asc
-      - /etc/apt/keyrings/teamviewer.gpg
-      - /etc/apt/keyrings/vivaldi_linux_signing_key.pub
-      - /etc/apt/keyrings/vivaldi.gpg
-      - /tmp/teamviewer_amd64.deb
+      - /etc/apt/keyrings/nodesource.gpg.key
+      - /etc/apt/keyrings/nodesource.gpg
       - /usr/share/applications/gtkhash.desktop
       - /usr/share/applications/picom.desktop
       - /usr/share/applications/display-im6.q16.desktop
