@@ -40,3 +40,17 @@
       src: ~/.gc/dotfiles/screenlayout/virtualbox.sh
       dest: ~/.screenlayout
       mode: '0744'
+
+#############################################################################################################
+
+# Last commands before restart
+
+#############################################################################################################
+
+  - name: Delete any leftover temporary files
+    become: true
+    ansible.builtin.file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+      - ~/.config/polybar/cuts/config.ini
