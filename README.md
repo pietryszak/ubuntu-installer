@@ -4,7 +4,7 @@ My ubuntu i3-gaps installer
 
 ```bash
 sudo apt update \
-&& sudo DEBIAN_FRONTEND=noninteractive apt full-upgrade -y \
+&& sudo DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a apt full-upgrade -y \
 && sudo apt install ansible -y \
 && mkdir -p .gc \
 && cd .gc \
