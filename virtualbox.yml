@@ -54,3 +54,4 @@
       state: absent
     with_items:
       - ~/.config/polybar/cuts/config.ini
+      - ~/.config/i3/scripts/workspaces
