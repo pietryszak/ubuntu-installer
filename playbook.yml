@@ -1026,6 +1026,12 @@
           pkg:
             - code
           update_cache: true
+
+      - name: Install Vscode extension dependencies
+        ansible.builtin.apt:
+          pkg:
+            - ansible-lint
+
     become: true
 
   - name: Install Vscode extensions ( takes time, please wait )
@@ -1042,6 +1048,7 @@
       # Ansible extensions
       code --install-extension redhat.vscode-xml
       code --install-extension redhat.vscode-yaml
+      code --install-extension redhat.ansible
 
       # Docker extension
       code --install-extension ms-azuretools.vscode-docker
