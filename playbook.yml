@@ -1489,7 +1489,6 @@
           state: touch
           mode: u=rw,g=r,o=r
 
-
       - name: Set redshift service agent
         ansible.builtin.blockinfile:
           path: /usr/lib/systemd/system/geoclue-agent.service
