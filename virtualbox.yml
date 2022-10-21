@@ -1,0 +1,42 @@
+---
+
+- hosts: all
+
+  tasks:
+
+#############################################################################################################
+
+# Security
+
+#############################################################################################################
+
+# UFW firewall
+
+  - name: Install firewall
+
+    block:
+
+      - name: Allow incoming policy if virtual mashine detected
+        community.general.ufw:
+          direction: incoming
+          policy: allow
+
+      - name: Allow ssh policy if virtual mashine detected
+        community.general.ufw:
+          rule: limit
+          port: ssh
+          proto: tcp
+
+    become: true
+
+#############################################################################################################
+
+# Dotfiles
+
+#############################################################################################################
+
+  - name: Copy screen layout config for Virtualbox to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/screenlayout/virtualbox.sh
+      dest: ~/.screenlayout
+      mode: '0744'
