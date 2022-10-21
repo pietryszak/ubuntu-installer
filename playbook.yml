@@ -1177,7 +1177,6 @@
       state: directory
       mode: '0744'
 
-
   - name: Add bat symbolic link
     ansible.builtin.file:
       src: /usr/bin/batcat
@@ -1339,7 +1338,7 @@
 
     block:
 
-      - name: Download Spotify browser public key
+      - name: Download Spotify public key
         ansible.builtin.get_url:
           url: https://download.spotify.com/debian/pubkey_5E3C45D7B312C643.gpg
           dest: /etc/apt/keyrings/pubkey_spotify.gpg
@@ -1362,6 +1361,12 @@
           pkg:
             - spotify-client
           update_cache: true
+
+      - name: Add bat symbolic link to Spotify
+        ansible.builtin.file:
+          src: /usr/share/spotify/spotify.desktop
+          dest: /usr/share/applications/
+          state: link
 
     become: true
 
@@ -1509,8 +1514,6 @@
           pkg:
             - nemo
             - nemo-fileroller
-            - nemo-font-manager
-            - nemo-gtkhash
             - nemo-nextcloud
             - nemo-preview
           update_cache: true
@@ -2087,6 +2090,9 @@
       - /etc/apt/keyrings/vivaldi_linux_signing_key.pub
       - /etc/apt/keyrings/vivaldi.gpg
       - /tmp/teamviewer_amd64.deb
+      - /usr/share/applications/gtkhash.desktop
+      - /usr/share/applications/picom.desktop
+      - /usr/share/applications/display-im6.q16.desktop
 
   - name: Remove unused packets
     become: true
@@ -2095,3 +2101,5 @@
       state: absent
     with_items:
       - nano
+      - byobu
+      - vim
