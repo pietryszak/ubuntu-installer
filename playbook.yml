@@ -1483,6 +1483,26 @@
             system=false
             users=
 
+      - name: Set redshift service agent
+        ansible.builtin.blockinfile:
+          path: /usr/lib/systemd/user/geoclue-agent.service
+          block: |
+
+            [Unit]
+            Description=redshift needs to get a (geo)clue
+
+            [Service]
+            ExecStart=/usr/libexec/geoclue-2.0/demos/agent
+
+            [Install]
+            WantedBy=default.target
+
+      - name: Enabling reshift agent service
+        ansible.builtin.systemd:
+          name: geoclue-agent.service
+          state: started
+          enabled: true
+
     become: true
 
 # Gnome calculator
