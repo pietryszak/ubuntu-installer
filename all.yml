@@ -1396,6 +1396,8 @@
 
 #############################################################################################################
 
+# Set locales
+
   - name: Set locale at polish
     become: true
     ansible.builtin.blockinfile:
@@ -1414,11 +1416,15 @@
         LC_MEASUREMENT=pl_PL.UTF-8
         LC_IDENTIFICATION=pl_PL.UTF-8
 
+# Set timezone
+
   - name: Set polish timezone
     become: true
     ansible.builtin.shell: |
       timedatectl set-timezone Europe/Warsaw
     changed_when: true
+
+# Delete unused files
 
   - name: Delete any leftover temporary files
     become: true
@@ -1438,6 +1444,8 @@
       - /usr/share/applications/info.desktop
       - /usr/share/applications/texdoctk.desktop
 
+# Delete unused packets
+
   - name: Remove unused packets
     become: true
     ansible.builtin.apt:
@@ -1452,6 +1460,7 @@
       - vim-runtime
 
 # Network Manager
+
   - name: Install network manager
 
     block:
