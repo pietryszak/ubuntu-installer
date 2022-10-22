@@ -1468,5 +1468,6 @@
           name: NetworkManager
           enabled: true
           state: started
+          masked: false
 
     become: true
