@@ -48,7 +48,6 @@
 #############################################################################################################
 
   - name: Delete any leftover temporary files
-    become: true
     ansible.builtin.file:
       path: "{{ item }}"
       state: absent
