@@ -31,32 +31,6 @@
 
 #############################################################################################################
 
-# Virtualization
-
-#############################################################################################################
-
-# Virtualbox
-
-  - name: Install Virtualbox
-
-    block:
-
-      - name: Install virtualbox guest tool dependencies
-        ansible.builtin.shell: |
-          apt install linux-headers-$(uname -r)
-        changed_when: true
-
-      - name: Install virtualbox guest tool dependiences
-        ansible.builtin.apt:
-          pkg:
-            - build-essential
-            - virtualbox-guest-utils
-            - virtualbox-guest-x11
-
-    become: true
-
-#############################################################################################################
-
 # Dotfiles
 
 #############################################################################################################
