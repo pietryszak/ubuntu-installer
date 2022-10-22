@@ -1500,13 +1500,4 @@
           enabled: true
           state: started
 
-      - name: Stop netplan service
-        ansible.builtin.systemd:
-          name: "{{ item }}"
-          state: stopped
-          enabled: false
-        with_items:
-          - systemd-networkd
-          - systemd-networkd.socket
-
     become: true
