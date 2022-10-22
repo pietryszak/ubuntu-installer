@@ -1435,6 +1435,11 @@
           pkg:
             - network-manager
             - network-manager-gnome
+            - network-manager-config-connectivity-ubuntu
+            - network-manager-openvpn
+            - network-manager-openvpn-gnome
+            - network-manager-pptp
+            - network-manager-pptp-gnome
 
       - name: Remove old netplan config file
         ansible.builtin.file:
