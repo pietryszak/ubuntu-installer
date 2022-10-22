@@ -1177,7 +1177,7 @@
 
     block:
 
-      - name: Install virtualbox guest tool dependencies
+      - name: Install linux headers
         ansible.builtin.shell: |
           apt install linux-headers-$(uname -r)
         changed_when: true
@@ -1414,6 +1414,13 @@
         LC_TELEPHONE="pl_PL.UTF-8"
         LC_MEASUREMENT="pl_PL.UTF-8"
         LC_IDENTIFICATION="pl_PL.UTF-8"
+
+  - name: Update locale
+    become: true
+    ansible.builtin.shell: |
+      locale-gen pl_PL.UTF-8
+      update-locale
+    changed_when: true
 
 # Set timezone
 
