@@ -1380,15 +1380,14 @@
 #############################################################################################################
 
   - name: Set locale at polish
+    become: true
     ansible.builtin.blockinfile:
       path: /etc/default/locale
       block: |
 
         # Polish locale
-        LC_CTYPE=pl_Pl.UTF-8
         LC_NUMERIC=pl_PL.UTF-8
         LC_TIME=pl_PL.UTF-8
-        LC_COLLATE=pl_PL.UTF-8
         LC_MONETARY=pl_PL.UTF-8
         LC_MESSAGES=pl_PL.UTF-8
         LC_PAPER=pl_PL.UTF-8
@@ -1397,7 +1396,12 @@
         LC_TELEPHONE=pl_PL.UTF-8
         LC_MEASUREMENT=pl_PL.UTF-8
         LC_IDENTIFICATION=pl_PL.UTF-8
-        LC_ALL=
+
+  - name: Set polish timezone
+    become: true
+    ansible.builtin.shell: |
+      timedatectl Europe/Warsaw
+    changed_when: true
 
   - name: Delete any leftover temporary files
     become: true
