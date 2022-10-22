@@ -1391,7 +1391,7 @@
   - name: Set polish timezone
     become: true
     ansible.builtin.shell: |
-      timedatectl Europe/Warsaw
+      timedatectl set-timezone Europe/Warsaw
     changed_when: true
 
   - name: Delete any leftover temporary files
