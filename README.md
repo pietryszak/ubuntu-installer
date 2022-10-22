@@ -2,6 +2,10 @@
 
 My ubuntu i3-gaps installer
 
+---
+If you don't need polish locale, change it at all.yml before start playbook
+
+---
 
 ### When installed on host
 
