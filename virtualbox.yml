@@ -53,3 +53,10 @@
       state: absent
     with_items:
       - ~/.config/i3/scripts/workspaces
+      - ~/.config/polybar/cuts/config.ini
+
+  - name: Copy polybar config to to proper folder
+    ansible.builtin.copy:
+      src: ~/.config/polybar/cuts/config-virtualbox.ini
+      dest: ~/.config/polybar/cuts/config.ini
+      mode: '0644'
