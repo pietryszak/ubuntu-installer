@@ -274,27 +274,6 @@
           VBoxManage hostonlyif create
         when: virtualbox_host_only_network.stdout == ""
 
-      - name: Install virtualbox guest tool dependencies
-        ansible.builtin.shell: |
-          apt install linux-headers-$(uname -r)
-        changed_when: true
-
-      - name: Install virtualbox guest tool dependiences
-        ansible.builtin.apt:
-          pkg:
-            - build-essential
-            - dkms
-            - virtualbox-guest-utils
-            - virtualbox-guest-x11
-            - virtualbox-dkms
-
-      - name: Add user to vboxusers group
-        ansible.builtin.user:
-          name: "{{ login_user }}"
-          append: true
-          groups:
-            - vboxusers
-
     become: true
 
 # KVM
