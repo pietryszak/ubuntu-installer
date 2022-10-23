@@ -1107,6 +1107,7 @@
         ansible.builtin.apt:
           pkg:
             - qt5ct
+            - qt5-style-plugins
 
       - name: Set QT theme to profile settings
         ansible.builtin.blockinfile:
