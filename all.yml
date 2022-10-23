@@ -710,14 +710,6 @@
       code --install-extension jonathanharty.gruvbox-material-icon-theme
     changed_when: true
 
-# Micro better nano text editor
-
-  - name: Install a micro better nano text editor
-    become: true
-    ansible.builtin.apt:
-      pkg:
-        - micro
-
 # Neovim
 # https://github.com/neovim/neovim
 
@@ -1335,6 +1327,12 @@
       dest: ~/.config/gtk-3.0/
       mode: '0644'
 
+  - name: Copy Xresources config to to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/xresources/
+      dest: ~/
+      mode: '0644'
+
   - name: Copy polybar config to to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/polybar
@@ -1458,7 +1456,6 @@
       name: "{{ item }}"
       state: absent
     with_items:
-      - nano
       - byobu
       - vim
       - vim-tiny
