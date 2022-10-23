@@ -678,12 +678,6 @@
 
 #############################################################################################################
 
-  - name: Copy screen layout config for PC to proper folder
-    ansible.builtin.copy:
-      src: ~/.gc/dotfiles/screenlayout/
-      dest: ~/.screenlayout
-      mode: '0744'
-
   - name: Copy polybar config to to proper folder
     ansible.builtin.copy:
       src: ~/.gc/polybar-spotify/spotify_status.py
