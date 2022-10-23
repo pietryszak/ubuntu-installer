@@ -1029,21 +1029,11 @@
       dest: ~/.gc/fonts
       version: main
 
-  - name: Create a directory for oh-my-zsh installation script
-    ansible.builtin.file:
-      path: ~/.local/share/fonts
-      state: directory
-      mode: '0744'
-
   - name: Copy fonts to proper folder
     ansible.builtin.copy:
-      src: "{{ item }}"
-      dest: ~/.local/share/fonts
+      src: ~/.gc/fonts/
+      dest: /usr/share/fonts/
       mode: '0755'
-    with_items:
-      - ~/.gc/fonts/feather.ttf
-      - ~/.gc/fonts/iosevka_nerd_font.ttf
-      - ~/.gc/fonts/weathericons-regular-webfont.ttf
 
   - name: Update fonts cache
     ansible.builtin.shell: |
@@ -1485,6 +1475,8 @@
       - /usr/share/applications/display-im6.q16.desktop
       - /usr/share/applications/info.desktop
       - /usr/share/applications/texdoctk.desktop
+      - /usr/share/fonts/README.md
+      - /usr/share/fonts/.git
 
 # Delete unused packets
 
