@@ -411,6 +411,16 @@
       pkg:
         - playerctl
 
+# Copyq for i3-gaps clipboard managment
+# https://github.com/altdesktop/playerctl
+
+  - name: Copyq for i3-gaps clipboard managment
+
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - copyq
+
 # Gnome-polkit - display popup fot password for sudo in i3-gaps
 
   - name: Install Playerctl for i3-gaps media control
