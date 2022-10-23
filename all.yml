@@ -1063,17 +1063,23 @@
       dest: ~/.gc/gruvbox-material-gtk
       version: master
 
-  - name: Copy GTK theme to proper folder ( takes time, please wait )
-    ansible.builtin.copy:
-      src: ~/.gc/gruvbox-material-gtk/themes/
-      dest: ~/.themes
-      mode: '0775'
+  - name: Copy theme and cursors to ptoper folders
 
-  - name: Copy cursor theme to proper folder
-    ansible.builtin.copy:
-      src: ~/.gc/gruvbox-material-gtk/cursors/
-      dest: ~/.icons
-      mode: '0775'
+    block:
+
+      - name: Copy GTK theme to proper folder ( takes time, please wait )
+        ansible.builtin.copy:
+          src: ~/.gc/gruvbox-material-gtk/themes/
+          dest: /usr/share/themes/
+          mode: '0755'
+
+      - name: Copy cursor theme to proper folder
+        ansible.builtin.copy:
+          src: ~/.gc/gruvbox-material-gtk/cursors/
+          dest: /usr/share/icons/
+          mode: '0755'
+
+    become: true
 
 # Set GTK theme
 
