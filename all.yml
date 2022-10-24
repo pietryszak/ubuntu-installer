@@ -1073,11 +1073,17 @@
       dest: ~/.gc/gruvbox-material-gtk
       version: master
 
-  - name: Copy theme and cursors to ptoper folders
+  - name: Copy theme and cursors to proper folders
 
     block:
 
       - name: Copy GTK theme to proper folder ( takes time, please wait )
+        ansible.builtin.copy:
+          src: ~/.gc/gruvbox-material-gtk/themes/
+          dest: ~/.themes
+          mode: '0755'
+
+      - name: Copy GTK theme for flatpak to proper folder ( takes time, please wait )
         ansible.builtin.copy:
           src: ~/.gc/gruvbox-material-gtk/themes/
           dest: /usr/share/themes/
