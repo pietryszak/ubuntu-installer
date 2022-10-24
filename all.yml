@@ -1267,6 +1267,12 @@
 
 # Copy files to proper configuration folder
 
+  - name: Copy alacritty config to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/alacritty
+      dest: ~/.config
+      mode: '0644'
+
   - name: Copy bat config to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/bat
@@ -1363,7 +1369,7 @@
       dest: ~/.config/btop
       mode: '0664'
 
-  - name: Copy btop config to to proper folder
+  - name: Copy volumeicon config to to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/volumeicon/
       dest: ~/.config/volumeicon/
