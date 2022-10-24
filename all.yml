@@ -411,24 +411,13 @@
       pkg:
         - playerctl
 
-# Copyq for i3-gaps clipboard managment
+# Xfce4-clipman for i3-gaps clipboard managment
 
-  - name: Install Copyq
-
-    block:
-
-      - name: Add Copyq ppa
-        ansible.builtin.shell: |
-          add-apt-repository --yes ppa:hluk/copyq
-        changed_when: true
-
-      - name: Install Papirus icons ( takes time up to 5 minutes, please wait )
-        ansible.builtin.apt:
-          pkg:
-            - copyq
-          update_cache: true
-
+  - name: Install Clipboard
     become: true
+    ansible.builtin.apt:
+      pkg:
+        - xfce4-clipman
 
 # Gnome-polkit - display popup fot password for sudo in i3-gaps
 
