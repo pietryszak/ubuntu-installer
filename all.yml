@@ -457,7 +457,6 @@
         ansible.builtin.apt:
           pkg:
             - clamav
-            - clamav-daemon
             - clamtk
 
       - name: Stop the clamav-freshclam service before update

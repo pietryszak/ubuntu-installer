@@ -150,6 +150,12 @@
 # Clamav setings only for host pc, auto scanning, but takes 1gb ram at least (databases always in ram)
 # Vm can scan system with ClamTK manually
 
+
+      - name: Install Clamav - open-source and free antivirus software toolkit
+        ansible.builtin.apt:
+          pkg:
+            - clamav-daemon
+
       - name: Enable service clamav-deamon that loads the virus database definitions into memory, and handles scanning of files
         ansible.builtin.systemd:
           name: clamav-daemon
