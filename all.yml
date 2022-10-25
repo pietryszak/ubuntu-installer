@@ -124,18 +124,22 @@
           dest: /boot/grub/themes
           mode: '0644'
 
-      - name: Adjust grub display resolution, display time, theme, splash screen
+      - name: Adjust grub display resolution, display time, timeout style
         ansible.builtin.lineinfile:
           backup: true
           path: /etc/default/grub
           regexp: "{{ item.regexp }}"
           line: "{{ item.line }}"
         loop:
-          - { regexp: '#GRUB_GFXMODE=640x480', line: 'GRUB_GFXMODE=2560x1440' }
-          - { regexp: 'GRUB_TIMEOUT=0', line: 'GRUB_TIMEOUT=4' }
-          - { regexp: 'GRUB_TIMEOUT_STYLE=hidden', line: 'GRUB_TIMEOUT_STYLE=menu' }
-          - { regexp: 'GRUB_CMDLINE_LINUX_DEFAULT=""',
-              line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 rd.systemd.show_status=auto rd.udev.log_level=3 splash"' }
+          - {regexp: '#GRUB_GFXMODE=640x480', line: 'GRUB_GFXMODE=2560x1440'}
+          - {regexp: 'GRUB_TIMEOUT=0', line: 'GRUB_TIMEOUT=4'}
+          - {regexp: 'GRUB_TIMEOUT_STYLE=hidden', line: 'GRUB_TIMEOUT_STYLE=menu'}
+
+      - name: Adjust grub splash screen
+        ansible.builtin.lineinfile:
+          path: /etc/selinux/config
+          regexp: 'GRUB_CMDLINE_LINUX_DEFAULT=""'
+          line: GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 rd.systemd.show_status=auto rd.udev.log_level=3 splash"
 
       - name: Add path of theme to grub configure
         ansible.builtin.blockinfile:
@@ -661,11 +665,6 @@
           pkg:
             - code
           update_cache: true
-
-      - name: Install Vscode extension dependencies
-        ansible.builtin.apt:
-          pkg:
-            - ansible-lint
 
     become: true
 

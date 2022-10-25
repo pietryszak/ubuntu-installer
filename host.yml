@@ -278,7 +278,7 @@
         become_user: "{{ login_user }}"
         ansible.builtin.shell: |
           VBoxManage hostonlyif create
-        when: virtualbox_host_only_network.stdout == ""
+        when: virtualbox_host_only_network.stdout|lenght == 0
 
     become: true
 
@@ -657,6 +657,12 @@
       src: ~/.gc/polybar-spotify/spotify_status.py
       dest: ~/.config/polybar/scripts/
       mode: '0744'
+
+  - name: Copy Vivaldi speeddial images to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/vivaldi-icons
+      dest: ~/Pictures/
+      mode: '0644'
 
 #############################################################################################################
 
