@@ -137,7 +137,7 @@
 
       - name: Adjust grub splash screen
         ansible.builtin.lineinfile:
-          path: /etc/selinux/config
+          path: /etc/default/grub
           regexp: 'GRUB_CMDLINE_LINUX_DEFAULT=""'
           line: GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 rd.systemd.show_status=auto rd.udev.log_level=3 splash"
 
