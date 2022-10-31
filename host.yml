@@ -554,6 +554,16 @@
       pkg:
         - jq
 
+  - name: Install extensions dependiences
+    ansible.builtin.apt:
+      pkg:
+        - ansible-lint
+
+  - name: Install Vscode extensions for host ( takes time, please wait )
+    ansible.builtin.shell: |
+      code --install-extension redhat.ansible
+    changed_when: true
+
 #############################################################################################################
 
 # Flatpak Apps
