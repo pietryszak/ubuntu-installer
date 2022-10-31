@@ -948,24 +948,13 @@
           state: directory
           mode: '0744'
 
-# Alacritty terminal
+# Terminator terminal
 
-  - name: Install Alacritty terminal
-
-    block:
-
-      - name: Add Alacritty terminal ppa
-        ansible.builtin.shell: |
-          add-apt-repository --yes ppa:aslatter/ppa
-        changed_when: true
-
-      - name: Install Alacritty
-        ansible.builtin.apt:
-          pkg:
-            - alacritty
-          update_cache: true
-
+  - name: Install Terminator terminal
     become: true
+    ansible.builtin.apt:
+      pkg:
+        - terminator
 
 # Gnome calculator
 
@@ -1292,9 +1281,9 @@
 
 # Copy files to proper configuration folder
 
-  - name: Copy alacritty config to proper folder
+  - name: Copy terminator config to proper folder
     ansible.builtin.copy:
-      src: ~/.gc/dotfiles/alacritty
+      src: ~/.gc/dotfiles/terminator
       dest: ~/.config
       mode: '0644'
 
