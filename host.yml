@@ -278,7 +278,7 @@
         become_user: "{{ login_user }}"
         ansible.builtin.shell: |
           VBoxManage hostonlyif create
-        when: virtualbox_host_only_network.stdout|lenght == 0
+        when: virtualbox_host_only_network.stdout|length == 0
 
     become: true
 
