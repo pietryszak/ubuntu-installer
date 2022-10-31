@@ -54,8 +54,8 @@
           regexp: "{{ item.regexp }}"
           line: "{{ item.line }}"
         loop:
-          - { regexp: 'Browsing No', line: 'Browsing On' }
-          - { regexp: 'Listen localhost:631', line: 'Port 631' }
+          - {regexp: 'Browsing No', line: 'Browsing On'}
+          - {regexp: 'Listen localhost:631', line: 'Port 631'}
 
       - name: Adjust cups to listen to all interfaces.
         ansible.builtin.blockinfile:

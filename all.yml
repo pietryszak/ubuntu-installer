@@ -1111,10 +1111,10 @@
     become: true
 
   - name: Copy GTK theme to proper folder ( takes time, please wait )
-  ansible.builtin.copy:
-    src: ~/.gc/gruvbox-material-gtk/themes/
-    dest: ~/.themes
-    mode: '0755'
+    ansible.builtin.copy:
+      src: ~/.gc/gruvbox-material-gtk/themes/
+      dest: ~/.themes
+      mode: '0755'
 
 # Set GTK theme
 
