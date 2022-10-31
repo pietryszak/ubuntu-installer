@@ -208,18 +208,6 @@
           direction: incoming
           policy: deny
 
-      - name: Allow Kde connect udp ports for android devices
-        community.general.ufw:
-          rule: allow
-          port: 1714:1764
-          proto: udp
-
-      - name: Allow Kde connect tcp ports for android devices
-        community.general.ufw:
-          rule: allow
-          port: 1714:1764
-          proto: tcp
-
     become: true
 
 #############################################################################################################
@@ -430,14 +418,6 @@
           enabled: true
 
     become: true
-
-# KDE connect for bluetooth connection with android phone
-
-  - name: Install KDE connect for bluetooth connection with android phone
-    become: true
-    ansible.builtin.apt:
-      pkg:
-        - kdeconnect
 
 # Scrcpy - screen copy for android devices (Android 5.0+ and enabled adb debugging)
 
