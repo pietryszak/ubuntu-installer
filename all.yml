@@ -724,7 +724,7 @@
 
       - name: Add neovim ppa
         ansible.builtin.shell: |
-          add-apt-repository --yes ppa:mozillateam/ppa
+          add-apt-repository --yes ppa:neovim-ppa/unstable
         changed_when: true
 
       - name: Install neovim
@@ -733,32 +733,7 @@
             - neovim
           update_cache: true
 
-      - name: Install a lunarvim dependencies
-        ansible.builtin.apt:
-          pkg:
-            - nodejs
-            - make
-            - cargo
-            - python3-pip
-
     become: true
-
-  - name: Create a directory for lunarvim installation script
-    ansible.builtin.file:
-      path: ~/.gc/lunarvim/
-      state: directory
-      mode: '0744'
-
-  - name: Download lunarvim
-    ansible.builtin.get_url:
-      url: https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh
-      dest: ~/.gc/lunarvim/install.sh
-      mode: '0744'
-
-  - name: Install lunarvim
-    ansible.builtin.command: |
-      ~/.gc/lunarvim/install.sh --yes
-    changed_when: true
 
 # Micro better nano editor
 
@@ -1311,12 +1286,6 @@
       dest: ~/.config
       mode: '0664'
 
-  - name: Copy lunar vim config to proper folder
-    ansible.builtin.copy:
-      src: ~/.gc/dotfiles/lvim
-      dest: ~/.config
-      mode: '0744'
-
   - name: Copy micro text editor config to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/micro
@@ -1473,6 +1442,31 @@
 # Last commands before restart
 
 #############################################################################################################
+
+# Astro vim
+
+  - name: Install a astro vim dependencies
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - nodejs
+
+  - name: Download astro vim
+    ansible.builtin.git:
+      repo: https://github.com/AstroNvim/AstroNvim
+      dest: ~/.config/nvim
+      version: main
+
+  - name: Copy astro vim config to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/astro
+      dest: ~/.config/nvim/user
+      mode: '0744'
+
+  - name: Install astro vim
+    ansible.builtin.command: |
+      nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+    changed_when: true
 
 # Set locales
 
