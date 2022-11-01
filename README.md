@@ -13,8 +13,8 @@ If you don't need polish locale, change it at all.yml before start playbook
 sudo apt update \
 && sudo DEBIAN_FRONTEND=noninteractive apt full-upgrade -y \
 && sudo DEBIAN_FRONTEND=noninteractive apt install ansible -y \
-&& mkdir -p .gc \
-&& cd .gc \
+&& mkdir -p ~/.gc \
+&& cd ~/.gc \
 && git clone https://github.com/pietryszak/ubuntu-installer \
 && cd ubuntu-installer \
 && ansible-playbook --ask-become-pass --connection=local --inventory 127.0.0.1, all.yml host.yml
