@@ -1457,10 +1457,17 @@
       dest: ~/.config/nvim
       version: main
 
-  - name: Copy astro vim config to proper folder
+
+  - name: Create folder for astro vim user config
+    ansible.builtin.file:
+      path: ~/.config/nvim/lua/user/
+      state: directory
+      mode: '0744'
+
+  - name: Copy astro vim user config to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/astro
-      dest: ~/.config/nvim/user
+      dest: ~/.config/nvim/lua/user/
       mode: '0744'
 
   - name: Install astro vim
