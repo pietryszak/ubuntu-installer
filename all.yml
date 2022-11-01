@@ -718,55 +718,47 @@
 # Neovim
 # https://github.com/neovim/neovim
 
-  - name: Install a neovim
-    become: true
-    ansible.builtin.apt:
-      pkg:
-        - neovim
-
-  - name: Install vim-plug - a vim plugin manager
-    ansible.builtin.shell: |
-      sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-    changed_when: true
-
-# Nodejs for neovim plugins
-
-  - name: Install a nodejs
+  - name: Install neovim
 
     block:
 
-      - name: Download Nodejs browser public key
-        ansible.builtin.get_url:
-          url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
-          dest: /etc/apt/keyrings/nodesource.gpg.key
-          mode: '0644'
-
-      - name: Add Nodejs gpg key
+      - name: Add neovim ppa
         ansible.builtin.shell: |
-          gpg --dearmor < /etc/apt/keyrings/nodesource.gpg.key > /etc/apt/keyrings/nodesource.gpg
-          install -D -o root -g root -m 644 /etc/apt/keyrings/nodesource.gpg /etc/apt/trusted.gpg.d/nodesource.gpg
+          add-apt-repository --yes ppa:mozillateam/ppa
         changed_when: true
 
-      - name: Add Nodejs to sources list
-        ansible.builtin.apt_repository:
-          repo: deb https://deb.nodesource.com/node_16.x jammy main
-          state: present
-          filename: nodesource
+      - name: Install neovim
+        ansible.builtin.apt:
+          pkg:
+            - neovim
+          update_cache: true
 
-      - name: Add Nodejs-src to sources list
-        ansible.builtin.apt_repository:
-          repo: deb-src https://deb.nodesource.com/node_16.x jammy main
-          state: present
-          filename: nodesource
-
-      - name: Install a Nodejs for neovim plugins
+      - name: Install a lunarvim dependencies
         ansible.builtin.apt:
           pkg:
             - nodejs
-          update_cache: true
+            - make
+            - cargo
+            - python3-pip
 
     become: true
+
+  - name: Create a directory for lunarvim installation script
+    ansible.builtin.file:
+      path: ~/.gc/lunarvim/
+      state: directory
+      mode: '0744'
+
+  - name: Download lunarvim
+    ansible.builtin.get_url:
+      url: https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh
+      dest: ~/.gc/lunarvim/install.sh
+      mode: '0744'
+
+  - name: Install lunarvim
+    ansible.builtin.command: |
+      ~/.gc/lunarvim/install.sh --yes
+    changed_when: true
 
 # Bat
 # https://github.com/sharkdp/bat
