@@ -760,6 +760,14 @@
       ~/.gc/lunarvim/install.sh --yes
     changed_when: true
 
+# Micro better nano editor
+
+  - name: Install Micro better nano editor
+    become: true
+    ansible.builtin.apt:
+      pkg:
+        - micro
+
 # Bat
 # https://github.com/sharkdp/bat
 
@@ -1529,6 +1537,7 @@
       - vim-tiny
       - vim-common
       - vim-runtime
+      - nano
 
 # Network Manager
 
