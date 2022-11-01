@@ -1311,9 +1311,15 @@
       dest: ~/.config
       mode: '0664'
 
-  - name: Copy nvim config to proper folder
+  - name: Copy lunar vim config to proper folder
     ansible.builtin.copy:
-      src: ~/.gc/dotfiles/nvim
+      src: ~/.gc/dotfiles/lvim
+      dest: ~/.config
+      mode: '0744'
+
+  - name: Copy micro text editor config to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/micro
       dest: ~/.config
       mode: '0744'
 
