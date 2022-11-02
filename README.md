@@ -36,6 +36,16 @@ sed -i -e '/lat/s/52.23/FIRST VALUE OF SCRIPT/' ~/.config/gammastep/config.ini
 sed -i -e '/lat/s/21.01/SECOND VALUE OF SCRIPT/' ~/.config/gammastep/config.ini
 ```
 
+*  OpenWeader in Polybar 
+
+In right side of polybar is small arrow, after click it an additionall bar shows a few information included a weather. To use it, you need to add OpenWeather API.
+Create an API key in [OpenWeatherMap](https://home.openweathermap.org)
+
+```bash
+sed -i 's/KEY=""/KEY="YOUR_API_KEY_HERE"/g' ~/.config/polybar/scripts/openweathermap-fullfeatured.sh
+```
+
+
 ---
 
 ### When installed on virtualbox
