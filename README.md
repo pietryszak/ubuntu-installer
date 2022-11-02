@@ -74,11 +74,3 @@ sudo sed -i 's/LC_TELEPHONE="pl_PL.UTF-8"/#LC_TELEPHONE="pl_PL.UTF-8"/g' /etc/de
 sudo sed -i 's/LC_MEASUREMENT="pl_PL.UTF-8"/#LC_MEASUREMENT="pl_PL.UTF-8"/g' /etc/default/locale
 sudo sed -i 's/LC_IDENTIFICATION="pl_PL.UTF-8"/#LC_IDENTIFICATION="pl_PL.UTF-8"/g' /etc/default/locale
 ```
-
-
-
-
-
-
-
-
