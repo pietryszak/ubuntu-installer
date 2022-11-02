@@ -652,11 +652,17 @@
       dest: ~/.config/polybar/scripts/
       mode: '0744'
 
+  - name: Copy gammastep config to to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/gammastep
+      dest: ~/.config/
+      mode: '0644'
+
   - name: Copy onlyoffice config to to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/onlyoffice
       dest: ~/.config/
-      mode: '0744'
+      mode: '0644'
 
   - name: Copy Vivaldi speeddial images to proper folder
     ansible.builtin.copy:
