@@ -1,10 +1,6 @@
 # Ubuntu installer
 
 My ubuntu i3-gaps installer
-
----
-If you don't need polish locale, change it at all.yml before start playbook
-
 ---
 
 ### When installed on host
@@ -39,6 +35,8 @@ To add yours location to Redshift use this script:
 sed -i -e '/lat/s/52.23/FIRST VALUE OF SCRIPT/' ~/.config/redshift/redshift.conf
 sed -i -e '/lat/s/21.01/SECOND VALUE OF SCRIPT/' ~/.config/redshift/redshift.conf
 ```
+
+---
 
 ### When installed on virtualbox
 
