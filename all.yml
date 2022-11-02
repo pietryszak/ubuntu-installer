@@ -1321,7 +1321,13 @@
       src: ~/.gc/dotfiles/teamviewer/
       dest: ~/.config/teamviewer/
       mode: '0644'
-  
+
+  - name: Copy Copyq config to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/copyq/
+      dest: ~/.config/copyq/
+      mode: '0644'
+
   - name: Copy Flameshot config to proper folder
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/flameshot/
