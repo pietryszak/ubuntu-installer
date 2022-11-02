@@ -6,6 +6,25 @@
 
 #############################################################################################################
 
+# Ansible config, variables
+
+#############################################################################################################
+
+# Username of regular username
+# https://stackoverflow.com/a/58916467
+
+  - name: Run whoami without become for regular username
+    ansible.builtin.command: whoami
+    changed_when: false
+    become: false
+    register: whoami
+
+  - name: Set a fact with the username
+    ansible.builtin.set_fact:
+      login_user: "{{ whoami.stdout }}"
+
+#############################################################################################################
+
 # Drivers
 
 #############################################################################################################
@@ -241,6 +260,7 @@
             - virtualbox-ext-pack
 
       - name: Register virtualbox network list
+        become: true
         become_user: "{{ login_user }}"
         ansible.builtin.shell: |
           VBoxManage natnetwork list
@@ -255,6 +275,7 @@
         when: virtualbox_natnetwork.stdout | regex_search('0 networks found')
 
       - name: Register virtualbox host-only list
+        become: true
         become_user: "{{ login_user }}"
         ansible.builtin.shell: |
           VBoxManage list hostonlyifs
@@ -393,18 +414,13 @@
           dest: ~/.gc/gammastep
           version: master
 
-      - name: Build gammastep
+      - name: Install gammastep
         ansible.builtin.shell: |
           cd ~/.gc/gammastep
           ./bootstrap
-        changed_when: true
-
-      - name: Install gammastep
-        become: true
-        ansible.builtin.shell: |
-          ./configure --with-systemduserunitdir=$HOME/.config/systemd/user
+          ./configure
           make
-          make install
+          sudo make install
         changed_when: true
 
 # Scrcpy - screen copy for android devices (Android 5.0+ and enabled adb debugging)
