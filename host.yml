@@ -365,59 +365,42 @@
 
     become: true
 
-# Redshift adjusts the color temperature of your screen according to your surrounding
+# Gammastep adjusts the color temperature of your screen according to your surrounding
+# https://gitlab.com/chinstrap/gammastep
 
-  - name: Install reedshift
+  - name: Install gammastep
 
     block:
 
-      - name: Install redshift - adjusts the color temperature of screen
+      - name: Install gammastep dependiences
         become: true
         ansible.builtin.apt:
           pkg:
-            - redshift-gtk
-            - redshift
-            - geoclue-2.0
+            - autopoint
+            - intltool
+            - libdrm-dev
+            - libxcb1-dev
+            - libxcb-randr0-dev
+            - libx11-dev
+            - libxxf86vm-dev
+            - libwayland-dev
+            - libglib2.0-dev
+            - python3
 
-      - name: Set redshift geolocalization settings
-        ansible.builtin.blockinfile:
-          path: /etc/geoclue/geoclue.conf
-          block: |
+      - name: Clone gammastep repo
+        ansible.builtin.git:
+          repo: https://gitlab.com/chinstrap/gammastep.git
+          dest: ~/.gc/gammastep
+          version: master
 
-            # Redshift
-            [redshift]
-            allowed=true
-            system=false
-            users=
-
-      - name: Create file with redshift service agent
-        ansible.builtin.file:
-          path: /usr/lib/systemd/system/geoclue-agent.service
-          state: touch
-          mode: u=rw,g=r,o=r
-
-
-      - name: Set redshift service agent
-        ansible.builtin.blockinfile:
-          path: /usr/lib/systemd/system/geoclue-agent.service
-          block: |
-
-            [Unit]
-            Description=redshift needs to get a (geo)clue
-
-            [Service]
-            ExecStart=/usr/libexec/geoclue-2.0/demos/agent
-
-            [Install]
-            WantedBy=default.target
-
-      - name: Enabling reshift agent service
-        ansible.builtin.systemd:
-          name: geoclue-agent.service
-          state: started
-          enabled: true
-
-    become: true
+      - name: Build and install gammastep
+        ansible.builtin.shell: |
+          cd ~/.gc/gammastep
+          ./bootstrap
+          ./configure --prefix=$HOME/opt/gammastep --with-systemduserunitdir=$HOME/.config/systemd/user
+          make
+          make install
+        changed_when: true
 
 # Scrcpy - screen copy for android devices (Android 5.0+ and enabled adb debugging)
 
