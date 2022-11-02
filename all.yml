@@ -415,13 +415,13 @@
       pkg:
         - playerctl
 
-# Xfce4-clipman for i3-gaps clipboard managment
+# Copyq for i3-gaps clipboard managment
 
   - name: Install Clipboard
     become: true
     ansible.builtin.apt:
       pkg:
-        - xfce4-clipman
+        - copyq
 
 # Gnome-polkit - display popup fot password for sudo in i3-gaps
 
@@ -1320,6 +1320,12 @@
     ansible.builtin.copy:
       src: ~/.gc/dotfiles/teamviewer/
       dest: ~/.config/teamviewer/
+      mode: '0644'
+  
+  - name: Copy Flameshot config to proper folder
+    ansible.builtin.copy:
+      src: ~/.gc/dotfiles/flameshot/
+      dest: ~/.config/flameshot/
       mode: '0644'
 
   - name: Copy Redshift config to proper folder
