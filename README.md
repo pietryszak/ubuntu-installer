@@ -45,7 +45,6 @@ Create an API key in [OpenWeatherMap](https://home.openweathermap.org)
 sed -i 's/KEY=""/KEY="YOUR_API_KEY_HERE"/g' ~/.config/polybar/scripts/openweathermap-fullfeatured.sh
 ```
 
-
 ---
 
 ### When installed on virtualbox
@@ -60,3 +59,26 @@ sudo apt update \
 && cd ubuntu-installer \
 && ansible-playbook --ask-become-pass --connection=local --inventory 127.0.0.1, all.yml virtualbox.yml
 ```
+
+---
+
+If you not need polish date and time format in system just use this script
+```bash
+sudo sed -i 's/LC_NUMERIC="pl_PL.UTF-8"/#LC_NUMERIC="pl_PL.UTF-8"/g' /etc/default/locale
+sudo sed -i 's/LC_TIME="pl_PL.UTF-8"/#LC_TIME="pl_PL.UTF-8"/g' /etc/default/locale
+sudo sed -i 's/LC_MONETARY="pl_PL.UTF-8"/#LC_MONETARY="pl_PL.UTF-8"/g' /etc/default/locale
+sudo sed -i 's/LC_PAPER="pl_PL.UTF-8"/#LC_PAPER="pl_PL.UTF-8"/g' /etc/default/locale
+sudo sed -i 's/LC_NAME="pl_PL.UTF-8"/#LC_NAME="pl_PL.UTF-8"/g' /etc/default/locale
+sudo sed -i 's/LC_ADDRESS="pl_PL.UTF-8"/#LC_ADDRESS="pl_PL.UTF-8"/g' /etc/default/locale
+sudo sed -i 's/LC_TELEPHONE="pl_PL.UTF-8"/#LC_TELEPHONE="pl_PL.UTF-8"/g' /etc/default/locale
+sudo sed -i 's/LC_MEASUREMENT="pl_PL.UTF-8"/#LC_MEASUREMENT="pl_PL.UTF-8"/g' /etc/default/locale
+sudo sed -i 's/LC_IDENTIFICATION="pl_PL.UTF-8"/#LC_IDENTIFICATION="pl_PL.UTF-8"/g' /etc/default/locale
+```
+
+
+
+
+
+
+
+
