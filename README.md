@@ -32,8 +32,8 @@ curl -s "https://location.services.mozilla.com/v1/geolocate?key=geoclue" | jq '.
 
 To add yours location to Redshift use this script:
 ```bash
-sed -i -e '/lat/s/52.23/FIRST VALUE OF SCRIPT/' ~/.config/redshift/redshift.conf
-sed -i -e '/lat/s/21.01/SECOND VALUE OF SCRIPT/' ~/.config/redshift/redshift.conf
+sed -i -e '/lat/s/52.23/FIRST VALUE OF SCRIPT/' ~/.config/gammastep/config.ini
+sed -i -e '/lat/s/21.01/SECOND VALUE OF SCRIPT/' ~/.config/gammastep/config.ini
 ```
 
 ---
