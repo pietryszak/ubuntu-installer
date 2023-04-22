@@ -1,7 +1,6 @@
 ---
-
-- hosts: all
-
+- name: Playbook for virtualbox
+  hosts: all
   tasks:
 
 #############################################################################################################
@@ -12,39 +11,37 @@
 
 # UFW firewall
 
-  - name: Install firewall
+    - name: Install firewall
+      become: true
+      block:
 
-    block:
+        - name: Allow incoming policy if virtual mashine detected
+          community.general.ufw:
+            direction: incoming
+            policy: allow
 
-      - name: Allow incoming policy if virtual mashine detected
-        community.general.ufw:
-          direction: incoming
-          policy: allow
+        - name: Allow ssh policy if virtual mashine detected
+          community.general.ufw:
+            rule: limit
+            port: ssh
+            proto: tcp
 
-      - name: Allow ssh policy if virtual mashine detected
-        community.general.ufw:
-          rule: limit
-          port: ssh
-          proto: tcp
+  #############################################################################################################
 
-    become: true
+  # Last commands before restart
 
-#############################################################################################################
+  #############################################################################################################
 
-# Last commands before restart
+    - name: Delete any leftover temporary files
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - ~/.config/i3/scripts/workspaces
+        - ~/.config/polybar/cuts/config.ini
 
-#############################################################################################################
-
-  - name: Delete any leftover temporary files
-    ansible.builtin.file:
-      path: "{{ item }}"
-      state: absent
-    with_items:
-      - ~/.config/i3/scripts/workspaces
-      - ~/.config/polybar/cuts/config.ini
-
-  - name: Copy polybar config to to proper folder
-    ansible.builtin.copy:
-      src: ~/.config/polybar/cuts/config-virtualbox.ini
-      dest: ~/.config/polybar/cuts/config.ini
-      mode: '0644'
+    - name: Copy polybar config to to proper folder
+      ansible.builtin.copy:
+        src: ~/.config/polybar/cuts/config-virtualbox.ini
+        dest: ~/.config/polybar/cuts/config.ini
+        mode: '0644'
