@@ -236,7 +236,7 @@
     - name: Install oh-my-zsh
       ansible.builtin.shell: |
         sh -c "~/.gc/ohmyzsh/install.sh" --unattended
-      when:
+      changed_when:
         not zsh_installation_status.stat.exists
 
   # Zsh plugins
@@ -435,7 +435,7 @@
   # https://betatim.github.io/posts/clamav-memory-usage/
 
     - name: Install Clamav antivirus
-
+      become: true
       block:
 
         - name: Install Clamav - open-source and free antivirus software toolkit
@@ -458,8 +458,6 @@
           ansible.builtin.systemd:
             name: clamav-freshclam
             state: started
-
-      become: true
 
   # UFW firewall
     - name: Install firewall
