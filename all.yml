@@ -1097,11 +1097,6 @@
 #            hardcode-tray --apply --conversion-tool RSVGConvert --size 22 --theme Papirus
 #          changed_when: true
 
-        - name: Add Papirus icons ppa
-          ansible.builtin.shell: |
-            add-apt-repository --yes ppa:papirus/papirus
-          changed_when: true
-
 #        - name: Install Papirus folders icons
 #          ansible.builtin.apt:
 #            pkg:
@@ -1270,12 +1265,6 @@
       ansible.builtin.copy:
         src: ~/.gc/dotfiles/flameshot/
         dest: ~/.config/flameshot/
-        mode: '0644'
-
-    - name: Copy Redshift config to proper folder
-      ansible.builtin.copy:
-        src: ~/.gc/dotfiles/redshift/
-        dest: ~/.config/redshift/
         mode: '0644'
 
     - name: Copy bash_aliases to user folder
