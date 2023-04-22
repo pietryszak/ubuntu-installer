@@ -481,14 +481,14 @@
           ansible.builtin.pause:
             seconds: 15
 
-        - name: Remove snap core20
+        - name: Remove snap core
           community.general.snap:
             name: "{{ item }}"
             state: absent
           register: unused_snaps
           failed_when: "unused_snaps is failed and ('find' not in unused_snaps.msg and 'found' not in unused_snaps.msg)"
           with_items:
-            - core20
+            - core22
 
         - name: Remove snap snapd
           community.general.snap:
