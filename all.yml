@@ -236,7 +236,7 @@
     - name: Install oh-my-zsh
       ansible.builtin.shell: |
         sh -c "~/.gc/ohmyzsh/install.sh" --unattended
-      changed_when:
+      when:
         not zsh_installation_status.stat.exists
 
   # Zsh plugins
