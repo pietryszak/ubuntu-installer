@@ -955,7 +955,7 @@
 
         - name: Add Github Desktop to sources list
           ansible.builtin.apt_repository:
-            repo: deb [arch=amd64] https://packagecloud.io/shiftkey/desktop/any/ any main
+            repo: deb [arch=amd64] https://mirror.mwt.me/shiftkey-desktop/deb/ any main
             state: present
             filename: packagecloud-shiftkey-desktop
 
