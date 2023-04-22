@@ -1097,20 +1097,25 @@
 #            hardcode-tray --apply --conversion-tool RSVGConvert --size 22 --theme Papirus
 #          changed_when: true
 
-        - name: Install Papirus folders icons
-          ansible.builtin.apt:
-            pkg:
-              - papirus-folders
-
-        - name: Set color of folders with Papirus folders icons
+        - name: Add Papirus icons ppa
           ansible.builtin.shell: |
-            papirus-folders -C brown --theme Papirus-Dark
+            add-apt-repository --yes ppa:papirus/papirus
           changed_when: true
 
-        - name: Install Papirus theme for filezilla
-          ansible.builtin.apt:
-            pkg:
-              - filezilla-theme-papirus
+#        - name: Install Papirus folders icons
+#          ansible.builtin.apt:
+#            pkg:
+#              - papirus-folders
+
+#        - name: Set color of folders with Papirus folders icons
+#          ansible.builtin.shell: |
+#            papirus-folders -C brown --theme Papirus-Dark
+#          changed_when: true
+
+#        - name: Install Papirus theme for filezilla
+#          ansible.builtin.apt:
+#            pkg:
+#              - filezilla-theme-papirus
 
   # Nemo file manager folders colors
 
