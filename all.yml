@@ -291,7 +291,7 @@
       become: true
       ansible.builtin.apt:
         pkg:
-          - i3-gaps
+          - i3
         update_cache: true
 
   # Polybar - status bar for i3-gaps
