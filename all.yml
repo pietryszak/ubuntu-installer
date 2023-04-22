@@ -594,7 +594,6 @@
       ansible.builtin.apt:
         pkg:
           - intel-media-va-driver-non-free
-
       when: cpu_family.msg == "GenuineIntel"
 
   # Vscode
@@ -944,7 +943,7 @@
 
         - name: Download Github Desktop public key
           ansible.builtin.get_url:
-            url: https://mirror.mwt.me/ghd/gpgkey
+            url: https://mirror.mwt.me/shiftkey-desktop/gpgkey
             dest: /etc/apt/keyrings/shiftkey-desktop.asc
             mode: '0644'
 
