@@ -287,14 +287,14 @@
   # i3
   # https://stackoverflow.com/a/73805885
 
-    - name: Install i3-gaps
+    - name: Install i3
       become: true
       ansible.builtin.apt:
         pkg:
           - i3
         update_cache: true
 
-  # Polybar - status bar for i3-gaps
+  # Polybar - status bar for i3
 
     - name: Install polybar status bar
       become: true
@@ -302,9 +302,9 @@
         pkg:
           - polybar
 
-  # Volumeicon - a volume icon for i3-gaps
+  # Volumeicon - a volume icon for i3
 
-    - name: Install volumeicon a volume icon for i3-gaps
+    - name: Install volumeicon a volume icon for i3
       become: true
       ansible.builtin.apt:
         pkg:
@@ -337,22 +337,22 @@
         pkg:
           - dunst
 
-  # Yad - dialog app for calendar in i3-gaps
+  # Yad - dialog app for calendar in i3
   # https://github.com/v1cont/yad
 
-    - name: Install dependiences of yad dialog app for calendar in i3-gaps
+    - name: Install dependiences of yad dialog app for calendar in i3
       become: true
       ansible.builtin.apt:
         pkg:
           - xdotool
 
-    - name: Install yad dialog app for calendar in i3-gaps
+    - name: Install yad dialog app for calendar in i3
       become: true
       ansible.builtin.apt:
         pkg:
           - yad
 
-  # Numlockx - numlock on at startup i3-gaps
+  # Numlockx - numlock on at startup i3
 
     - name: Install numlockx for numlock on startup
       become: true
@@ -368,25 +368,25 @@
         pkg:
           - arandr
 
-  # Feh for i3-gaps wallpapers
+  # Feh for i3 wallpapers
 
-    - name: Install Feh - i3-gaps wallpapers
+    - name: Install Feh - i3 wallpapers
       become: true
       ansible.builtin.apt:
         pkg:
           - feh
 
-  # Playerctl for i3-gaps media control
+  # Playerctl for i3 media control
   # https://github.com/altdesktop/playerctl
 
-    - name: Install Playerctl for i3-gaps media control
+    - name: Install Playerctl for i3 media control
 
       become: true
       ansible.builtin.apt:
         pkg:
           - playerctl
 
-  # Copyq for i3-gaps clipboard managment
+  # Copyq for i3 clipboard managment
 
     - name: Install Clipboard
       become: true
@@ -394,9 +394,9 @@
         pkg:
           - copyq
 
-  # Gnome-polkit - display popup fot password for sudo in i3-gaps
+  # Gnome-polkit - display popup fot password for sudo in i3
 
-    - name: Install Playerctl for i3-gaps media control
+    - name: Install Playerctl for i3 media control
 
       become: true
       ansible.builtin.apt:
@@ -1087,13 +1087,13 @@
             add-apt-repository --yes ppa:papirus/hardcode-tray
           changed_when: true
 
-        - name: Install Papirus hardcoded icons for i3-gaps polybar
+        - name: Install Papirus hardcoded icons for i3 polybar
           ansible.builtin.apt:
             pkg:
               - hardcode-tray
             update_cache: true
 
-        - name: Apply Papirus hardcoded icons for i3-gaps polybar
+        - name: Apply Papirus hardcoded icons for i3 polybar
           ansible.builtin.shell: |
             hardcode-tray --apply --conversion-tool RSVGConvert --size 22 --theme Papirus
           changed_when: true
