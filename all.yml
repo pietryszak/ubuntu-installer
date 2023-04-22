@@ -1,6 +1,8 @@
 ---
+
 - name: Playbook for all computers
   hosts: all
+
   tasks:
 
 #############################################################################################################
@@ -81,6 +83,7 @@
           - pulseaudio-utils
           - pulseaudio-module-bluetooth
           - pavucontrol
+
 
   # Exfatprogs - tool to create, check and label exFAT filesystems
 
@@ -213,10 +216,6 @@
             name: "{{ login_user }}"
             shell: /bin/zsh
 
-    - name: Install zsh
-      become: true
-      block:
-      
     - name: Create a directory for oh-my-zsh installation script
       ansible.builtin.file:
         path: ~/.gc/ohmyzsh/
@@ -234,7 +233,7 @@
         path: ~/.oh-my-zsh
       register: zsh_installation_status
 
-    - name: Install oh my zsh
+    - name: Install oh-my-zsh
       ansible.builtin.shell: |
         sh -c "~/.gc/ohmyzsh/install.sh" --unattended
       when:
@@ -281,19 +280,40 @@
 
   #############################################################################################################
 
-  # i3 + things connected to i3
+  # i3 gaps + things connected to i3
 
   #############################################################################################################
 
-  # i3
+  # i3-gaps
   # https://stackoverflow.com/a/73805885
 
     - name: Install i3-gaps
       become: true
-      ansible.builtin.apt:
-        pkg:
-          - i3
-        update_cache: true
+      block:
+
+        - name: Download Regolith public key
+          ansible.builtin.get_url:
+            url: https://regolith-desktop.org/regolith.key
+            dest: /etc/apt/keyrings/regolith.key
+            mode: '0644'
+
+        - name: Add Regolith gpg key
+          ansible.builtin.shell: |
+            gpg --dearmor < /etc/apt/keyrings/regolith.key > /etc/apt/keyrings/regolith.gpg
+            install -D -o root -g root -m 644 /etc/apt/keyrings/regolith.gpg /etc/apt/trusted.gpg.d/regolith-archive-keyring.gpg
+          changed_when: true
+
+        - name: Add Regolith to sources list
+          ansible.builtin.apt_repository:
+            repo: deb [arch=amd64] https://regolith-desktop.org/release-ubuntu-jammy-amd64 {{ ansible_distribution_release }} main
+            state: present
+            filename: regolith
+
+        - name: Install i3-gaps
+          ansible.builtin.apt:
+            pkg:
+              - i3-gaps
+            update_cache: true
 
   # Polybar - status bar for i3-gaps
 
@@ -415,7 +435,7 @@
   # https://betatim.github.io/posts/clamav-memory-usage/
 
     - name: Install Clamav antivirus
-      become: true
+
       block:
 
         - name: Install Clamav - open-source and free antivirus software toolkit
@@ -438,6 +458,8 @@
           ansible.builtin.systemd:
             name: clamav-freshclam
             state: started
+
+      become: true
 
   # UFW firewall
     - name: Install firewall
@@ -828,7 +850,7 @@
 
   # Vivaldi browser
 
-    - name: Install Vivaldi browser
+    - name: Install Vivaldi borwser
       become: true
       block:
 
@@ -1065,7 +1087,6 @@
 
               # Default QT theme
               QT_QPA_PLATFORMTHEME=qt5ct
-
 
   # Papirus icons for gruvbox
 
