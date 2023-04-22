@@ -1081,21 +1081,21 @@
               - papirus-icon-theme
             update_cache: true
 
-        - name: Add Papirus icons ppa
-          ansible.builtin.shell: |
-            add-apt-repository --yes ppa:papirus/hardcode-tray
-          changed_when: true
+#        - name: Add Papirus hardcoded icons ppa
+#          ansible.builtin.shell: |
+#            add-apt-repository --yes ppa:papirus/hardcode-tray
+#          changed_when: true
 
-        - name: Install Papirus hardcoded icons for i3 polybar
-          ansible.builtin.apt:
-            pkg:
-              - hardcode-tray
-            update_cache: true
+#        - name: Install Papirus hardcoded icons for i3 polybar
+#          ansible.builtin.apt:
+#            pkg:
+#              - hardcode-tray
+#            update_cache: true
 
-        - name: Apply Papirus hardcoded icons for i3 polybar
-          ansible.builtin.shell: |
-            hardcode-tray --apply --conversion-tool RSVGConvert --size 22 --theme Papirus
-          changed_when: true
+#       - name: Apply Papirus hardcoded icons for i3 polybar
+#          ansible.builtin.shell: |
+#            hardcode-tray --apply --conversion-tool RSVGConvert --size 22 --theme Papirus
+#          changed_when: true
 
         - name: Install Papirus folders icons
           ansible.builtin.apt:
