@@ -33,7 +33,7 @@
       register: cpu_family
       no_log: true
 
-    - name: Export variable for installation packet without pop upgrades
+    - name: Export variable for installation packet without popup
       ansible.builtin.shell: |
         export DEBIAN_FRONTEND=noninteractive
       changed_when: true
@@ -280,40 +280,19 @@
 
   #############################################################################################################
 
-  # i3 gaps + things connected to i3
+  # i3 + things connected to i3
 
   #############################################################################################################
 
-  # i3-gaps
+  # i3
   # https://stackoverflow.com/a/73805885
 
     - name: Install i3-gaps
       become: true
-      block:
-
-        - name: Download Regolith public key
-          ansible.builtin.get_url:
-            url: https://regolith-desktop.org/regolith.key
-            dest: /etc/apt/keyrings/regolith.key
-            mode: '0644'
-
-        - name: Add Regolith gpg key
-          ansible.builtin.shell: |
-            gpg --dearmor < /etc/apt/keyrings/regolith.key > /etc/apt/keyrings/regolith.gpg
-            install -D -o root -g root -m 644 /etc/apt/keyrings/regolith.gpg /etc/apt/trusted.gpg.d/regolith-archive-keyring.gpg
-          changed_when: true
-
-        - name: Add Regolith to sources list
-          ansible.builtin.apt_repository:
-            repo: deb [arch=amd64] https://regolith-desktop.org/release-ubuntu-jammy-amd64 {{ ansible_distribution_release }} main
-            state: present
-            filename: regolith
-
-        - name: Install i3-gaps
-          ansible.builtin.apt:
-            pkg:
-              - i3-gaps
-            update_cache: true
+      ansible.builtin.apt:
+        pkg:
+          - i3-gaps
+        update_cache: true
 
   # Polybar - status bar for i3-gaps
 
