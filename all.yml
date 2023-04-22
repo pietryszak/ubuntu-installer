@@ -491,8 +491,8 @@
 
         - name: Remove lxd snap
           community.general.snap:
-            name={{ item }}
-            state=absent
+            name: "{{ item }}"
+            state: absent
           register: unused_snaps
           failed_when: "unused_snaps is failed and ('find' not in unused_snaps.msg and 'found' not in unused_snaps.msg)"
           with_items:
@@ -504,8 +504,8 @@
 
         - name: Remove snap core20
           community.general.snap:
-            name={{ item }}
-            state=absent
+            name: "{{ item }}"
+            state: absent
           register: unused_snaps
           failed_when: "unused_snaps is failed and ('find' not in unused_snaps.msg and 'found' not in unused_snaps.msg)"
           with_items:
@@ -513,8 +513,8 @@
 
         - name: Remove snap snapd
           community.general.snap:
-            name={{ item }}
-            state=absent
+            name: "{{ item }}"
+            state: absent
           register: unused_snaps
           failed_when: "unused_snaps is failed and ('find' not in unused_snaps.msg and 'found' not in unused_snaps.msg)"
           with_items:
@@ -522,9 +522,9 @@
 
         - name: Stop and disable unused snap services
           ansible.builtin.systemd:
-            name={{ item }}
-            state=stopped
-            enabled=no
+            name: "{{ item }}"
+            state: stopped
+            enabled: false
           register: unused_disable
           failed_when: "unused_disable is failed and ('find' not in unused_disable.msg and 'found' not in unused_disable.msg)"
           with_items:
