@@ -1,6 +1,7 @@
 # Ubuntu installer
 
 My ubuntu i3-gaps installer
+---
 Compatible with Ubuntu Server 23.04 and versions later
 ---
 
