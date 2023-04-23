@@ -1409,7 +1409,7 @@
 
     - name: Install astro vim
       ansible.builtin.command: |
-        nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+        nvim  --headless -c 'quitall'
       changed_when: true
 
   # Set locales
