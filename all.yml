@@ -128,9 +128,8 @@
           ansible.builtin.apt:
             pkg:
               - unzip
-              - zipinfo
               - zstd
-              - gtar
+              - tar
               - p7zip-full
               - p7zip-rar
 
