@@ -920,7 +920,6 @@
             pkg:
               - nemo
               - nemo-fileroller
-              - nemo-nextcloud
               - nemo-preview
             update_cache: true
 

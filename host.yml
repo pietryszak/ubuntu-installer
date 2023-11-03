@@ -125,11 +125,11 @@
 
   #############################################################################################################
 
-  # i3 gaps + things connected to i3
+  # i3 + things connected to i3
 
   #############################################################################################################
 
-  # Polybar Spotify module for i3-gaps
+  # Polybar Spotify module for i3
 
     - name: Install Polybar Spotify module dependencies
       become: true
@@ -497,6 +497,8 @@
       ansible.builtin.apt:
         pkg:
           - jq
+
+# Vscode extensions
 
     - name: Install extensions dependiences
       ansible.builtin.apt:
