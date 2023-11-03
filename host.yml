@@ -490,23 +490,6 @@
         pkg:
           - timeshift
 
-  # Nextcloud client
-
-    - name: Install nexcloud client
-      become: true
-      block:
-
-        - name: Add nexcloud ppa
-          ansible.builtin.shell: |
-            add-apt-repository --yes ppa:nextcloud-devs/client
-          changed_when: true
-
-        - name: Install Nexcloud client
-          ansible.builtin.apt:
-            pkg:
-              - nextcloud-client
-            update_cache: true
-
   # Jq - json for weather module in polybar
 
     - name: Install Jq - json for weather module in polybar
@@ -531,6 +514,7 @@
 
   #############################################################################################################
 
+ # Gimp - Image manipulation app
     - name: Install GIMP - image manipulation program
       community.general.flatpak:
         name: https://flathub.org/beta-repo/appstream/org.gimp.GIMP.flatpakref
@@ -547,10 +531,10 @@
 
   # TickTick a kanban board, todo list, tasks list
 
-    - name: Install TickTick a kanban board, todo list, tasks list
+    - name: Install Obsidian note app, kanban board, todo list, tasks list
       become: true
       community.general.flatpak:
-        name: com.ticktick.TickTicks
+        name: md.obsidian.Obsidian
         state: present
 
   # Peazip GUI for archives files
@@ -568,54 +552,6 @@
       community.general.flatpak:
         name: in.srev.guiscrcpy
         state: present
-
-  # Joplin notes app and extensions
-
-    - name: Install Joplin notes app and extensions
-
-      block:
-
-        - name: Install Joplin notes app
-          become: true
-          community.general.flatpak:
-            name: net.cozic.joplin_desktop
-            state: present
-
-        - name: Create a folder for joplin extensions
-          ansible.builtin.file:
-            path: ~/.config/joplin-desktop/plugins
-            state: directory
-            mode: '0744'
-
-        - name: Download Joplin Better Markdown Viewer extension
-          ansible.builtin.get_url:
-            url: https://github.com/joplin/plugins/raw/master/plugins/ylc395.betterMarkdownViewer/plugin.jpl
-            dest: ~/.config/joplin-desktop/plugins/ylc395.betterMarkdownViewer.jpl
-            mode: '0644'
-
-        - name: Download Joplin Email note extension
-          ansible.builtin.get_url:
-            url: https://github.com/joplin/plugins/raw/master/plugins/com.eliasvsimon.email-note/plugin.jpl
-            dest: ~/.config/joplin-desktop/plugins/com.eliasvsimon.email-note.jpl
-            mode: '0644'
-
-        - name: Download Joplin Home note extension
-          ansible.builtin.get_url:
-            url: https://github.com/joplin/plugins/raw/master/plugins/com.lki.homenote/plugin.jpl
-            dest: ~/.config/joplin-desktop/plugins/com.lki.homenote.jpl
-            mode: '0644'
-
-        - name: Download Joplin Note tabs extension
-          ansible.builtin.get_url:
-            url: https://github.com/joplin/plugins/raw/master/plugins/joplin.plugin.note.tabs/plugin.jpl
-            dest: ~/.config/joplin-desktop/plugins/joplin.plugin.note.tabs.jpl
-            mode: '0644'
-
-        - name: Download Joplin Persistent Layout extension
-          ansible.builtin.get_url:
-            url: https://github.com/joplin/plugins/raw/master/plugins/joplin.plugin.benji.persistentLayout/plugin.jpl
-            dest: ~/.config/joplin-desktop/plugins/joplin.plugin.benji.persistentLayout.jpl
-            mode: '0644'
 
   #############################################################################################################
 
