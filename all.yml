@@ -114,7 +114,12 @@
   # GRUB
   # https://github.com/AdisonCavani/distro-grub-themes
 
-
+    - name: Grub look theme
+      ansible.builtin.git:
+        repo: https://github.com/AdisonCavani/distro-grub-themes.git
+        dest: ~/.gc/distro-grub-themes
+        version: master
+        
     - name: Create a folder for unarchive grub theme
       ansible.builtin.file:
         path: ~/.gc/distro-grub-themes/themes/ubuntu/
@@ -125,12 +130,6 @@
       ansible.builtin.unarchive:
         src: ~/.gc/distro-grub-themes/themes/ubuntu.tar
         dest: ~/.gc/distro-grub-themes/themes/ubuntu/
-
-    - name: Grub look theme
-      ansible.builtin.git:
-        repo: https://github.com/AdisonCavani/distro-grub-themes.git
-        dest: ~/.gc/distro-grub-themes
-        version: master
 
     - name: Install grub theme and plymouth theme, configure it
       become: true
