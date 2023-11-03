@@ -93,6 +93,18 @@
         pkg:
           - exfatprogs
 
+  # Install unarchiver
+
+    - name: Install unarchiver
+      become: true
+      ansible.builtin.apt:
+        pkg:
+          - unzip
+          - zstd
+          - tar
+          - p7zip-full
+          - p7zip-rar
+
   #############################################################################################################
 
   # Grub - startup app + Lightdm - login app
@@ -101,6 +113,18 @@
 
   # GRUB
   # https://github.com/AdisonCavani/distro-grub-themes
+
+
+    - name: Create a folder for unarchive grub theme
+      ansible.builtin.file:
+        path: ~/.gc/distro-grub-themes/themes/ubuntu/
+        state: directory
+        mode: '0744'
+
+    - name: Unzip grub theme
+      ansible.builtin.unarchive:
+        src: ~/.gc/distro-grub-themes/themes/ubuntu.tar
+        dest: ~/.gc/distro-grub-themes/themes/ubuntu/
 
     - name: Grub look theme
       ansible.builtin.git:
@@ -117,29 +141,6 @@
             path: /boot/grub/themes/
             state: directory
             mode: '0744'
-
-        - name: Create a folder for unarchive grub theme
-          ansible.builtin.file:
-            path: ~/.gc/distro-grub-themes/themes/ubuntu/
-            state: directory
-            mode: '0744'
-
-      # Install unarchiver
-
-        - name: Install unarchiver
-          become: true
-          ansible.builtin.apt:
-            pkg:
-              - unzip
-              - zstd
-              - tar
-              - p7zip-full
-              - p7zip-rar
-
-        - name: Unzip grub theme
-          ansible.builtin.unarchive:
-            src: ~/.gc/distro-grub-themes/themes/ubuntu.tar
-            dest: ~/.gc/distro-grub-themes/themes/ubuntu/
 
         - name: Copy grub theme to grub folder
           ansible.builtin.copy:
