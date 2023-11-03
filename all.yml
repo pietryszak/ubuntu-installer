@@ -121,13 +121,18 @@
             - /boot/grub/themes/
             - ~/.gc/distro-grub-themes/themes/ubuntu/
 
-      # Install unzip
+      # Install unarchiver
 
-        - name: Install unzip
+        - name: Install unarchiver
           become: true
           ansible.builtin.apt:
             pkg:
               - unzip
+              - zipinfo
+              - zstd
+              - gtar
+              - p7zip-full
+              - p7zip-rar
 
         - name: Unzip grub theme
           ansible.builtin.unarchive:
@@ -895,15 +900,6 @@
       ansible.builtin.apt:
         pkg:
           - gnome-calculator
-
-  # 7zip
-
-    - name: Install 7zip
-      become: true
-      ansible.builtin.apt:
-        pkg:
-          - p7zip-full
-          - p7zip-rar
 
   # Nemo file manager
 
