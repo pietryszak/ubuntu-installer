@@ -118,9 +118,14 @@
             state: directory
             mode: '0744'
 
+        - name: Unzip grub theme
+          ansible.builtin.unarchive:
+            src: ~/.gc/distro-grub-themes/themes/ubuntu.tar
+            dest: ~/.gc/distro-grub-themes/themes/ubuntu
+
         - name: Copy grub theme to grub folder
           ansible.builtin.copy:
-            src: ~/.gc/distro-grub-themes/customize/ubuntu/
+            src: ~/.gc/distro-grub-themes/themes/ubuntu/
             dest: /boot/grub/themes
             mode: '0644'
 
