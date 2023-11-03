@@ -2,7 +2,7 @@
 
 My ubuntu i3-gaps installer
 ---
-Compatible with Ubuntu Server 23.04 and versions later
+Compatible with Ubuntu Server 23.10 and versions later
 ---
 
 ### When installed on host
