@@ -121,6 +121,14 @@
             - /boot/grub/themes/
             - ~/.gc/distro-grub-themes/themes/ubuntu/
 
+      # Install unzip
+
+        - name: Install unzip
+          become: true
+          ansible.builtin.apt:
+            pkg:
+              - unzip
+
         - name: Unzip grub theme
           ansible.builtin.unarchive:
             src: ~/.gc/distro-grub-themes/themes/ubuntu.tar
