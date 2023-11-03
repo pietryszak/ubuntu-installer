@@ -114,12 +114,15 @@
 
         - name: Create a folder for grub theme
           ansible.builtin.file:
-            path: "{{ item }}"
+            path: /boot/grub/themes/
             state: directory
             mode: '0744'
-          loop:
-            - /boot/grub/themes/
-            - ~/.gc/distro-grub-themes/themes/ubuntu/
+
+        - name: Create a folder for unarchive grub theme
+          ansible.builtin.file:
+            path: ~/.gc/distro-grub-themes/themes/ubuntu/
+            state: directory
+            mode: '0744'
 
       # Install unarchiver
 
@@ -258,6 +261,7 @@
         sh -c "~/.gc/ohmyzsh/install.sh" --unattended
       when:
         not zsh_installation_status.stat.exists
+      changed_when: true
 
   # Zsh plugins
 
