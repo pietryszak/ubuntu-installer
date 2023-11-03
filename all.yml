@@ -1488,33 +1488,6 @@
               - network-manager-pptp
               - network-manager-pptp-gnome
 
-        - name: Remove old netplan config file
-          ansible.builtin.file:
-            path: /etc/netplan/00-installer-config.yaml
-            state: absent
-
-        - name: Touch a new netplan config file
-          ansible.builtin.file:
-            path: /etc/netplan/00-installer-config.yaml
-            state: touch
-            mode: '0644'
-
-        - name: Configure netplan to use network manager
-          ansible.builtin.blockinfile:
-            path: /etc/netplan/00-installer-config.yaml
-            block: |
-
-              network:
-                version: 2
-                renderer: NetworkManager
-            state: present
-
-        - name: Apply new netplan configuration
-          ansible.builtin.shell: |
-            netplan generate
-            netplan apply
-          changed_when: true
-
         - name: Enable network manager service
           ansible.builtin.systemd:
             name: NetworkManager
