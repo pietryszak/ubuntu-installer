@@ -124,7 +124,7 @@
         - name: Unzip grub theme
           ansible.builtin.unarchive:
             src: ~/.gc/distro-grub-themes/themes/ubuntu.tar
-            dest: ~/.gc/distro-grub-themes/themes/ubuntu
+            dest: ~/.gc/distro-grub-themes/themes/ubuntu/
 
         - name: Copy grub theme to grub folder
           ansible.builtin.copy:
