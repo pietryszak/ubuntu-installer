@@ -114,9 +114,12 @@
 
         - name: Create a folder for grub theme
           ansible.builtin.file:
-            path: /boot/grub/themes/
+            path: "{{ item }}"
             state: directory
             mode: '0744'
+          loop:
+            - /boot/grub/themes/
+            - ~/.gc/distro-grub-themes/themes/ubuntu/
 
         - name: Unzip grub theme
           ansible.builtin.unarchive:
